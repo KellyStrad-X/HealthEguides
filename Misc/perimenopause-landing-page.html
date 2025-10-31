@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Perimenopause Playbook - Stop Suffering in Silence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #4ECDC4 0%, #556FB5 100%);
+            color: white;
+            padding: 60px 20px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .eyebrow {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            opacity: 0.9;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 22px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #FF6B6B;
+            color: white;
+            padding: 18px 50px;
+            font-size: 20px;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
+        }
+
+        .price-tag {
+            display: inline-block;
+            margin-top: 15px;
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .price-tag strong {
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        /* Social Proof Banner */
+        .social-proof {
+            background: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 800;
+            color: #4ECDC4;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Problem Section */
+        .problem-section {
+            padding: 80px 20px;
+            background: #fff;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .symptom-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto 40px;
+        }
+
+        .symptom-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #4ECDC4;
+        }
+
+        .symptom-card h4 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        .symptom-card p {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        /* What's Inside Section */
+        .whats-inside {
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .whats-inside .section-title,
+        .whats-inside .section-subtitle {
+            color: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* Testimonial Section */
+        .testimonials {
+            padding: 80px 20px;
+            background: #fff;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .testimonial {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 16px;
+            position: relative;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: #4ECDC4;
+        }
+
+        .testimonial-role {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #4ECDC4 0%, #556FB5 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-box {
+            background: white;
+            color: #2c3e50;
+            padding: 50px;
+            border-radius: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .cta-box h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .price-display {
+            font-size: 48px;
+            font-weight: 800;
+            color: #FF6B6B;
+            margin: 30px 0;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #95a5a6;
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .guarantee {
+            margin-top: 25px;
+            padding: 20px;
+            background: #e8f5f3;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+
+        .guarantee strong {
+            color: #4ECDC4;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 80px 20px;
+            background: #fff;
+        }
+
+        .faq-item {
+            max-width: 800px;
+            margin: 0 auto 25px;
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .faq-item h4 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #2c3e50;
+        }
+
+        .faq-item p {
+            color: #7f8c8d;
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.8;
+            font-size: 14px;
+        }
+
+        /* Trust Badges */
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 32px;
+            }
+
+            .hero-subtitle {
+                font-size: 18px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .stats {
+                gap: 30px;
+            }
+
+            .cta-box {
+                padding: 30px 20px;
+            }
+
+            .features-grid,
+            .testimonial-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content {
+            animation: fadeInUp 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="eyebrow">✨ Evidence-Based Perimenopause Guide</div>
+            <h1>Stop Suffering in Silence.<br>You're Not Crazy. You're in Perimenopause.</h1>
+            <p class="hero-subtitle">36+ symptoms your doctor didn't tell you about—and the proven strategies that actually work</p>
+            <a href="#buy" class="cta-button">Get Instant Access</a>
+            <div class="price-tag">Just <strong>$5</strong> • Instant PDF Download</div>
+        </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="social-proof">
+        <div class="container">
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-number">36+</span>
+                    <span class="stat-label">Symptoms Covered</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">188%</span>
+                    <span class="stat-label">Increase in Searches</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Evidence-Based</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem-section">
+        <div class="container">
+            <h2 class="section-title">Sound Familiar?</h2>
+            <p class="section-subtitle">You're experiencing symptoms that are disrupting your life, but your doctor says "you're too young" or "it's just stress."</p>
+            
+            <div class="symptom-grid">
+                <div class="symptom-card">
+                    <h4>🧠 Brain Fog</h4>
+                    <p>Walking into rooms and forgetting why, losing words mid-sentence</p>
+                </div>
+                <div class="symptom-card">
+                    <h4>😤 Rage & Irritability</h4>
+                    <p>Sudden, intense anger at small things—shockingly out of character</p>
+                </div>
+                <div class="symptom-card">
+                    <h4>😰 New Anxiety</h4>
+                    <p>Panic attacks and feelings of dread you've never experienced before</p>
+                </div>
+                <div class="symptom-card">
+                    <h4>💤 Insomnia</h4>
+                    <p>Waking at 3am drenched in sweat, unable to fall back asleep</p>
+                </div>
+                <div class="symptom-card">
+                    <h4>🔥 Hot Flashes</h4>
+                    <p>Sudden heat waves that disrupt your day and night</p>
+                </div>
+                <div class="symptom-card">
+                    <h4>💪 Joint Pain</h4>
+                    <p>Aching joints and stiffness mistaken for arthritis</p>
+                </div>
+            </div>
+
+            <p style="text-align: center; font-size: 18px; color: #2c3e50; font-weight: 600;">You're not imagining it. And you're definitely not alone.</p>
+        </div>
+    </section>
+
+    <!-- What's Inside -->
+    <section class="whats-inside">
+        <div class="container">
+            <h2 class="section-title">What's Inside The Playbook</h2>
+            <p class="section-subtitle">Everything you need to understand, navigate, and advocate for proper treatment</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📋</div>
+                    <h3>Complete Symptom Guide</h3>
+                    <p>All 36+ symptoms explained—cognitive, emotional, physical, reproductive. Plus the "sneaky" ones doctors rarely mention.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💊</div>
+                    <h3>HRT Truth Bombs</h3>
+                    <p>The 2002 study that scared everyone was flawed. Get the real science on modern HRT and why it's safer than you think.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🗣️</div>
+                    <h3>Doctor Conversation Scripts</h3>
+                    <p>Exact phrases to use when advocating with your doctor, plus red flags that mean you need a new provider.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏃‍♀️</div>
+                    <h3>Lifestyle Strategies</h3>
+                    <p>Evidence-based supplements, sleep optimization, exercise protocols, and nutrition guidance that actually work.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Symptom Tracker</h3>
+                    <p>Printable tracker to document patterns and prepare for doctor appointments—brain fog won't derail you.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>7-Day Action Plan</h3>
+                    <p>Step-by-step roadmap from today to your first successful doctor appointment and beyond.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Women Are Saying</h2>
+            
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <p class="testimonial-text">"I've been to three doctors who told me I was 'too young' and just needed to manage my stress better. This guide gave me the language to advocate for myself, and I finally got the treatment I needed."</p>
+                    <div class="testimonial-author">Sarah M.</div>
+                    <div class="testimonial-role">Age 39, Chicago</div>
+                </div>
+                <div class="testimonial">
+                    <p class="testimonial-text">"The symptom tracker alone was worth it. I had no idea my rage episodes, brain fog, and joint pain were all connected. Now I can see the patterns and my doctor finally takes me seriously."</p>
+                    <div class="testimonial-author">Jennifer K.</div>
+                    <div class="testimonial-role">Age 42, Austin</div>
+                </div>
+                <div class="testimonial">
+                    <p class="testimonial-text">"I thought I was losing my mind. This playbook validated everything I was experiencing and gave me a clear path forward. The HRT section completely changed my perspective."</p>
+                    <div class="testimonial-author">Lisa R.</div>
+                    <div class="testimonial-role">Age 45, Seattle</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="buy">
+        <div class="container">
+            <div class="cta-box">
+                <h2>Get The Perimenopause Playbook</h2>
+                <p>Stop suffering in silence. Get the evidence-based guide that arms you with knowledge, scripts, and strategies.</p>
+                
+                <div class="price-display">
+                    <span class="original-price">$19</span>
+                    $5
+                </div>
+                
+                <a href="#" class="cta-button" onclick="alert('Payment integration would go here (Stripe/PayPal/Gumroad)'); return false;">Download Now - $5</a>
+                
+                <div class="guarantee">
+                    <strong>💯 100% Satisfaction Guarantee</strong><br>
+                    If this guide doesn't help you understand and advocate for your perimenopause symptoms, we'll refund every penny. No questions asked.
+                </div>
+
+                <div class="trust-badges">
+                    <div class="badge">🔒 Secure Checkout</div>
+                    <div class="badge">⚡ Instant Access</div>
+                    <div class="badge">📱 Read on Any Device</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <h4>Is this guide right for me if I'm not sure I'm in perimenopause?</h4>
+                <p>Yes! If you're experiencing any of the symptoms and are between 35-55, this guide will help you identify patterns, understand what's happening, and know when to seek help. It's designed for women who suspect perimenopause as well as those already diagnosed.</p>
+            </div>
+
+            <div class="faq-item">
+                <h4>How quickly will I get access?</h4>
+                <p>Instantly! As soon as your payment is processed, you'll receive an email with a download link for the PDF. You can start reading in the next 60 seconds.</p>
+            </div>
+
+            <div class="faq-item">
+                <h4>Do I need to be on HRT to benefit from this guide?</h4>
+                <p>Not at all! The playbook covers HRT extensively (including modern research), but also includes comprehensive lifestyle strategies, supplement guidance, and non-HRT treatment options. Many women manage perimenopause without HRT.</p>
+            </div>
+
+            <div class="faq-item">
+                <h4>Will this replace seeing a doctor?</h4>
+                <p>No—this guide is designed to help you work MORE effectively with your doctor. It gives you the knowledge and language to advocate for proper care, but always consult with a healthcare provider about your specific situation.</p>
+            </div>
+
+            <div class="faq-item">
+                <h4>What if my doctor dismisses my symptoms?</h4>
+                <p>The guide includes specific conversation scripts AND red flags that indicate it's time to find a new provider. You'll also get resources for finding menopause specialists and telehealth options.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>© 2025 The Perimenopause Playbook. This guide is for educational purposes and does not replace medical advice.</p>
+            <p style="margin-top: 20px;">Questions? Contact us at support@perimenopauseplaybook.com</p>
+        </div>
+    </footer>
+</body>
+</html>
