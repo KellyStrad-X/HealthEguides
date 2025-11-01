@@ -23,25 +23,47 @@ function PurchaseSuccessContent() {
         return;
       }
 
-      try {
-        const res = await fetch('/api/get-access-from-session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ sessionId }),
-        });
+      // Retry logic to handle webhook delay (race condition fix)
+      const maxAttempts = 10;
+      const delayMs = 2000; // Wait 2 seconds between attempts
 
-        const data = await res.json();
+      for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
+          console.log(`🔍 Attempt ${attempt}/${maxAttempts}: Fetching purchase...`);
 
-        if (data.purchases) {
-          setPurchases(data.purchases);
-        } else {
-          setError('Unable to retrieve purchase details');
+          const res = await fetch('/api/get-access-from-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sessionId }),
+          });
+
+          const data = await res.json();
+
+          if (data.purchases && data.purchases.length > 0) {
+            console.log('✅ Purchase found!');
+            setPurchases(data.purchases);
+            setLoading(false);
+            return; // Success!
+          }
+
+          // Not found yet, wait before retry
+          if (attempt < maxAttempts) {
+            console.log(`⏳ Purchase not ready yet, waiting ${delayMs}ms...`);
+            await new Promise(resolve => setTimeout(resolve, delayMs));
+          }
+        } catch (err) {
+          console.error(`❌ Attempt ${attempt} error:`, err);
+          if (attempt === maxAttempts) {
+            setError('Unable to retrieve purchase details. Please check your email for access links.');
+          } else {
+            // Wait before retry
+            await new Promise(resolve => setTimeout(resolve, delayMs));
+          }
         }
-      } catch (err) {
-        console.error('Error fetching purchase:', err);
-        setError('Unable to retrieve purchase details');
       }
 
+      // All attempts failed
+      setError('Unable to retrieve purchase details. Please check your email for access links.');
       setLoading(false);
     }
 
