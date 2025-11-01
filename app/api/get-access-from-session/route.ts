@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
-import { adminDb } from '@/lib/firebase-admin';
+import Stripe from 'stripe';
+import { ensurePurchasesForSession } from '@/lib/purchase-service';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(request: Request) {
   try {
@@ -12,28 +15,54 @@ export async function POST(request: Request) {
       );
     }
 
-    // Find all purchases associated with this Stripe session
-    const purchasesSnapshot = await adminDb
-      .collection('purchases')
-      .where('stripeSessionId', '==', sessionId)
-      .get();
+    let session: Stripe.Checkout.Session;
 
-    if (purchasesSnapshot.empty) {
+    try {
+      session = await stripe.checkout.sessions.retrieve(sessionId);
+    } catch (stripeError) {
+      console.error('Stripe session retrieval failed:', stripeError);
+      return NextResponse.json(
+        { error: 'Session not found' },
+        { status: 404 }
+      );
+    }
+
+    if (session.payment_status !== 'paid') {
+      return NextResponse.json(
+        {
+          pending: true,
+          status: session.payment_status,
+          message: 'Payment is still processing. Please try again in a moment.',
+        },
+        { status: 202 }
+      );
+    }
+
+    const { purchases, created } = await ensurePurchasesForSession(session);
+
+    if (purchases.length === 0) {
       return NextResponse.json(
         { error: 'No purchases found for this session' },
         { status: 404 }
       );
     }
 
-    // Return all guide access tokens
-    const purchases = purchasesSnapshot.docs.map(doc => {
-      const data = doc.data();
-      return {
-        guideId: data.guideId,
-        guideName: data.guideName,
-        accessToken: data.accessToken,
-      };
-    });
+    if (created) {
+      // If purchases were created here (webhook hasn't run), send the email now.
+      try {
+        await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/send-purchase-email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: session.customer_email,
+            purchases,
+            sessionId,
+          }),
+        });
+      } catch (emailError) {
+        console.error('Deferred email send failed:', emailError);
+      }
+    }
 
     return NextResponse.json({ purchases });
 

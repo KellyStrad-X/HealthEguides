@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
+import { ensurePurchasesForSession } from '@/lib/purchase-service';
 import { adminDb } from '@/lib/firebase-admin';
-import { generateAccessToken } from '@/lib/utils';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -67,43 +67,29 @@ export async function POST(request: Request) {
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   console.log('Processing checkout:', session.id);
 
-  const guideIds = JSON.parse(session.metadata?.guideIds || '[]') as string[];
   const email = session.customer_email;
 
-  if (!email || guideIds.length === 0) {
-    console.error('Missing email or guide IDs in session metadata');
+  if (!email) {
+    console.error(`Session ${session.id} missing customer email; skipping purchase creation.`);
     return;
   }
 
-  // Create a purchase record for each guide
-  const purchasePromises = guideIds.map(async (guideId) => {
-    const accessToken = generateAccessToken();
+  if (session.payment_status !== 'paid') {
+    console.log(`Session ${session.id} payment status: ${session.payment_status}. Skipping purchase creation.`);
+    return;
+  }
 
-    const purchaseData = {
-      email,
-      guideId,
-      guideName: session.metadata?.guideTitles || 'Health Guide',
-      accessToken,
-      stripeSessionId: session.id,
-      stripePaymentIntentId: session.payment_intent as string,
-      amount: session.amount_total || 0,
-      currency: session.currency || 'usd',
-      isBundle: session.metadata?.isBundle === 'true',
-      purchasedAt: new Date(),
-      lastAccessedAt: null,
-      accessCount: 0,
-      status: 'active',
-    };
+  const { purchases, created } = await ensurePurchasesForSession(session);
 
-    // Store in Firebase
-    const docRef = await adminDb.collection('purchases').add(purchaseData);
+  if (!purchases.length) {
+    console.error(`No purchases generated for session ${session.id}`);
+    return;
+  }
 
-    console.log(`Purchase recorded: ${docRef.id} for guide ${guideId}`);
-
-    return { guideId, accessToken };
-  });
-
-  const purchases = await Promise.all(purchasePromises);
+  if (!created) {
+    console.log(`Purchases already existed for session ${session.id}, skipping email resend.`);
+    return;
+  }
 
   // Send email with access links
   try {
