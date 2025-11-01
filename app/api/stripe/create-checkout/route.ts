@@ -80,6 +80,7 @@ export async function POST(request: Request) {
     };
 
     // Create Stripe Checkout session
+    console.log('💳 Creating Stripe session...');
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       payment_method_types: ['card'],
@@ -90,6 +91,10 @@ export async function POST(request: Request) {
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/catalog`,
       allow_promotion_codes: true, // Enable discount codes
     });
+
+    console.log('✅ Session created:', session.id);
+    console.log('🔗 Checkout URL:', session.url);
+    console.log('💰 Amount:', session.amount_total);
 
     return NextResponse.json({
       sessionId: session.id,
