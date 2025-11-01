@@ -54,6 +54,10 @@ const allGuides = [...guides, ...placeholderGuides];
 export default function BundleOffer() {
   const [selectedGuides, setSelectedGuides] = useState<string[]>([]);
   const [showMore, setShowMore] = useState(false);
+  const [email, setEmail] = useState('');
+  const [showEmailCapture, setShowEmailCapture] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const toggleGuide = (guideId: string) => {
     if (selectedGuides.includes(guideId)) {
@@ -65,24 +69,55 @@ export default function BundleOffer() {
 
   const handleClaimBundle = () => {
     if (selectedGuides.length !== 3) {
-      alert('Please select exactly 3 guides to claim this offer!');
       return;
     }
+    setShowEmailCapture(true);
+  };
 
-    // Track event
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'bundle_claim', {
-        selected_guides: selectedGuides,
-        bundle_price: 10,
+  const handleCheckout = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      // Track event
+      if (typeof window !== 'undefined' && (window as any).gtag) {
+        (window as any).gtag('event', 'bundle_claim', {
+          selected_guides: selectedGuides,
+          bundle_price: 10,
+        });
+      }
+
+      // Create Stripe checkout session
+      const response = await fetch('/api/stripe/create-checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          guideIds: selectedGuides,
+        }),
       });
-    }
 
-    // TODO: Navigate to Gumroad bundle checkout
-    // For now, alert user
-    const selectedTitles = selectedGuides
-      .map(id => allGuides.find(g => g.id === id)?.title)
-      .join(', ');
-    alert(`Bundle selected: ${selectedTitles}\n\nPrice: $10.00\n\nYou'll be redirected to checkout...`);
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to create checkout session');
+      }
+
+      const { url } = await response.json();
+
+      // Redirect to Stripe Checkout
+      if (url) {
+        window.location.href = url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (err) {
+      console.error('Checkout error:', err);
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+      setLoading(false);
+    }
   };
 
   return (
@@ -200,29 +235,77 @@ export default function BundleOffer() {
           </div>
         </div>
 
-        {/* CTA Button */}
+        {/* CTA Button / Email Capture */}
         <div className="text-center">
-          <button
-            onClick={handleClaimBundle}
-            disabled={selectedGuides.length !== 3}
-            className={`
-              px-12 py-5 text-xl font-bold rounded-full shadow-2xl transition-all duration-300
-              ${selectedGuides.length === 3
-                ? 'bg-yellow-300 text-purple-900 hover:bg-yellow-200 hover:scale-105 cursor-pointer'
-                : 'bg-white/20 text-white/50 cursor-not-allowed'
-              }
-            `}
-          >
-            {selectedGuides.length === 3
-              ? '🎉 Claim Bundle for $10 →'
-              : `Select ${3 - selectedGuides.length} More Guide${3 - selectedGuides.length !== 1 ? 's' : ''}`
-            }
-          </button>
+          {!showEmailCapture ? (
+            <>
+              <button
+                onClick={handleClaimBundle}
+                disabled={selectedGuides.length !== 3}
+                className={`
+                  px-12 py-5 text-xl font-bold rounded-full shadow-2xl transition-all duration-300
+                  ${selectedGuides.length === 3
+                    ? 'bg-yellow-300 text-purple-900 hover:bg-yellow-200 hover:scale-105 cursor-pointer'
+                    : 'bg-white/20 text-white/50 cursor-not-allowed'
+                  }
+                `}
+              >
+                {selectedGuides.length === 3
+                  ? '🎉 Claim Bundle for $10 →'
+                  : `Select ${3 - selectedGuides.length} More Guide${3 - selectedGuides.length !== 1 ? 's' : ''}`
+                }
+              </button>
 
-          {selectedGuides.length === 3 && (
-            <p className="mt-4 text-sm text-white/80">
-              ✓ Instant download • ✓ Read on any device • ✓ Money-back guarantee
-            </p>
+              {selectedGuides.length === 3 && (
+                <p className="mt-4 text-sm text-white/80">
+                  ✓ Instant access • ✓ Read on any device • ✓ Money-back guarantee
+                </p>
+              )}
+            </>
+          ) : (
+            <div className="max-w-md mx-auto bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8">
+              <h3 className="text-2xl font-bold mb-4">Almost There!</h3>
+              <p className="text-white/90 mb-6">
+                Enter your email to complete your bundle purchase
+              </p>
+
+              <form onSubmit={handleCheckout} className="space-y-4">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  required
+                  className="w-full px-6 py-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent transition-all"
+                />
+
+                {error && (
+                  <div className="text-red-300 text-sm text-center bg-red-500/20 border border-red-300/30 rounded-lg py-2">
+                    {error}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={loading || !email}
+                  className="w-full px-8 py-4 bg-yellow-300 text-purple-900 rounded-lg font-bold text-lg hover:bg-yellow-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? 'Processing...' : 'Continue to Checkout - $10'}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowEmailCapture(false);
+                    setEmail('');
+                    setError('');
+                  }}
+                  className="w-full px-4 py-2 text-white/70 hover:text-white text-sm transition-colors"
+                >
+                  ← Change Selection
+                </button>
+              </form>
+            </div>
           )}
         </div>
       </div>

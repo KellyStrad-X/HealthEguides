@@ -18,29 +18,8 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
     setError('');
 
     try {
-      // Submit email to API
-      const response = await fetch('/api/email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          guideSlug: guide.slug,
-          guideTitle: guide.title,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to submit email');
-      }
-
-      // Track events
+      // Track begin_checkout event
       if (typeof window !== 'undefined' && (window as any).gtag) {
-        (window as any).gtag('event', 'email_submit', {
-          guide_name: guide.title,
-          guide_slug: guide.slug,
-        });
         (window as any).gtag('event', 'begin_checkout', {
           value: guide.price,
           currency: 'USD',
@@ -54,10 +33,34 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
         });
       }
 
-      // Redirect to Gumroad
-      window.location.href = guide.gumroadUrl;
+      // Create Stripe checkout session
+      const response = await fetch('/api/stripe/create-checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          guideIds: [guide.id], // Single guide purchase
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to create checkout session');
+      }
+
+      const { url } = await response.json();
+
+      // Redirect to Stripe Checkout
+      if (url) {
+        window.location.href = url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
     } catch (err) {
-      setError('Something went wrong. Please try again.');
+      console.error('Checkout error:', err);
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
       setLoading(false);
     }
   };
