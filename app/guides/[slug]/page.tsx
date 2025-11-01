@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { guides } from '@/lib/guides';
 import Link from 'next/link';
@@ -14,7 +14,7 @@ interface GuideViewerProps {
   };
 }
 
-export default function GuideViewer({ params }: GuideViewerProps) {
+function GuideViewerContent({ params }: GuideViewerProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [accessGranted, setAccessGranted] = useState(false);
@@ -233,5 +233,20 @@ export default function GuideViewer({ params }: GuideViewerProps) {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function GuideViewer({ params }: GuideViewerProps) {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f8f9fa] to-white">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#4ECDC4] mb-4"></div>
+          <p className="text-lg text-gray-600">Loading guide...</p>
+        </div>
+      </div>
+    }>
+      <GuideViewerContent params={params} />
+    </Suspense>
   );
 }

@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 // Force dynamic rendering since this page uses search params
 export const dynamic = 'force-dynamic';
 
-export default function PurchaseSuccess() {
+function PurchaseSuccessContent() {
   const searchParams = useSearchParams();
   const [purchases, setPurchases] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -156,5 +156,20 @@ export default function PurchaseSuccess() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PurchaseSuccess() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f8f9fa] to-white">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#4ECDC4] mb-4"></div>
+          <p className="text-lg text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <PurchaseSuccessContent />
+    </Suspense>
   );
 }
