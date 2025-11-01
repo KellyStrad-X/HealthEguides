@@ -33,5 +33,30 @@ export function initializeFirebaseAdmin() {
   return { app, db };
 }
 
-// Export singleton instance
-export const { app: adminApp, db: adminDb } = initializeFirebaseAdmin();
+// Lazy initialization - only initialize when accessed (at runtime, not build time)
+function getAdminApp() {
+  if (!app) {
+    initializeFirebaseAdmin();
+  }
+  return app;
+}
+
+function getAdminDb() {
+  if (!db) {
+    initializeFirebaseAdmin();
+  }
+  return db;
+}
+
+// Export lazy getters instead of immediate initialization
+export const adminApp = new Proxy({} as App, {
+  get(target, prop) {
+    return (getAdminApp() as any)[prop];
+  }
+});
+
+export const adminDb = new Proxy({} as Firestore, {
+  get(target, prop) {
+    return (getAdminDb() as any)[prop];
+  }
+});
