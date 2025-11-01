@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
+// Force dynamic rendering since this page uses search params
+export const dynamic = 'force-dynamic';
+
 export default function PurchaseSuccess() {
   const searchParams = useSearchParams();
   const [purchases, setPurchases] = useState<any[]>([]);

@@ -5,6 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { guides } from '@/lib/guides';
 import Link from 'next/link';
 
+// Force dynamic rendering since this page uses search params
+export const dynamic = 'force-dynamic';
+
 interface GuideViewerProps {
   params: {
     slug: string;
