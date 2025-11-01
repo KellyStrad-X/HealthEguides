@@ -7,9 +7,17 @@ import { getBundlePrice } from '@/lib/utils';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(request: Request) {
+  // Debug logging
+  console.log('🔍 Checkout API called');
+  console.log('🔑 Stripe key exists:', !!process.env.STRIPE_SECRET_KEY);
+  console.log('🌐 Base URL:', process.env.NEXT_PUBLIC_BASE_URL);
+
   try {
     const body = await request.json();
     const { email, guideIds } = body;
+
+    console.log('📧 Email:', email);
+    console.log('📚 Guide IDs:', guideIds);
 
     // Validate email
     if (!email || !email.includes('@')) {
