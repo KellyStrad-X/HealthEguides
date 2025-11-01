@@ -4,12 +4,13 @@ import Stripe from 'stripe';
 import { ensurePurchasesForSession } from '@/lib/purchase-service';
 import { adminDb } from '@/lib/firebase-admin';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
 // This is required to receive raw body for Stripe signature verification
 export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
+  // Initialize Stripe at runtime (not build time)
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
   const body = await request.text();
   const signature = headers().get('stripe-signature');
 

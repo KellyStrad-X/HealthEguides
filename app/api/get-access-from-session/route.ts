@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { ensurePurchasesForSession } from '@/lib/purchase-service';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
 export async function POST(request: Request) {
+  // Initialize Stripe at runtime (not build time)
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
   try {
     const { sessionId } = await request.json();
 

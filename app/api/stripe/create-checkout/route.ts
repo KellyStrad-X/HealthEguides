@@ -3,9 +3,10 @@ import Stripe from 'stripe';
 import { guides } from '@/lib/guides';
 import { getBundlePrice } from '@/lib/utils';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
 export async function POST(request: Request) {
+  // Initialize Stripe at runtime (not build time)
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
   // Debug logging
   console.log('🔍 Checkout API called');
   console.log('🔑 Stripe key exists:', !!process.env.STRIPE_SECRET_KEY);
