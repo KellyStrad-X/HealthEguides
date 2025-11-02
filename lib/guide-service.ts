@@ -66,6 +66,16 @@ export async function getAllGuides(): Promise<Guide[]> {
       });
     }
 
+    // Sort guides: available ones (with HTML) first, then coming soon
+    guidesData.sort((a, b) => {
+      const aAvailable = !a.comingSoon;
+      const bAvailable = !b.comingSoon;
+
+      if (aAvailable && !bAvailable) return -1; // a first
+      if (!aAvailable && bAvailable) return 1;  // b first
+      return 0; // keep original order within groups
+    });
+
     return guidesData;
   } catch (error) {
     console.error('Error fetching guides:', error);
