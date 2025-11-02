@@ -21,6 +21,13 @@ export async function GET(request: Request) {
 
     const purchases = purchasesSnapshot.docs.map(doc => {
       const data = doc.data();
+
+      // Detect test mode purchases by checking if Stripe IDs contain 'test'
+      const isTestMode =
+        data.stripeSessionId?.includes('_test_') ||
+        data.stripePaymentIntentId?.includes('_test_') ||
+        false;
+
       return {
         id: doc.id,
         email: data.email,
@@ -32,6 +39,7 @@ export async function GET(request: Request) {
         amount: data.amount,
         currency: data.currency,
         isBundle: data.isBundle || false,
+        isTestMode,
         purchasedAt: data.purchasedAt?.toDate?.()?.toISOString() || data.purchasedAt,
         lastAccessedAt: data.lastAccessedAt?.toDate?.()?.toISOString() || data.lastAccessedAt,
         accessCount: data.accessCount || 0,
@@ -54,6 +62,7 @@ export async function GET(request: Request) {
           amount: purchase.amount,
           currency: purchase.currency,
           isBundle: purchase.isBundle,
+          isTestMode: purchase.isTestMode,
           stripePaymentIntentId: purchase.stripePaymentIntentId,
           refundedAt: purchase.refundedAt,
           guides: [],

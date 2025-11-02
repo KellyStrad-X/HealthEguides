@@ -20,6 +20,7 @@ interface Purchase {
   amount: number;
   currency: string;
   isBundle: boolean;
+  isTestMode: boolean;
   stripePaymentIntentId: string;
   refundedAt?: string;
   guides: Guide[];
@@ -33,6 +34,7 @@ export default function PurchasesPage() {
   const [filteredPurchases, setFilteredPurchases] = useState<Purchase[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [modeFilter, setModeFilter] = useState<string>('all');
   const [refundingSessionId, setRefundingSessionId] = useState<string | null>(null);
   const [showRefundModal, setShowRefundModal] = useState(false);
   const [selectedPurchase, setSelectedPurchase] = useState<Purchase | null>(null);
@@ -55,7 +57,7 @@ export default function PurchasesPage() {
     }
   }, [authenticated]);
 
-  // Filter purchases based on search and status
+  // Filter purchases based on search, status, and mode
   useEffect(() => {
     let filtered = [...purchases];
 
@@ -75,8 +77,15 @@ export default function PurchasesPage() {
       filtered = filtered.filter(p => p.status === statusFilter);
     }
 
+    // Mode filter (test/live)
+    if (modeFilter === 'live') {
+      filtered = filtered.filter(p => !p.isTestMode);
+    } else if (modeFilter === 'test') {
+      filtered = filtered.filter(p => p.isTestMode);
+    }
+
     setFilteredPurchases(filtered);
-  }, [purchases, searchQuery, statusFilter]);
+  }, [purchases, searchQuery, statusFilter, modeFilter]);
 
   const fetchPurchases = async () => {
     try {
@@ -208,7 +217,7 @@ export default function PurchasesPage() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Filters */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Search */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -239,6 +248,22 @@ export default function PurchasesPage() {
                 <option value="revoked">Revoked</option>
               </select>
             </div>
+
+            {/* Mode Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Mode
+              </label>
+              <select
+                value={modeFilter}
+                onChange={(e) => setModeFilter(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              >
+                <option value="all">All Purchases</option>
+                <option value="live">Live Only</option>
+                <option value="test">Test Only</option>
+              </select>
+            </div>
           </div>
 
           {/* Stats */}
@@ -247,6 +272,8 @@ export default function PurchasesPage() {
             <span>Showing: {filteredPurchases.length}</span>
             <span>Active: {purchases.filter(p => p.status === 'active').length}</span>
             <span>Refunded: {purchases.filter(p => p.status === 'refunded').length}</span>
+            <span>Live: {purchases.filter(p => !p.isTestMode).length}</span>
+            <span>Test: {purchases.filter(p => p.isTestMode).length}</span>
           </div>
         </div>
 
@@ -276,6 +303,11 @@ export default function PurchasesPage() {
                           BUNDLE
                         </span>
                       )}
+                      {purchase.isTestMode && (
+                        <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
+                          TEST MODE
+                        </span>
+                      )}
                     </div>
                     <div className="text-sm text-gray-600 space-y-1">
                       <p>Purchased: {formatDate(purchase.purchasedAt)}</p>
@@ -299,7 +331,7 @@ export default function PurchasesPage() {
                     >
                       View in Stripe
                     </a>
-                    {purchase.status === 'active' && (
+                    {purchase.status === 'active' && !purchase.isTestMode && (
                       <button
                         onClick={() => handleRefundClick(purchase)}
                         disabled={refundingSessionId === purchase.sessionId}
@@ -307,6 +339,11 @@ export default function PurchasesPage() {
                       >
                         {refundingSessionId === purchase.sessionId ? 'Processing...' : 'Refund'}
                       </button>
+                    )}
+                    {purchase.status === 'active' && purchase.isTestMode && (
+                      <div className="px-3 py-1.5 bg-gray-300 text-gray-500 rounded-md text-sm font-medium cursor-not-allowed">
+                        Cannot Refund Test
+                      </div>
                     )}
                   </div>
                 </div>
@@ -350,7 +387,7 @@ export default function PurchasesPage() {
               <p className="text-gray-700">
                 Are you sure you want to refund this purchase?
               </p>
-              <div className="bg-gray-50 p-4 rounded-md space-y-2 text-sm">
+              <div className="bg-gray-50 p-4 rounded-md space-y-2 text-sm text-gray-900">
                 <p>
                   <span className="font-medium">Customer:</span> {selectedPurchase.email}
                 </p>
