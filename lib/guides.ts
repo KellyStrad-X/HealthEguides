@@ -7,11 +7,12 @@ export interface Guide {
   features: string[];
   price: number;
   slug: string;
-  gumroadUrl: string;
   metaDescription: string;
   keywords: string[];
   category: string;
   comingSoon?: boolean;
+  hasHtmlGuide?: boolean;
+  htmlUrl?: string;
 }
 
 export const guides: Guide[] = [
@@ -29,7 +30,6 @@ export const guides: Guide[] = [
     ],
     price: 4.99,
     slug: "perimenopause",
-    gumroadUrl: "https://example.gumroad.com/l/perimenopause", // TODO: Replace with actual URL
     metaDescription: "Complete guide to navigating perimenopause with evidence-based strategies for symptom management, treatment options, and lifestyle changes.",
     keywords: ["perimenopause", "menopause", "hormone health", "women's health", "symptom management"],
     category: "Hormone Health",
@@ -49,7 +49,6 @@ export const guides: Guide[] = [
     ],
     price: 4.99,
     slug: "pcos",
-    gumroadUrl: "https://example.gumroad.com/l/pcos", // TODO: Replace with actual URL
     metaDescription: "Comprehensive PCOS management guide with strategies for insulin resistance, fertility, and symptom control.",
     keywords: ["PCOS", "polycystic ovary syndrome", "fertility", "insulin resistance", "women's health"],
     category: "Women's Health",
@@ -69,7 +68,6 @@ export const guides: Guide[] = [
     ],
     price: 4.99,
     slug: "fertility",
-    gumroadUrl: "https://example.gumroad.com/l/fertility", // TODO: Replace with actual URL
     metaDescription: "Natural fertility optimization guide with evidence-based strategies for preconception health and reproductive wellness.",
     keywords: ["fertility", "preconception", "conception", "reproductive health", "pregnancy planning"],
     category: "Fertility",
@@ -89,7 +87,6 @@ export const guides: Guide[] = [
     ],
     price: 4.99,
     slug: "stress-cortisol",
-    gumroadUrl: "https://example.gumroad.com/l/stress-cortisol",
     metaDescription: "Comprehensive guide to managing stress and balancing cortisol levels for optimal health.",
     keywords: ["stress management", "cortisol", "adrenal health", "wellness", "mental health"],
     category: "Wellness",
@@ -109,7 +106,6 @@ export const guides: Guide[] = [
     ],
     price: 4.99,
     slug: "sleep-optimization",
-    gumroadUrl: "https://example.gumroad.com/l/sleep-optimization",
     metaDescription: "Science-backed strategies for improving sleep quality and achieving restorative rest.",
     keywords: ["sleep", "insomnia", "sleep quality", "wellness", "rest"],
     category: "Wellness",
@@ -129,7 +125,6 @@ export const guides: Guide[] = [
     ],
     price: 4.99,
     slug: "gut-health",
-    gumroadUrl: "https://example.gumroad.com/l/gut-health",
     metaDescription: "Complete guide to healing your gut and optimizing digestive health naturally.",
     keywords: ["gut health", "microbiome", "digestive health", "IBS", "wellness"],
     category: "Digestive Health",
@@ -149,7 +144,6 @@ export const guides: Guide[] = [
     ],
     price: 4.99,
     slug: "energy-vitality",
-    gumroadUrl: "https://example.gumroad.com/l/energy-vitality",
     metaDescription: "Natural strategies to overcome fatigue and boost your energy levels sustainably.",
     keywords: ["energy", "fatigue", "vitality", "wellness", "adrenal fatigue"],
     category: "Wellness",
@@ -169,7 +163,6 @@ export const guides: Guide[] = [
     ],
     price: 4.99,
     slug: "retinol-guide",
-    gumroadUrl: "https://example.gumroad.com/l/retinol-guide",
     metaDescription: "Complete retinol guide for anti-aging with evidence-based protocols, product recommendations, and side effect management.",
     keywords: ["retinol", "anti-aging", "skincare", "skin health", "retinoids"],
     category: "Skincare",

@@ -158,10 +158,14 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
       if (response.ok) {
         alert('HTML guide uploaded successfully!');
+        // Refresh the guides list to show updated hasHtmlGuide status
+        await fetchGuides();
       } else {
-        alert('Failed to upload HTML guide');
+        const error = await response.json();
+        alert('Failed to upload HTML guide: ' + (error.error || 'Unknown error'));
       }
     } catch (err) {
+      console.error('Upload error:', err);
       alert('Error uploading HTML guide');
     } finally {
       setUploadingHtml(null);
