@@ -30,6 +30,7 @@ export default function AdminPage() {
 
       if (response.ok) {
         sessionStorage.setItem('admin_authenticated', 'true');
+        sessionStorage.setItem('admin_password', password);
         setAuthenticated(true);
       } else {
         setError('Invalid password');
@@ -41,6 +42,7 @@ export default function AdminPage() {
 
   const handleLogout = () => {
     sessionStorage.removeItem('admin_authenticated');
+    sessionStorage.removeItem('admin_password');
     setAuthenticated(false);
     setPassword('');
   };
@@ -178,12 +180,20 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       <div className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
-          <button
-            onClick={onLogout}
-            className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
-          >
-            Logout
-          </button>
+          <div className="flex items-center gap-3">
+            <a
+              href="/admin/purchases"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            >
+              Purchases
+            </a>
+            <button
+              onClick={onLogout}
+              className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              Logout
+            </button>
+          </div>
         </div>
       </div>
 
