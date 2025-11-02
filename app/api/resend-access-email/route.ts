@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import sgMail from '@sendgrid/mail';
 import { adminDb } from '@/lib/firebase-admin';
-import { guides } from '@/lib/guides';
+import { getAllGuides } from '@/lib/guide-service';
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
@@ -46,10 +46,13 @@ export async function POST(request: Request) {
       );
     }
 
+    // Get all guides (includes both hardcoded and Firebase guides)
+    const allGuides = await getAllGuides();
+
     // Get guide details for all purchases
     const purchases = purchasesSnapshot.docs.map(doc => {
       const data = doc.data();
-      const guide = guides.find(g => g.id === data.guideId);
+      const guide = allGuides.find(g => g.id === data.guideId);
 
       return {
         guideId: data.guideId,

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { guides } from '@/lib/guides';
+import { getAllGuides } from '@/lib/guide-service';
 import { getBundlePrice } from '@/lib/utils';
 
 export async function POST(request: Request) {
@@ -35,8 +35,9 @@ export async function POST(request: Request) {
       );
     }
 
-    // Get guide details
-    const selectedGuides = guides.filter(g => guideIds.includes(g.id));
+    // Get guide details (includes both hardcoded and Firebase guides)
+    const allGuides = await getAllGuides();
+    const selectedGuides = allGuides.filter(g => guideIds.includes(g.id));
 
     if (selectedGuides.length === 0) {
       return NextResponse.json(

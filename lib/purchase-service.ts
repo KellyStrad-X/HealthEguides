@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
 import { adminDb } from '@/lib/firebase-admin';
-import { guides } from '@/lib/guides';
+import { getAllGuides } from '@/lib/guide-service';
 import { generateAccessToken } from '@/lib/utils';
 
 export interface PurchaseAccess {
@@ -9,8 +9,9 @@ export interface PurchaseAccess {
   accessToken: string;
 }
 
-function getGuideName(guideId: string, fallbackTitle?: string): string {
-  const guide = guides.find(g => g.id === guideId);
+async function getGuideName(guideId: string, fallbackTitle?: string): Promise<string> {
+  const allGuides = await getAllGuides();
+  const guide = allGuides.find(g => g.id === guideId);
   if (guide?.title) {
     return guide.title;
   }
@@ -63,7 +64,7 @@ export async function ensurePurchasesForSession(
       continue;
     }
 
-    const guideName = getGuideName(guideId, session.metadata?.guideTitles);
+    const guideName = await getGuideName(guideId, session.metadata?.guideTitles);
     const accessToken = generateAccessToken();
 
     await adminDb.collection('purchases').add({
