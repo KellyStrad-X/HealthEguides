@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import MetaPixel from "@/components/MetaPixel";
 
 export const metadata: Metadata = {
   title: "Health E-Guides | Evidence-Based Women's Health Guides",
@@ -38,6 +39,7 @@ export default function RootLayout({
         <script src="https://gumroad.com/js/gumroad.js" async />
       </head>
       <body className="scrollbar-thin">
+        <MetaPixel />
         {children}
       </body>
     </html>

@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { guides } from '@/lib/guides';
+import { trackPurchase } from '@/components/MetaPixel';
 
 // Force dynamic rendering since this page uses search params
 export const dynamic = 'force-dynamic';
@@ -54,6 +55,13 @@ function PurchaseSuccessContent() {
           if (data.purchases && data.purchases.length > 0) {
             console.log('✅ Purchase found!');
             setPurchases(data.purchases);
+
+            // Track Purchase event (Meta Pixel)
+            const contentNames = data.purchases.map((p: any) => p.guideName);
+            const contentIds = data.purchases.map((p: any) => p.guideId);
+            const totalValue = data.purchases.reduce((sum: number, p: any) => sum + (p.amount || 0), 0) / 100; // Convert cents to dollars
+            trackPurchase(contentNames, contentIds, totalValue, data.purchases.length);
+
             setLoading(false);
             return; // Success!
           }

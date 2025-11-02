@@ -2,6 +2,7 @@
 
 import { Guide } from '@/lib/guides';
 import { useState, useRef, useEffect } from 'react';
+import { trackInitiateCheckout } from '@/components/MetaPixel';
 
 interface GuideEmailCaptureProps {
   guide: Guide;
@@ -45,7 +46,7 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
     setError('');
 
     try {
-      // Track begin_checkout event
+      // Track begin_checkout event (Google Analytics)
       if (typeof window !== 'undefined' && (window as any).gtag) {
         (window as any).gtag('event', 'begin_checkout', {
           value: safePrice,
@@ -59,6 +60,9 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
           ],
         });
       }
+
+      // Track InitiateCheckout event (Meta Pixel)
+      trackInitiateCheckout(guide.title, guide.id, safePrice);
 
       // Create Stripe checkout session
       const response = await fetch('/api/stripe/create-checkout', {

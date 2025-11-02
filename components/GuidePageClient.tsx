@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Guide } from '@/lib/guides';
 import SaleHeader from '@/components/SaleHeader';
 import GuideLandingHero from '@/components/GuideLandingHero';
@@ -8,6 +8,7 @@ import GuideProblemAgitation from '@/components/GuideProblemAgitation';
 import GuideBenefits from '@/components/GuideBenefits';
 import GuideEmailCapture from '@/components/GuideEmailCapture';
 import BundleSelectionModal from '@/components/BundleSelectionModal';
+import { trackViewContent } from '@/components/MetaPixel';
 
 interface GuidePageClientProps {
   guide: Guide;
@@ -15,6 +16,11 @@ interface GuidePageClientProps {
 
 export default function GuidePageClient({ guide }: GuidePageClientProps) {
   const [showBundleModal, setShowBundleModal] = useState(false);
+
+  // Track ViewContent event when guide page loads
+  useEffect(() => {
+    trackViewContent(guide.title, guide.id, guide.price);
+  }, [guide]);
 
   return (
     <>
