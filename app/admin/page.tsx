@@ -310,10 +310,10 @@ function GuideForm({
       features: [],
       price: 4.99,
       slug: '',
-      gumroadUrl: '',
       metaDescription: '',
       keywords: [],
-      category: 'Health'
+      category: 'Health',
+      comingSoon: true
     }
   );
   const [featureInput, setFeatureInput] = useState('');
