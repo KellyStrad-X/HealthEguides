@@ -17,7 +17,9 @@ export function HeaderProvider({ children }: { children: ReactNode }) {
 
   return (
     <HeaderContext.Provider value={{ isCompressed, setIsCompressed }}>
-      {children}
+      <div suppressHydrationWarning>
+        {children}
+      </div>
     </HeaderContext.Provider>
   );
 }

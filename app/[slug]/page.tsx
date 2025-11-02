@@ -19,6 +19,8 @@ interface PageProps {
 // Allow dynamic params to support Firebase-created guides
 // Static routes like /catalog, /about etc. will still match first due to Next.js routing priority
 export const dynamicParams = true;
+export const dynamic = 'force-dynamic'; // Prevent static generation to avoid hydration issues
+export const revalidate = 0; // Always fetch fresh data
 
 export async function generateStaticParams() {
   return getAllGuideSlugs().map((slug) => ({
@@ -27,38 +29,50 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const guide = await getGuideBySlugFromAll(params.slug);
+  try {
+    const guide = await getGuideBySlugFromAll(params.slug);
 
-  if (!guide) {
+    if (!guide) {
+      return {
+        title: 'Guide Not Found',
+      };
+    }
+
     return {
-      title: 'Guide Not Found',
+      title: `${guide.title} | Health E-Guides`,
+      description: guide.metaDescription,
+      keywords: guide.keywords?.join(', ') || '',
+    };
+  } catch (error) {
+    console.error('Error generating metadata:', error);
+    return {
+      title: 'Health E-Guides',
     };
   }
-
-  return {
-    title: `${guide.title} | Health E-Guides`,
-    description: guide.metaDescription,
-    keywords: guide.keywords?.join(', ') || '',
-  };
 }
 
 export default async function GuidePage({ params }: PageProps) {
-  const guide = await getGuideBySlugFromAll(params.slug);
+  try {
+    const guide = await getGuideBySlugFromAll(params.slug);
 
-  if (!guide) {
+    if (!guide) {
+      notFound();
+    }
+
+    return (
+      <HeaderProvider>
+        <main className="min-h-screen">
+          <SaleHeader />
+          <GuideLandingHero guide={guide} />
+          <GuideProblemAgitation guide={guide} />
+          <GuideBenefits guide={guide} />
+          <GuideEmailCapture guide={guide} />
+          <Footer />
+        </main>
+      </HeaderProvider>
+    );
+  } catch (error) {
+    console.error('Error loading guide page:', error);
     notFound();
   }
-
-  return (
-    <HeaderProvider>
-      <main className="min-h-screen">
-        <SaleHeader />
-        <GuideLandingHero guide={guide} />
-        <GuideProblemAgitation guide={guide} />
-        <GuideBenefits guide={guide} />
-        <GuideEmailCapture guide={guide} />
-        <Footer />
-      </main>
-    </HeaderProvider>
-  );
 }
