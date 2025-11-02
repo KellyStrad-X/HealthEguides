@@ -30,23 +30,20 @@ function GuideViewerContent({ params }: GuideViewerProps) {
   useEffect(() => {
     async function fetchGuide() {
       setGuideLoaded(false);
-      // Try hardcoded guides first
-      const hardcodedGuide = guides.find(g => g.slug === params.slug);
-      if (hardcodedGuide) {
-        setGuide(hardcodedGuide);
-        setGuideLoaded(true);
-        return;
-      }
 
-      // If not found, fetch from API to check Firebase
+      // Fetch from API to get both hardcoded and Firebase guides
       try {
-        const response = await fetch('/api/guides');
+        const response = await fetch('/api/guides', {
+          cache: 'no-store' // Always get fresh data
+        });
         const allGuides = await response.json();
         const foundGuide = allGuides.find((g: any) => g.slug === params.slug);
         setGuide(foundGuide || null);
       } catch (err) {
         console.error('Error fetching guide:', err);
-        setGuide(null);
+        // Fallback to hardcoded guides if API fails
+        const hardcodedGuide = guides.find(g => g.slug === params.slug);
+        setGuide(hardcodedGuide || null);
       } finally {
         setGuideLoaded(true);
       }

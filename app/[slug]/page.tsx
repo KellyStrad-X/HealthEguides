@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
-import { getGuideBySlug, getAllGuideSlugs } from '@/lib/guides';
+import { getAllGuideSlugs } from '@/lib/guides';
+import { getGuideBySlugFromAll } from '@/lib/guide-service';
 import type { Metadata } from 'next';
 import { HeaderProvider } from '@/lib/headerContext';
 import SaleHeader from '@/components/SaleHeader';
@@ -25,28 +26,8 @@ export async function generateStaticParams() {
   }));
 }
 
-async function fetchGuideBySlug(slug: string) {
-  // Try to get from hardcoded guides first (faster)
-  const hardcodedGuide = getGuideBySlug(slug);
-  if (hardcodedGuide) {
-    return hardcodedGuide;
-  }
-
-  // If not found in hardcoded, fetch from API to check Firebase
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/guides`, {
-      cache: 'no-store' // Don't cache to ensure we get latest Firebase data
-    });
-    const guides = await response.json();
-    return guides.find((g: any) => g.slug === slug);
-  } catch (error) {
-    console.error('Error fetching guides:', error);
-    return null;
-  }
-}
-
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const guide = await fetchGuideBySlug(params.slug);
+  const guide = await getGuideBySlugFromAll(params.slug);
 
   if (!guide) {
     return {
@@ -62,7 +43,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function GuidePage({ params }: PageProps) {
-  const guide = await fetchGuideBySlug(params.slug);
+  const guide = await getGuideBySlugFromAll(params.slug);
 
   if (!guide) {
     notFound();
