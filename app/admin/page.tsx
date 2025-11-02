@@ -95,10 +95,34 @@ export default function AdminPage() {
 }
 
 function AdminDashboard({ onLogout }: { onLogout: () => void }) {
-  const [guidesList, setGuidesList] = useState<Guide[]>(guides);
+  const [guidesList, setGuidesList] = useState<Guide[]>([]);
   const [editingGuide, setEditingGuide] = useState<Guide | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [uploadingPdf, setUploadingPdf] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch guides from API on mount
+  useEffect(() => {
+    fetchGuides();
+  }, []);
+
+  const fetchGuides = async () => {
+    try {
+      const response = await fetch('/api/admin/guides');
+      if (response.ok) {
+        const data = await response.json();
+        setGuidesList(data);
+      } else {
+        // Fallback to hardcoded guides if API fails
+        setGuidesList(guides);
+      }
+    } catch (error) {
+      console.error('Failed to fetch guides:', error);
+      setGuidesList(guides);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleDeleteGuide = async (guideId: string) => {
     if (!confirm('Are you sure you want to delete this guide?')) return;
@@ -193,7 +217,13 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         )}
 
         {/* Guides List */}
-        <div className="grid grid-cols-1 gap-4">
+        {loading ? (
+          <div className="text-center py-12 text-gray-500">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-600 mb-4"></div>
+            <p>Loading guides...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4">
           {guidesList.map((guide) => (
             <div key={guide.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-start justify-between">
@@ -244,9 +274,10 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        )}
 
-        {guidesList.length === 0 && (
+        {!loading && guidesList.length === 0 && (
           <div className="text-center py-12 text-gray-500">
             No guides yet. Create your first guide to get started!
           </div>
