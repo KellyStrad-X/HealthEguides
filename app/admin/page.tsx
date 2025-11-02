@@ -98,7 +98,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [guidesList, setGuidesList] = useState<Guide[]>([]);
   const [editingGuide, setEditingGuide] = useState<Guide | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [uploadingPdf, setUploadingPdf] = useState<string | null>(null);
+  const [uploadingHtml, setUploadingHtml] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Fetch guides from API on mount
@@ -144,27 +144,27 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     }
   };
 
-  const handleUploadPdf = async (guideId: string, file: File) => {
-    setUploadingPdf(guideId);
+  const handleUploadHtml = async (guideId: string, file: File) => {
+    setUploadingHtml(guideId);
     const formData = new FormData();
-    formData.append('pdf', file);
+    formData.append('html', file);
     formData.append('guideId', guideId);
 
     try {
-      const response = await fetch('/api/admin/upload-pdf', {
+      const response = await fetch('/api/admin/upload-html', {
         method: 'POST',
         body: formData,
       });
 
       if (response.ok) {
-        alert('PDF uploaded successfully!');
+        alert('HTML guide uploaded successfully!');
       } else {
-        alert('Failed to upload PDF');
+        alert('Failed to upload HTML guide');
       }
     } catch (err) {
-      alert('Error uploading PDF');
+      alert('Error uploading HTML guide');
     } finally {
-      setUploadingPdf(null);
+      setUploadingHtml(null);
     }
   };
 
@@ -246,16 +246,16 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                   <label className="cursor-pointer">
                     <input
                       type="file"
-                      accept=".pdf"
+                      accept=".html,.htm"
                       className="hidden"
                       onChange={(e) => {
                         const file = e.target.files?.[0];
-                        if (file) handleUploadPdf(guide.id, file);
+                        if (file) handleUploadHtml(guide.id, file);
                       }}
-                      disabled={uploadingPdf === guide.id}
+                      disabled={uploadingHtml === guide.id}
                     />
                     <span className="px-3 py-1.5 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm font-medium">
-                      {uploadingPdf === guide.id ? 'Uploading...' : 'Upload PDF'}
+                      {uploadingHtml === guide.id ? 'Uploading...' : 'Upload HTML'}
                     </span>
                   </label>
                   <button

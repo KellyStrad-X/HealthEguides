@@ -10,9 +10,9 @@ The admin console allows you to manage your ebook guides through a simple web in
 - ✅ **Create Guides** - Add new guides with metadata (title, description, price, etc.)
 - ✅ **Edit Guides** - Update existing guide information
 - ✅ **Delete Guides** - Remove guides from the catalog
-- ✅ **Upload PDFs** - Upload PDF ebooks for each guide
+- ✅ **Upload HTML Guides** - Upload HTML ebook files for token-based access
 - ✅ **Firestore Storage** - Guide metadata stored in Firebase Firestore
-- ✅ **PDF Storage** - PDFs stored in Firebase Storage (with local fallback)
+- ✅ **Local HTML Storage** - HTML guides stored in `/public/guides/` for serving
 
 ## Setup
 
@@ -68,17 +68,24 @@ Enter your admin password to access the dashboard.
    - **Meta Description**: SEO description
 3. Click **"Create Guide"**
 
-### Uploading a PDF
+### Uploading an HTML Guide
 
 1. Find the guide in the list
-2. Click **"Upload PDF"**
-3. Select your PDF file
-4. The PDF will be uploaded and associated with the guide
+2. Click **"Upload HTML"**
+3. Select your HTML file (must be a complete, self-contained HTML file)
+4. The HTML will be uploaded and saved to `/public/guides/{guideId}.html`
 
-**PDF Storage:**
-- If Firebase Storage is configured, PDFs are stored there
-- Otherwise, PDFs are stored locally in `public/guides/`
-- PDF URL is automatically saved to the guide record
+**How It Works:**
+- HTML files are saved to `public/guides/` directory
+- When customers purchase, they get a token-based access link
+- Link format: `/guides/{slug}?access={token}`
+- Your app validates the token and displays the HTML guide
+- Existing system at `app/guides/[slug]/page.tsx` handles this automatically
+
+**HTML File Requirements:**
+- Must be a complete HTML file with all styles inline or embedded
+- Images/assets should use absolute URLs or be embedded as base64
+- The file should work standalone when opened in a browser
 
 ### Editing a Guide
 
@@ -91,22 +98,22 @@ Enter your admin password to access the dashboard.
 1. Click **"Delete"** on any guide
 2. Confirm the deletion
 
-**Warning:** This permanently deletes the guide metadata. The PDF file will remain in storage.
+**Warning:** This permanently deletes the guide metadata from Firestore. The HTML file will remain in `/public/guides/` and must be manually deleted if needed.
 
 ## Data Storage
 
 ### With Firebase (Recommended for Production)
 
 - **Guide Metadata**: Stored in Firestore collection `guides`
-- **PDF Files**: Stored in Firebase Storage at `guides/{guideId}.pdf`
-- **Access Anywhere**: Data accessible from any environment
-- **Automatic Backups**: Firebase handles backups
+- **HTML Files**: Stored locally in `/public/guides/{guideId}.html`
+- **Access Tokens**: Stored in Firestore collection `purchases`
+- **Automatic Backups**: Firebase handles metadata backups
 
 ### Without Firebase (Local Development)
 
 - **Guide Metadata**: Falls back to hardcoded guides in `lib/guides.ts`
-- **PDF Files**: Stored in `public/guides/` directory
-- **Warning**: Changes won't persist if Firebase isn't configured
+- **HTML Files**: Stored in `public/guides/` directory
+- **Warning**: Metadata changes won't persist without Firebase, but HTML files will remain
 
 ## Security
 
@@ -156,16 +163,18 @@ service cloud.firestore {
 
 **Solution:** Either configure Firebase or guides will use the hardcoded list in `lib/guides.ts`
 
-### PDF Upload Fails
+### HTML Upload Fails
 
 **Possible Causes:**
-1. Firebase Storage not configured
-2. File too large (check Firebase Storage limits)
+1. File permissions issue on server
+2. File too large (though HTML should be small)
+3. Invalid HTML file
 
 **Solution:**
-- PDF will fallback to local storage if Firebase fails
-- Check `public/guides/` directory for uploaded PDFs
-- Configure Firebase Storage for production use
+- Check `public/guides/` directory exists and is writable
+- Verify HTML file is valid and complete
+- Check server logs for specific error messages
+- HTML files are always stored locally in `/public/guides/`
 
 ### Module Not Found Errors on Client
 
@@ -182,9 +191,25 @@ The admin console uses these API endpoints:
 - `POST /api/admin/guides` - Create new guide
 - `PUT /api/admin/guides` - Update existing guide
 - `DELETE /api/admin/guides` - Delete guide
-- `POST /api/admin/upload-pdf` - Upload PDF file
+- `POST /api/admin/upload-html` - Upload HTML guide file
 
 All endpoints require prior authentication (except auth).
+
+## How the Token Access System Works
+
+Once you upload an HTML guide, here's the complete customer flow:
+
+1. **Purchase**: Customer completes Stripe checkout
+2. **Webhook**: Stripe webhook creates purchase record in Firebase with unique access token
+3. **Email**: Customer receives email with link: `/guides/{slug}?access={token}`
+4. **Validation**: When clicked, `app/guides/[slug]/page.tsx` validates the token
+5. **Display**: If valid, HTML guide from `/public/guides/{guideId}.html` is displayed
+6. **Access**: Customer can bookmark link for lifetime access
+
+**Key Files:**
+- `app/guides/[slug]/page.tsx:120` - Loads HTML from `/guides/{guideId}.html`
+- `app/api/validate-access/route.ts` - Validates access tokens
+- `app/api/stripe/webhook/route.ts` - Creates purchase records with tokens
 
 ## Migrating Existing Guides to Firestore
 

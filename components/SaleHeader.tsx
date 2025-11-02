@@ -106,7 +106,7 @@ export default function SaleHeader() {
 
           <button
             onClick={handleClaimOffer}
-            className="px-6 py-2 bg-white text-pink-600 font-bold rounded-full hover:bg-pink-50 transition-all duration-300 hover:scale-105 shadow-lg text-sm"
+            className={`px-6 py-2 bg-white text-pink-600 font-bold rounded-full hover:bg-pink-50 transition-all duration-300 hover:scale-105 shadow-lg text-sm overflow-hidden ${isCompressed ? 'max-h-0 opacity-0 md:max-h-20 md:opacity-100' : 'max-h-20 opacity-100'}`}
           >
             Claim Offer →
           </button>
