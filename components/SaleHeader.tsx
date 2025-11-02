@@ -13,10 +13,14 @@ export default function SaleHeader({ onClaimClick }: SaleHeaderProps = {}) {
     minutes: 0,
     seconds: 0,
   });
+  const [mounted, setMounted] = useState(false);
   const { isCompressed, setIsCompressed } = useHeader();
   const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
+    // Mark as mounted to prevent hydration mismatch
+    setMounted(true);
+
     // Calculate time until midnight
     const calculateTimeLeft = () => {
       const now = new Date();
@@ -85,25 +89,27 @@ export default function SaleHeader({ onClaimClick }: SaleHeaderProps = {}) {
             <span>3 E-Books for $10!</span>
           </div>
 
-          <div className={`flex items-center gap-2 overflow-hidden transition-all duration-300 ${isCompressed ? 'max-h-0 opacity-0 scale-95' : 'max-h-20 opacity-100 scale-100'}`}>
-            <span className="text-sm font-semibold whitespace-nowrap">ENDS IN:</span>
-            <div className="flex gap-2">
-              <div className="bg-white/20 backdrop-blur-sm px-2 py-1 rounded min-w-[40px] text-center">
-                <div className="font-bold">{formatTime(timeLeft.hours)}</div>
-                <div className="text-[10px] opacity-80">HRS</div>
-              </div>
-              <div className="flex items-center font-bold">:</div>
-              <div className="bg-white/20 backdrop-blur-sm px-2 py-1 rounded min-w-[40px] text-center">
-                <div className="font-bold">{formatTime(timeLeft.minutes)}</div>
-                <div className="text-[10px] opacity-80">MIN</div>
-              </div>
-              <div className="flex items-center font-bold">:</div>
-              <div className="bg-white/20 backdrop-blur-sm px-2 py-1 rounded min-w-[40px] text-center">
-                <div className="font-bold">{formatTime(timeLeft.seconds)}</div>
-                <div className="text-[10px] opacity-80">SEC</div>
+          {mounted && (
+            <div className={`flex items-center gap-2 overflow-hidden transition-all duration-300 ${isCompressed ? 'max-h-0 opacity-0 scale-95' : 'max-h-20 opacity-100 scale-100'}`}>
+              <span className="text-sm font-semibold whitespace-nowrap">ENDS IN:</span>
+              <div className="flex gap-2">
+                <div className="bg-white/20 backdrop-blur-sm px-2 py-1 rounded min-w-[40px] text-center">
+                  <div className="font-bold">{formatTime(timeLeft.hours)}</div>
+                  <div className="text-[10px] opacity-80">HRS</div>
+                </div>
+                <div className="flex items-center font-bold">:</div>
+                <div className="bg-white/20 backdrop-blur-sm px-2 py-1 rounded min-w-[40px] text-center">
+                  <div className="font-bold">{formatTime(timeLeft.minutes)}</div>
+                  <div className="text-[10px] opacity-80">MIN</div>
+                </div>
+                <div className="flex items-center font-bold">:</div>
+                <div className="bg-white/20 backdrop-blur-sm px-2 py-1 rounded min-w-[40px] text-center">
+                  <div className="font-bold">{formatTime(timeLeft.seconds)}</div>
+                  <div className="text-[10px] opacity-80">SEC</div>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           <button
             onClick={handleClaimOffer}
