@@ -22,15 +22,28 @@ export async function POST(request: Request) {
     // Initialize Stripe
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-    // Fetch the payment intent from Stripe with charges expanded
-    const paymentIntent: any = await stripe.paymentIntents.retrieve(paymentIntentId, {
-      expand: ['charges.data.refunds']
-    });
+    // Fetch the payment intent to get the charge ID
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+
+    // Get the latest charge ID
+    const chargeId = typeof paymentIntent.latest_charge === 'string'
+      ? paymentIntent.latest_charge
+      : paymentIntent.latest_charge?.id;
+
+    if (!chargeId) {
+      return NextResponse.json(
+        { error: 'No charge found for this payment intent' },
+        { status: 404 }
+      );
+    }
+
+    // Fetch the charge directly (this is the most reliable way to check refunds)
+    const charge = await stripe.charges.retrieve(chargeId);
 
     // Check if there are any refunds
-    const hasRefunds = paymentIntent?.charges?.data?.[0]?.refunds?.data?.length > 0;
-    const isFullyRefunded = paymentIntent?.charges?.data?.[0]?.refunded || false;
-    const refundAmount = paymentIntent?.charges?.data?.[0]?.amount_refunded || 0;
+    const hasRefunds = (charge.amount_refunded || 0) > 0;
+    const isFullyRefunded = charge.refunded || false;
+    const refundAmount = charge.amount_refunded || 0;
 
     if (hasRefunds || isFullyRefunded) {
       // Update Firestore to match Stripe status
@@ -61,7 +74,8 @@ export async function POST(request: Request) {
     return NextResponse.json({
       wasRefunded: false,
       updated: false,
-      status: paymentIntent.status,
+      paymentIntentStatus: paymentIntent.status,
+      chargeStatus: charge.status,
     });
   } catch (error: any) {
     console.error('Check refund status error:', error);

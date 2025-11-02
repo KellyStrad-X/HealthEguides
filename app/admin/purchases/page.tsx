@@ -172,13 +172,13 @@ export default function PurchasesPage() {
       if (response.ok) {
         const data = await response.json();
         if (data.wasRefunded && data.updated) {
-          alert(`Status synced! This purchase was refunded in Stripe and has been updated in the database.`);
+          alert(`Status synced! This purchase was refunded in Stripe (refund amount: $${(data.refundAmount / 100).toFixed(2)}) and has been updated in the database.`);
           // Refresh purchases to show updated status
           await fetchPurchases();
         } else if (data.wasRefunded && !data.updated) {
-          alert('This purchase is refunded but no records were found to update.');
+          alert('This purchase is refunded in Stripe but no records were found to update in the database.');
         } else {
-          alert('This purchase is active in Stripe (not refunded).');
+          alert(`This purchase is active in Stripe (not refunded).\n\nPayment Intent: ${data.paymentIntentStatus}\nCharge: ${data.chargeStatus}`);
         }
       } else {
         const error = await response.json();
