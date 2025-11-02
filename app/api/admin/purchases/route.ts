@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
 
+/**
+ * Admin API route to fetch all purchases from Firestore
+ * Returns purchases grouped by Stripe session for easier management
+ */
 export async function GET(request: Request) {
   // Verify admin authentication
   const authHeader = request.headers.get('authorization');
