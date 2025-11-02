@@ -19,11 +19,14 @@ export default function BundleOffer() {
       .catch(err => console.error('Failed to fetch guides:', err));
   }, []);
 
-  const toggleGuide = (guideId: string) => {
-    if (selectedGuides.includes(guideId)) {
-      setSelectedGuides(selectedGuides.filter(id => id !== guideId));
+  const toggleGuide = (guide: Guide) => {
+    // Don't allow selection of coming soon guides
+    if (guide.comingSoon) return;
+
+    if (selectedGuides.includes(guide.id)) {
+      setSelectedGuides(selectedGuides.filter(id => id !== guide.id));
     } else if (selectedGuides.length < 3) {
-      setSelectedGuides([...selectedGuides, guideId]);
+      setSelectedGuides([...selectedGuides, guide.id]);
     }
   };
 
@@ -131,7 +134,8 @@ export default function BundleOffer() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {guides.map((guide, index) => {
                 const isSelected = selectedGuides.includes(guide.id);
-                const isDisabled = !isSelected && selectedGuides.length >= 3;
+                const isComingSoon = guide.comingSoon === true;
+                const isDisabled = isComingSoon || (!isSelected && selectedGuides.length >= 3);
                 // Don't hide selected guides, even if they're past index 3
                 const isHidden = !showMore && index >= 3 && !isSelected;
 
@@ -141,10 +145,10 @@ export default function BundleOffer() {
                 return (
                   <button
                     key={guide.id}
-                    onClick={() => !isDisabled && toggleGuide(guide.id)}
+                    onClick={() => !isDisabled && toggleGuide(guide)}
                     disabled={isDisabled}
                     className={`
-                      p-4 rounded-xl border-2 transition-all duration-300 ease-in-out text-left
+                      p-4 rounded-xl border-2 transition-all duration-300 ease-in-out text-left relative
                       ${isSelected
                         ? 'border-yellow-300 bg-yellow-300/20 scale-105'
                         : isDisabled
@@ -153,6 +157,13 @@ export default function BundleOffer() {
                       }
                     `}
                   >
+                    {/* Coming Soon Badge */}
+                    {isComingSoon && (
+                      <div className="absolute top-2 right-2 bg-yellow-500 text-black px-2 py-0.5 rounded-full text-[10px] font-bold">
+                        Coming Soon
+                      </div>
+                    )}
+
                     <div className="flex items-start gap-3">
                       <div className="text-3xl flex-shrink-0">{guide.emoji}</div>
                       <div className="flex-1 min-w-0">
@@ -164,7 +175,9 @@ export default function BundleOffer() {
                         </p>
                       </div>
                       <div className="flex-shrink-0">
-                        {isSelected ? (
+                        {isComingSoon ? (
+                          <span className="text-white/30 text-2xl">⏳</span>
+                        ) : isSelected ? (
                           <span className="text-yellow-300 text-2xl">✓</span>
                         ) : (
                           <span className="text-white/40 text-2xl">○</span>
