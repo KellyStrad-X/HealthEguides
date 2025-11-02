@@ -33,34 +33,47 @@ function initializeFirebase() {
       return admin.app();
     }
 
-    // Try service account JSON first
-    if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    // Check for required individual fields (matching lib/firebase-admin.ts)
+    const hasIndividualFields = process.env.FIREBASE_PROJECT_ID &&
+                                process.env.FIREBASE_CLIENT_EMAIL &&
+                                process.env.FIREBASE_PRIVATE_KEY;
+
+    if (!hasIndividualFields && !process.env.FIREBASE_SERVICE_ACCOUNT) {
+      console.error('❌ Missing Firebase credentials in .env.local\n');
+      console.error('Required environment variables:');
+      console.error('  FIREBASE_PROJECT_ID=' + (process.env.FIREBASE_PROJECT_ID ? '✅' : '❌ MISSING'));
+      console.error('  FIREBASE_CLIENT_EMAIL=' + (process.env.FIREBASE_CLIENT_EMAIL ? '✅' : '❌ MISSING'));
+      console.error('  FIREBASE_PRIVATE_KEY=' + (process.env.FIREBASE_PRIVATE_KEY ? '✅' : '❌ MISSING'));
+      console.error('\nCopy these from your Firebase Console → Project Settings → Service Accounts');
+      process.exit(1);
+    }
+
+    // Use individual fields (matches your app's firebase-admin.ts)
+    if (hasIndividualFields) {
+      admin.initializeApp({
+        credential: admin.credential.cert({
+          projectId: process.env.FIREBASE_PROJECT_ID,
+          clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+          privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+        }),
+        projectId: process.env.FIREBASE_PROJECT_ID
+      });
+      console.log('✅ Firebase initialized with individual fields');
+      console.log('   Project: ' + process.env.FIREBASE_PROJECT_ID);
+    }
+    // Fallback to service account JSON
+    else if (process.env.FIREBASE_SERVICE_ACCOUNT) {
       const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
       admin.initializeApp({
         credential: admin.credential.cert(serviceAccount)
       });
       console.log('✅ Firebase initialized with service account JSON');
     }
-    // Fall back to individual fields
-    else if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
-      admin.initializeApp({
-        credential: admin.credential.cert({
-          projectId: process.env.FIREBASE_PROJECT_ID,
-          clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-          privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
-        })
-      });
-      console.log('✅ Firebase initialized with individual fields');
-    } else {
-      throw new Error('Firebase credentials not found in environment variables');
-    }
 
     return admin.app();
   } catch (error) {
     console.error('❌ Failed to initialize Firebase:', error.message);
-    console.error('\nMake sure you have one of the following in .env.local:');
-    console.error('  1. FIREBASE_SERVICE_ACCOUNT (full JSON)');
-    console.error('  2. FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY');
+    console.error('\nCheck that your .env.local file exists and has the correct credentials');
     process.exit(1);
   }
 }
