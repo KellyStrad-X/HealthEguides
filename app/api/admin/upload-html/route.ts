@@ -43,12 +43,13 @@ export async function POST(request: NextRequest) {
     const filePath = join(guidesDir, `${guideId}.html`);
     await writeFile(filePath, htmlContent, 'utf-8');
 
-    // Update guide record with HTML URL (if Firestore is configured)
+    // Update guide record with HTML URL and mark as available (if Firestore is configured)
     const htmlUrl = `/guides/${guideId}.html`;
     try {
       await adminDb.collection('guides').doc(guideId).update({
         htmlUrl,
         hasHtmlGuide: true,
+        comingSoon: false, // Mark guide as available now that HTML is uploaded
         updatedAt: new Date().toISOString(),
       });
     } catch (err) {

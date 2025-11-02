@@ -8,6 +8,9 @@ interface GuideCardProps {
 
 export default function GuideCard({ guide }: GuideCardProps) {
   const handleClick = () => {
+    // Don't navigate if coming soon
+    if (guide.comingSoon) return;
+
     // Track click event
     if (typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('event', 'click_guide_card', {
@@ -22,15 +25,26 @@ export default function GuideCard({ guide }: GuideCardProps) {
 
   return (
     <div
-      className="glass-card overflow-hidden hover-lift hover:scale-[1.02] cursor-pointer group"
+      className={`glass-card overflow-hidden relative ${
+        guide.comingSoon
+          ? 'opacity-60 cursor-default'
+          : 'hover-lift hover:scale-[1.02] cursor-pointer'
+      } group`}
       onClick={handleClick}
     >
+      {/* Coming Soon Badge */}
+      {guide.comingSoon && (
+        <div className="absolute top-4 right-4 z-10 bg-yellow-500 text-black px-3 py-1 rounded-full text-xs font-bold">
+          Coming Soon
+        </div>
+      )}
+
       {/* Gradient header with emoji */}
       <div
         className="h-32 flex items-center justify-center relative overflow-hidden"
         style={{ background: guide.gradient }}
       >
-        <div className="text-6xl group-hover:scale-110 transition-transform duration-300">
+        <div className={`text-6xl transition-transform duration-300 ${!guide.comingSoon ? 'group-hover:scale-110' : ''}`}>
           {guide.emoji}
         </div>
       </div>
@@ -63,8 +77,15 @@ export default function GuideCard({ guide }: GuideCardProps) {
             </span>
           </div>
 
-          <button className="w-full btn-primary text-center">
-            Get Your Guide →
+          <button
+            className={`w-full text-center ${
+              guide.comingSoon
+                ? 'bg-gray-600 text-white/50 cursor-default'
+                : 'btn-primary'
+            }`}
+            disabled={guide.comingSoon}
+          >
+            {guide.comingSoon ? 'Coming Soon' : 'Get Your Guide →'}
           </button>
         </div>
       </div>

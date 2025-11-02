@@ -1,16 +1,33 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { HeaderProvider } from '@/lib/headerContext';
-import { guides, getAllCategories } from '@/lib/guides';
+import { Guide } from '@/lib/guides';
 import GuideCard from '@/components/GuideCard';
 import SaleHeader from '@/components/SaleHeader';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 export default function CatalogPage() {
+  const [guides, setGuides] = useState<Guide[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const categories = getAllCategories();
+
+  useEffect(() => {
+    fetch('/api/guides')
+      .then(res => res.json())
+      .then(data => {
+        setGuides(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to fetch guides:', err);
+        setLoading(false);
+      });
+  }, []);
+
+  // Get unique categories from guides
+  const categories = Array.from(new Set(guides.map(guide => guide.category))).sort();
 
   const filteredGuides = selectedCategory === 'All'
     ? guides
@@ -68,19 +85,28 @@ export default function CatalogPage() {
         </div>
 
         {/* Guides Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredGuides.map((guide) => (
-            <GuideCard key={guide.id} guide={guide} />
-          ))}
-        </div>
-
-        {/* Empty State */}
-        {filteredGuides.length === 0 && (
+        {loading ? (
           <div className="text-center py-20">
-            <p className="text-2xl text-white/50">
-              No guides found in this category.
-            </p>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white/20 mb-4"></div>
+            <p className="text-white/60">Loading guides...</p>
           </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredGuides.map((guide) => (
+                <GuideCard key={guide.id} guide={guide} />
+              ))}
+            </div>
+
+            {/* Empty State */}
+            {filteredGuides.length === 0 && (
+              <div className="text-center py-20">
+                <p className="text-2xl text-white/50">
+                  No guides found in this category.
+                </p>
+              </div>
+            )}
+          </>
         )}
 
         {/* More Coming Soon */}

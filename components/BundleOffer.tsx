@@ -1,63 +1,23 @@
 'use client';
 
-import { useState } from 'react';
-import { guides } from '@/lib/guides';
-
-// Placeholder guides (will eventually be replaced with most popular)
-const placeholderGuides = [
-  {
-    id: 'placeholder-1',
-    title: 'Thyroid Health Essentials',
-    description: 'Master your thyroid health with comprehensive strategies for optimal hormone balance.',
-    emoji: '🦋',
-    category: 'Hormone Health'
-  },
-  {
-    id: 'placeholder-2',
-    title: 'Stress & Cortisol Management',
-    description: 'Learn to balance cortisol and reduce stress for better health and energy.',
-    emoji: '🧘‍♀️',
-    category: 'Wellness'
-  },
-  {
-    id: 'placeholder-3',
-    title: 'Sleep Optimization Guide',
-    description: 'Evidence-based strategies for deep, restorative sleep every night.',
-    emoji: '😴',
-    category: 'Wellness'
-  },
-  {
-    id: 'placeholder-4',
-    title: 'Gut Health Revolution',
-    description: 'Heal your gut and transform your overall health with proven protocols.',
-    emoji: '🌿',
-    category: 'Digestive Health'
-  },
-  {
-    id: 'placeholder-5',
-    title: 'Energy & Vitality Boost',
-    description: 'Combat fatigue and reclaim your energy with natural solutions.',
-    emoji: '⚡',
-    category: 'Wellness'
-  },
-  {
-    id: 'placeholder-6',
-    title: 'Weight Management Guide',
-    description: 'Sustainable, evidence-based approach to reaching your ideal weight.',
-    emoji: '🎯',
-    category: 'Wellness'
-  },
-];
-
-const allGuides = [...guides, ...placeholderGuides];
+import { useState, useEffect } from 'react';
+import { Guide } from '@/lib/guides';
 
 export default function BundleOffer() {
+  const [guides, setGuides] = useState<Guide[]>([]);
   const [selectedGuides, setSelectedGuides] = useState<string[]>([]);
   const [showMore, setShowMore] = useState(false);
   const [email, setEmail] = useState('');
   const [showEmailCapture, setShowEmailCapture] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetch('/api/guides')
+      .then(res => res.json())
+      .then(data => setGuides(data))
+      .catch(err => console.error('Failed to fetch guides:', err));
+  }, []);
 
   const toggleGuide = (guideId: string) => {
     if (selectedGuides.includes(guideId)) {
@@ -169,7 +129,7 @@ export default function BundleOffer() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {allGuides.map((guide, index) => {
+              {guides.map((guide, index) => {
                 const isSelected = selectedGuides.includes(guide.id);
                 const isDisabled = !isSelected && selectedGuides.length >= 3;
                 // Don't hide selected guides, even if they're past index 3

@@ -11,6 +11,7 @@ export interface Guide {
   metaDescription: string;
   keywords: string[];
   category: string;
+  comingSoon?: boolean;
 }
 
 export const guides: Guide[] = [
@@ -31,7 +32,8 @@ export const guides: Guide[] = [
     gumroadUrl: "https://example.gumroad.com/l/perimenopause", // TODO: Replace with actual URL
     metaDescription: "Complete guide to navigating perimenopause with evidence-based strategies for symptom management, treatment options, and lifestyle changes.",
     keywords: ["perimenopause", "menopause", "hormone health", "women's health", "symptom management"],
-    category: "Hormone Health"
+    category: "Hormone Health",
+    comingSoon: true
   },
   {
     id: "pcos-guide",
@@ -50,7 +52,8 @@ export const guides: Guide[] = [
     gumroadUrl: "https://example.gumroad.com/l/pcos", // TODO: Replace with actual URL
     metaDescription: "Comprehensive PCOS management guide with strategies for insulin resistance, fertility, and symptom control.",
     keywords: ["PCOS", "polycystic ovary syndrome", "fertility", "insulin resistance", "women's health"],
-    category: "Women's Health"
+    category: "Women's Health",
+    comingSoon: true
   },
   {
     id: "fertility-boost",
@@ -69,7 +72,88 @@ export const guides: Guide[] = [
     gumroadUrl: "https://example.gumroad.com/l/fertility", // TODO: Replace with actual URL
     metaDescription: "Natural fertility optimization guide with evidence-based strategies for preconception health and reproductive wellness.",
     keywords: ["fertility", "preconception", "conception", "reproductive health", "pregnancy planning"],
-    category: "Fertility"
+    category: "Fertility",
+    comingSoon: true
+  },
+  {
+    id: "stress-cortisol",
+    title: "Stress & Cortisol Management",
+    description: "Learn to balance cortisol and reduce stress for better health and energy.",
+    emoji: "🧘‍♀️",
+    gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+    features: [
+      "Cortisol regulation strategies",
+      "Stress reduction techniques",
+      "Sleep & recovery protocols",
+      "Mindfulness practices"
+    ],
+    price: 4.99,
+    slug: "stress-cortisol",
+    gumroadUrl: "https://example.gumroad.com/l/stress-cortisol",
+    metaDescription: "Comprehensive guide to managing stress and balancing cortisol levels for optimal health.",
+    keywords: ["stress management", "cortisol", "adrenal health", "wellness", "mental health"],
+    category: "Wellness",
+    comingSoon: true
+  },
+  {
+    id: "sleep-optimization",
+    title: "Sleep Optimization Guide",
+    description: "Evidence-based strategies for deep, restorative sleep every night.",
+    emoji: "😴",
+    gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+    features: [
+      "Sleep hygiene protocols",
+      "Circadian rhythm optimization",
+      "Natural sleep supplements",
+      "Environmental factors"
+    ],
+    price: 4.99,
+    slug: "sleep-optimization",
+    gumroadUrl: "https://example.gumroad.com/l/sleep-optimization",
+    metaDescription: "Science-backed strategies for improving sleep quality and achieving restorative rest.",
+    keywords: ["sleep", "insomnia", "sleep quality", "wellness", "rest"],
+    category: "Wellness",
+    comingSoon: true
+  },
+  {
+    id: "gut-health",
+    title: "Gut Health Revolution",
+    description: "Heal your gut and transform your overall health with proven protocols.",
+    emoji: "🌿",
+    gradient: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
+    features: [
+      "Microbiome optimization",
+      "Elimination diet protocols",
+      "Digestive health strategies",
+      "Supplement recommendations"
+    ],
+    price: 4.99,
+    slug: "gut-health",
+    gumroadUrl: "https://example.gumroad.com/l/gut-health",
+    metaDescription: "Complete guide to healing your gut and optimizing digestive health naturally.",
+    keywords: ["gut health", "microbiome", "digestive health", "IBS", "wellness"],
+    category: "Digestive Health",
+    comingSoon: true
+  },
+  {
+    id: "energy-vitality",
+    title: "Energy & Vitality Boost",
+    description: "Combat fatigue and reclaim your energy with natural solutions.",
+    emoji: "⚡",
+    gradient: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+    features: [
+      "Energy-boosting nutrition",
+      "Fatigue root cause analysis",
+      "Exercise optimization",
+      "Supplement protocols"
+    ],
+    price: 4.99,
+    slug: "energy-vitality",
+    gumroadUrl: "https://example.gumroad.com/l/energy-vitality",
+    metaDescription: "Natural strategies to overcome fatigue and boost your energy levels sustainably.",
+    keywords: ["energy", "fatigue", "vitality", "wellness", "adrenal fatigue"],
+    category: "Wellness",
+    comingSoon: true
   }
 ];
 

@@ -1,10 +1,27 @@
 'use client';
 
 import Link from 'next/link';
-import { guides } from '@/lib/guides';
+import { useState, useEffect } from 'react';
+import { Guide } from '@/lib/guides';
 import GuideCard from './GuideCard';
 
 export default function GuidesGrid() {
+  const [guides, setGuides] = useState<Guide[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/guides')
+      .then(res => res.json())
+      .then(data => {
+        setGuides(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to fetch guides:', err);
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <section id="catalog" className="py-20 bg-[#0a0a0a]">
       <div className="section-container">
@@ -17,11 +34,18 @@ export default function GuidesGrid() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {guides.map((guide) => (
-            <GuideCard key={guide.id} guide={guide} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white/20 mb-4"></div>
+            <p className="text-white/60">Loading guides...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {guides.slice(0, 6).map((guide) => (
+              <GuideCard key={guide.id} guide={guide} />
+            ))}
+          </div>
+        )}
 
         <div className="text-center mt-12">
           <Link
