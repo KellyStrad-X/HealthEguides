@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 import MetaPixel from "@/components/MetaPixel";
 
@@ -39,7 +40,9 @@ export default function RootLayout({
         <script src="https://gumroad.com/js/gumroad.js" async />
       </head>
       <body className="scrollbar-thin">
-        <MetaPixel />
+        <Suspense fallback={null}>
+          <MetaPixel />
+        </Suspense>
         {children}
       </body>
     </html>
