@@ -36,6 +36,7 @@ export default function PurchasesPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [modeFilter, setModeFilter] = useState<string>('all');
   const [refundingSessionId, setRefundingSessionId] = useState<string | null>(null);
+  const [checkingStatusSessionId, setCheckingStatusSessionId] = useState<string | null>(null);
   const [showRefundModal, setShowRefundModal] = useState(false);
   const [selectedPurchase, setSelectedPurchase] = useState<Purchase | null>(null);
 
@@ -148,6 +149,46 @@ export default function PurchasesPage() {
     } finally {
       setRefundingSessionId(null);
       setSelectedPurchase(null);
+    }
+  };
+
+  const handleCheckStatus = async (purchase: Purchase) => {
+    setCheckingStatusSessionId(purchase.sessionId);
+
+    try {
+      const password = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || sessionStorage.getItem('admin_password');
+      const response = await fetch('/api/admin/check-refund-status', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${password}`,
+        },
+        body: JSON.stringify({
+          paymentIntentId: purchase.stripePaymentIntentId,
+          sessionId: purchase.sessionId,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.wasRefunded && data.updated) {
+          alert(`Status synced! This purchase was refunded in Stripe and has been updated in the database.`);
+          // Refresh purchases to show updated status
+          await fetchPurchases();
+        } else if (data.wasRefunded && !data.updated) {
+          alert('This purchase is refunded but no records were found to update.');
+        } else {
+          alert('This purchase is active in Stripe (not refunded).');
+        }
+      } else {
+        const error = await response.json();
+        alert(`Status check failed: ${error.error}`);
+      }
+    } catch (error) {
+      console.error('Status check error:', error);
+      alert('Failed to check status. Please try again.');
+    } finally {
+      setCheckingStatusSessionId(null);
     }
   };
 
@@ -332,13 +373,22 @@ export default function PurchasesPage() {
                       View in Stripe
                     </a>
                     {purchase.status === 'active' && !purchase.isTestMode && (
-                      <button
-                        onClick={() => handleRefundClick(purchase)}
-                        disabled={refundingSessionId === purchase.sessionId}
-                        className="px-3 py-1.5 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {refundingSessionId === purchase.sessionId ? 'Processing...' : 'Refund'}
-                      </button>
+                      <>
+                        <button
+                          onClick={() => handleCheckStatus(purchase)}
+                          disabled={checkingStatusSessionId === purchase.sessionId}
+                          className="px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {checkingStatusSessionId === purchase.sessionId ? 'Checking...' : 'Check Status'}
+                        </button>
+                        <button
+                          onClick={() => handleRefundClick(purchase)}
+                          disabled={refundingSessionId === purchase.sessionId}
+                          className="px-3 py-1.5 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {refundingSessionId === purchase.sessionId ? 'Processing...' : 'Refund'}
+                        </button>
+                      </>
                     )}
                     {purchase.status === 'active' && purchase.isTestMode && (
                       <div className="px-3 py-1.5 bg-gray-300 text-gray-500 rounded-md text-sm font-medium cursor-not-allowed">
