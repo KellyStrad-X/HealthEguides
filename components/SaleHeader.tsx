@@ -3,7 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useHeader } from '@/lib/headerContext';
 
-export default function SaleHeader() {
+interface SaleHeaderProps {
+  onClaimClick?: () => void;
+}
+
+export default function SaleHeader({ onClaimClick }: SaleHeaderProps = {}) {
   const [timeLeft, setTimeLeft] = useState({
     hours: 0,
     minutes: 0,
@@ -61,9 +65,13 @@ export default function SaleHeader() {
   const formatTime = (num: number) => String(num).padStart(2, '0');
 
   const handleClaimOffer = () => {
-    const offerSection = document.getElementById('bundle-offer');
-    if (offerSection) {
-      offerSection.scrollIntoView({ behavior: 'smooth' });
+    if (onClaimClick) {
+      onClaimClick();
+    } else {
+      const offerSection = document.getElementById('bundle-offer');
+      if (offerSection) {
+        offerSection.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 

@@ -6,6 +6,7 @@ import { Guide } from '@/lib/guides';
 import GuideCard from '@/components/GuideCard';
 import SaleHeader from '@/components/SaleHeader';
 import Header from '@/components/Header';
+import BundleOffer from '@/components/BundleOffer';
 import Footer from '@/components/Footer';
 
 export default function CatalogPage() {
@@ -121,6 +122,10 @@ export default function CatalogPage() {
         </div>
       </div>
       </div>
+
+      {/* Bundle Offer Section */}
+      <BundleOffer />
+
       <Footer />
       </div>
     </HeaderProvider>

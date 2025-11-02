@@ -3,11 +3,7 @@ import { getAllGuideSlugs } from '@/lib/guides';
 import { getGuideBySlugFromAll } from '@/lib/guide-service';
 import type { Metadata } from 'next';
 import { HeaderProvider } from '@/lib/headerContext';
-import SaleHeader from '@/components/SaleHeader';
-import GuideLandingHero from '@/components/GuideLandingHero';
-import GuideProblemAgitation from '@/components/GuideProblemAgitation';
-import GuideBenefits from '@/components/GuideBenefits';
-import GuideEmailCapture from '@/components/GuideEmailCapture';
+import GuidePageClient from '@/components/GuidePageClient';
 import Footer from '@/components/Footer';
 
 interface PageProps {
@@ -62,11 +58,7 @@ export default async function GuidePage({ params }: PageProps) {
     return (
       <HeaderProvider>
         <main className="min-h-screen">
-          <SaleHeader />
-          <GuideLandingHero guide={guide} />
-          <GuideProblemAgitation guide={guide} />
-          <GuideBenefits guide={guide} />
-          <GuideEmailCapture guide={guide} />
+          <GuidePageClient guide={guide} />
           <Footer />
         </main>
       </HeaderProvider>
