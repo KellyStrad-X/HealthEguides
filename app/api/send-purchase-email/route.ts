@@ -103,8 +103,10 @@ export async function POST(request: Request) {
           </div>
 
           <div class="support">
-            <p style="margin: 0 0 10px 0;"><strong>Need help?</strong></p>
-            <p style="margin: 0;">Reply to this email or contact <a href="mailto:support@healtheguides.com" style="color: #4ECDC4; text-decoration: none;">support@healtheguides.com</a></p>
+            <p style="margin: 0 0 10px 0;"><strong>Need help or not satisfied?</strong></p>
+            <p style="margin: 0 0 15px 0;">If you have any questions, issues, or would like to request a refund, we're here to help.</p>
+            <p style="margin: 0;">Contact us at <a href="mailto:support@healtheguides.com" style="color: #4ECDC4; text-decoration: none; font-weight: 600;">support@healtheguides.com</a></p>
+            <p style="margin: 10px 0 0 0; font-size: 13px; color: #7f8c8d;">We stand behind the quality of our guides and want you to be completely satisfied with your purchase.</p>
           </div>
 
           <div class="footer">
