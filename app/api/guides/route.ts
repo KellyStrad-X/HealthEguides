@@ -8,42 +8,49 @@ export async function GET() {
   try {
     // Start with hardcoded guides as base
     let guidesData = [...hardcodedGuides];
+    const hardcodedIds = new Set(hardcodedGuides.map(g => g.id));
 
-    // Try to enhance with Firestore data
+    // Try to fetch and merge with Firestore data
     try {
       const guidesSnapshot = await adminDb.collection('guides').get();
-      const firestoreData = new Map();
+      const firestoreGuides = new Map();
 
       guidesSnapshot.forEach((doc) => {
         const data = doc.data();
-        firestoreData.set(doc.id, {
-          hasHtmlGuide: data.hasHtmlGuide,
-          comingSoon: data.comingSoon,
-          htmlUrl: data.htmlUrl,
-        });
+        firestoreGuides.set(doc.id, { ...data, id: doc.id });
       });
 
-      // Merge Firestore data with hardcoded guides
+      // Update existing hardcoded guides with Firestore data
       guidesData = guidesData.map((guide) => {
-        const firestoreGuide = firestoreData.get(guide.id);
+        const firestoreGuide = firestoreGuides.get(guide.id);
 
         if (firestoreGuide) {
-          // If Firestore says comingSoon is false, use that
-          if (firestoreGuide.comingSoon === false) {
-            return { ...guide, comingSoon: false };
-          }
+          // Merge: Firestore can override comingSoon and other status fields
+          return {
+            ...guide,
+            comingSoon: firestoreGuide.comingSoon ?? guide.comingSoon,
+            hasHtmlGuide: firestoreGuide.hasHtmlGuide,
+            htmlUrl: firestoreGuide.htmlUrl,
+          };
         }
 
         // Check if HTML file exists locally
         const htmlPath = join(process.cwd(), 'public', 'guides', `${guide.id}.html`);
         if (existsSync(htmlPath)) {
-          // HTML exists, mark as available
           return { ...guide, comingSoon: false };
         }
 
-        // Otherwise keep the guide's original comingSoon status
         return guide;
       });
+
+      // Add any new guides from Firestore that aren't in hardcoded list
+      firestoreGuides.forEach((firestoreGuide) => {
+        if (!hardcodedIds.has(firestoreGuide.id)) {
+          // This is a new guide created via admin panel
+          guidesData.push(firestoreGuide);
+        }
+      });
+
     } catch (err) {
       console.warn('Firestore not configured or error fetching guides, using hardcoded guides:', err);
 

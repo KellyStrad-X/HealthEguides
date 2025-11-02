@@ -15,8 +15,9 @@ interface PageProps {
   };
 }
 
-// Only match slugs from generateStaticParams - don't catch other routes like /catalog, /about, etc.
-export const dynamicParams = false;
+// Allow dynamic params to support Firebase-created guides
+// Static routes like /catalog, /about etc. will still match first due to Next.js routing priority
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   return getAllGuideSlugs().map((slug) => ({
@@ -24,8 +25,28 @@ export async function generateStaticParams() {
   }));
 }
 
+async function fetchGuideBySlug(slug: string) {
+  // Try to get from hardcoded guides first (faster)
+  const hardcodedGuide = getGuideBySlug(slug);
+  if (hardcodedGuide) {
+    return hardcodedGuide;
+  }
+
+  // If not found in hardcoded, fetch from API to check Firebase
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/guides`, {
+      cache: 'no-store' // Don't cache to ensure we get latest Firebase data
+    });
+    const guides = await response.json();
+    return guides.find((g: any) => g.slug === slug);
+  } catch (error) {
+    console.error('Error fetching guides:', error);
+    return null;
+  }
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const guide = getGuideBySlug(params.slug);
+  const guide = await fetchGuideBySlug(params.slug);
 
   if (!guide) {
     return {
@@ -36,12 +57,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${guide.title} | Health E-Guides`,
     description: guide.metaDescription,
-    keywords: guide.keywords.join(', '),
+    keywords: guide.keywords?.join(', ') || '',
   };
 }
 
-export default function GuidePage({ params }: PageProps) {
-  const guide = getGuideBySlug(params.slug);
+export default async function GuidePage({ params }: PageProps) {
+  const guide = await fetchGuideBySlug(params.slug);
 
   if (!guide) {
     notFound();

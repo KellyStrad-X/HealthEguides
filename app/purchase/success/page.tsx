@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { guides } from '@/lib/guides';
 
 // Force dynamic rendering since this page uses search params
 export const dynamic = 'force-dynamic';
@@ -12,6 +13,13 @@ function PurchaseSuccessContent() {
   const [purchases, setPurchases] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [loadingMessage, setLoadingMessage] = useState('Processing your purchase...');
+
+  // Helper function to get guide slug from guide ID
+  const getGuideSlug = (guideId: string): string => {
+    const guide = guides.find(g => g.id === guideId);
+    return guide?.slug || guideId; // Fallback to guideId if not found
+  };
 
   useEffect(() => {
     async function fetchPurchaseDetails() {
@@ -24,12 +32,16 @@ function PurchaseSuccessContent() {
       }
 
       // Retry logic to handle webhook delay (race condition fix)
-      const maxAttempts = 10;
-      const delayMs = 2000; // Wait 2 seconds between attempts
+      const maxAttempts = 5;
+      const delayMs = 1000; // Wait 1 second between attempts
 
       for (let attempt = 1; attempt <= maxAttempts; attempt++) {
         try {
           console.log(`🔍 Attempt ${attempt}/${maxAttempts}: Fetching purchase...`);
+
+          if (attempt > 2) {
+            setLoadingMessage('This is taking a bit longer than expected...');
+          }
 
           const res = await fetch('/api/get-access-from-session', {
             method: 'POST',
@@ -75,7 +87,7 @@ function PurchaseSuccessContent() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f8f9fa] to-white">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#4ECDC4] mb-4"></div>
-          <p className="text-lg text-gray-600">Processing your purchase...</p>
+          <p className="text-lg text-gray-600">{loadingMessage}</p>
         </div>
       </div>
     );
@@ -131,7 +143,7 @@ function PurchaseSuccessContent() {
                   {purchase.guideName}
                 </h3>
                 <Link
-                  href={`/guides/${purchase.guideId}?access=${purchase.accessToken}`}
+                  href={`/guides/${getGuideSlug(purchase.guideId)}?access=${purchase.accessToken}`}
                   className="inline-block px-6 py-3 bg-gradient-to-r from-[#4ECDC4] to-[#556FB5] text-white rounded-lg font-semibold hover:opacity-90 transition"
                 >
                   Start Reading →

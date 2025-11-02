@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { Guide } from '@/lib/guides';
 
 interface GuideCardProps {
@@ -7,6 +8,8 @@ interface GuideCardProps {
 }
 
 export default function GuideCard({ guide }: GuideCardProps) {
+  const router = useRouter();
+
   const handleClick = () => {
     // Don't navigate if coming soon
     if (guide.comingSoon) return;
@@ -19,8 +22,8 @@ export default function GuideCard({ guide }: GuideCardProps) {
       });
     }
 
-    // Navigate to guide page
-    window.location.href = `/${guide.slug}`;
+    // Navigate to guide page using Next.js router for client-side navigation
+    router.push(`/${guide.slug}`);
   };
 
   return (

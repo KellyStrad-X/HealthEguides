@@ -23,11 +23,45 @@ function GuideViewerContent({ params }: GuideViewerProps) {
   const [guideHtml, setGuideHtml] = useState<string>('');
   const [headerVisible, setHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [guide, setGuide] = useState<any>(null);
+  const [guideLoaded, setGuideLoaded] = useState(false);
 
-  const guide = guides.find(g => g.slug === params.slug);
+  // Fetch guide data (supports both hardcoded and Firebase guides)
+  useEffect(() => {
+    async function fetchGuide() {
+      setGuideLoaded(false);
+      // Try hardcoded guides first
+      const hardcodedGuide = guides.find(g => g.slug === params.slug);
+      if (hardcodedGuide) {
+        setGuide(hardcodedGuide);
+        setGuideLoaded(true);
+        return;
+      }
+
+      // If not found, fetch from API to check Firebase
+      try {
+        const response = await fetch('/api/guides');
+        const allGuides = await response.json();
+        const foundGuide = allGuides.find((g: any) => g.slug === params.slug);
+        setGuide(foundGuide || null);
+      } catch (err) {
+        console.error('Error fetching guide:', err);
+        setGuide(null);
+      } finally {
+        setGuideLoaded(true);
+      }
+    }
+
+    fetchGuide();
+  }, [params.slug]);
 
   useEffect(() => {
     async function validateAccess() {
+      // Wait for guide to be loaded before checking
+      if (!guideLoaded) {
+        return;
+      }
+
       if (!guide) {
         setError('Guide not found');
         setLoading(false);
@@ -113,7 +147,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
     }
 
     validateAccess();
-  }, [searchParams, params.slug, guide, router]);
+  }, [searchParams, params.slug, guide, guideLoaded, router]);
 
   // Handle scroll to show/hide header
   useEffect(() => {
@@ -261,7 +295,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
 
           {/* Catalog Screenshot */}
           <div className="mb-8 rounded-xl overflow-hidden shadow-2xl border-4 border-white">
-            <Link href="/">
+            <Link href="/catalog">
               <img
                 src="/catalog-preview.png"
                 alt="Health eGuides Catalog"
@@ -285,7 +319,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
           </div>
 
           <Link
-            href="/"
+            href="/catalog"
             className="inline-block px-8 py-4 bg-gradient-to-r from-[#4ECDC4] to-[#556FB5] text-white text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
           >
             View Full Catalog
