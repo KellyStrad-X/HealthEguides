@@ -238,7 +238,11 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4">
-          {guidesList.map((guide) => (
+          {guidesList.map((guide) => {
+            // Defensive guard for missing data
+            const safePrice = typeof guide.price === 'number' && !isNaN(guide.price) ? guide.price : 0;
+
+            return (
             <div key={guide.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -246,7 +250,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                     <span className="text-3xl">{guide.emoji}</span>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-800">{guide.title}</h3>
-                      <p className="text-sm text-gray-500">{guide.category} • ${guide.price.toFixed(2)}</p>
+                      <p className="text-sm text-gray-500">{guide.category} • ${safePrice.toFixed(2)}</p>
                     </div>
                   </div>
                   <p className="text-gray-600 text-sm mb-3">{guide.description}</p>
@@ -287,7 +291,8 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
           </div>
         )}
 

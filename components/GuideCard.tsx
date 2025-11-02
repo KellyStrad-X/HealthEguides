@@ -10,6 +10,10 @@ interface GuideCardProps {
 export default function GuideCard({ guide }: GuideCardProps) {
   const router = useRouter();
 
+  // Defensive guards for missing data
+  const safeFeatures = Array.isArray(guide.features) ? guide.features : [];
+  const safePrice = typeof guide.price === 'number' && !isNaN(guide.price) ? guide.price : 0;
+
   const handleClick = () => {
     // Don't navigate if coming soon
     if (guide.comingSoon) return;
@@ -64,7 +68,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
 
         {/* Features list */}
         <ul className="space-y-2 mb-6">
-          {guide.features.map((feature, index) => (
+          {safeFeatures.map((feature, index) => (
             <li key={index} className="flex items-start gap-2 text-sm text-white/80">
               <span className="text-green-400 mt-0.5">✓</span>
               <span>{feature}</span>
@@ -76,7 +80,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
         <div className="pt-4 border-t border-white/10">
           <div className="flex items-center justify-between mb-4">
             <span className="text-3xl font-bold gradient-text">
-              ${guide.price.toFixed(2)}
+              ${safePrice.toFixed(2)}
             </span>
           </div>
 

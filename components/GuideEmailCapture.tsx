@@ -8,6 +8,9 @@ interface GuideEmailCaptureProps {
 }
 
 export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
+  // Defensive guard for missing data
+  const safePrice = typeof guide.price === 'number' && !isNaN(guide.price) ? guide.price : 0;
+
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -45,13 +48,13 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
       // Track begin_checkout event
       if (typeof window !== 'undefined' && (window as any).gtag) {
         (window as any).gtag('event', 'begin_checkout', {
-          value: guide.price,
+          value: safePrice,
           currency: 'USD',
           items: [
             {
               item_id: guide.id,
               item_name: guide.title,
-              price: guide.price,
+              price: safePrice,
             },
           ],
         });
@@ -100,7 +103,7 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
                 Get {guide.title}
               </h2>
               <div className="text-5xl font-bold gradient-text mb-4">
-                ${guide.price.toFixed(2)}
+                ${safePrice.toFixed(2)}
               </div>
               <p className="text-white/70">
                 Enter your email to get started. You&apos;ll be redirected to secure
@@ -130,7 +133,7 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
                 disabled={loading}
                 className="w-full btn-primary text-xl py-5 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Processing...' : `Get Your Guide Now - $${guide.price.toFixed(2)}`}
+                {loading ? 'Processing...' : `Get Your Guide Now - $${safePrice.toFixed(2)}`}
               </button>
 
               <p className="text-xs text-white/50 text-center">

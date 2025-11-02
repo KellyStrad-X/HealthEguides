@@ -5,6 +5,9 @@ interface GuideBenefitsProps {
 }
 
 export default function GuideBenefits({ guide }: GuideBenefitsProps) {
+  // Defensive guard for missing data
+  const safeFeatures = Array.isArray(guide.features) ? guide.features : [];
+
   return (
     <section className="py-20 bg-gradient-to-b from-[#0a0a0a] to-[#1a1a2e]">
       <div className="section-container">
@@ -18,7 +21,7 @@ export default function GuideBenefits({ guide }: GuideBenefitsProps) {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-            {guide.features.map((feature, index) => (
+            {safeFeatures.map((feature, index) => (
               <div
                 key={index}
                 className="glass-card p-6 flex items-start gap-4 hover-lift"
