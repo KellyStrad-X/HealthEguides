@@ -21,6 +21,8 @@ function GuideViewerContent({ params }: GuideViewerProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [guideHtml, setGuideHtml] = useState<string>('');
+  const [headerVisible, setHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   const guide = guides.find(g => g.slug === params.slug);
 
@@ -112,6 +114,29 @@ function GuideViewerContent({ params }: GuideViewerProps) {
 
     validateAccess();
   }, [searchParams, params.slug, guide, router]);
+
+  // Handle scroll to show/hide header
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY < 50) {
+        // Always show header at top of page
+        setHeaderVisible(true);
+      } else if (currentScrollY > lastScrollY) {
+        // Scrolling down - hide header
+        setHeaderVisible(false);
+      } else if (currentScrollY < lastScrollY) {
+        // Scrolling up - show header
+        setHeaderVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
 
   async function loadGuideContent() {
     try {
@@ -205,8 +230,12 @@ function GuideViewerContent({ params }: GuideViewerProps) {
   // Display the guide content
   return (
     <div className="min-h-screen bg-white">
-      {/* Simple header with logo/home link */}
-      <header className="sticky top-0 bg-white border-b border-gray-200 shadow-sm z-50">
+      {/* Collapsing header with logo/home link */}
+      <header
+        className={`sticky top-0 bg-white border-b border-gray-200 shadow-sm z-50 transition-transform duration-300 ${
+          headerVisible ? 'translate-y-0' : '-translate-y-full'
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-center">
           <Link href="/" className="text-xl font-bold text-[#4ECDC4] hover:opacity-80 transition">
             Health eGuides
@@ -219,6 +248,50 @@ function GuideViewerContent({ params }: GuideViewerProps) {
         className="guide-content"
         dangerouslySetInnerHTML={{ __html: guideHtml }}
       />
+
+      {/* Catalog Preview Section */}
+      <section className="bg-gradient-to-br from-[#f8f9fa] to-white py-16 px-4 mt-12">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-gray-800 mb-4">
+            Explore More Health Guides
+          </h2>
+          <p className="text-lg text-gray-600 mb-8">
+            Discover our full collection of evidence-based health guides
+          </p>
+
+          {/* Catalog Screenshot */}
+          <div className="mb-8 rounded-xl overflow-hidden shadow-2xl border-4 border-white">
+            <Link href="/">
+              <img
+                src="/catalog-preview.png"
+                alt="Health eGuides Catalog"
+                className="w-full h-auto hover:scale-105 transition-transform duration-300 cursor-pointer"
+                onError={(e) => {
+                  // Fallback if image doesn't exist
+                  e.currentTarget.style.display = 'none';
+                  const fallback = e.currentTarget.parentElement?.nextElementSibling;
+                  if (fallback) (fallback as HTMLElement).style.display = 'block';
+                }}
+              />
+            </Link>
+            <div
+              style={{ display: 'none' }}
+              className="bg-white p-12 border-2 border-dashed border-gray-300 rounded-lg"
+            >
+              <p className="text-gray-500 text-sm">
+                📚 View our complete catalog of health guides
+              </p>
+            </div>
+          </div>
+
+          <Link
+            href="/"
+            className="inline-block px-8 py-4 bg-gradient-to-r from-[#4ECDC4] to-[#556FB5] text-white text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
+          >
+            View Full Catalog
+          </Link>
+        </div>
+      </section>
 
       {/* Simple footer */}
       <footer className="bg-gray-50 border-t border-gray-200 py-8 mt-12">
