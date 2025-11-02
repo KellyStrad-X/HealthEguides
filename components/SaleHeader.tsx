@@ -43,19 +43,12 @@ export default function SaleHeader() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      // Only compress if scrolled down more than 50px
-      if (currentScrollY > 50) {
-        // Scrolling down - compress
-        if (currentScrollY > lastScrollY) {
-          setIsCompressed(true);
-        }
-        // Scrolling up - expand
-        else if (currentScrollY < lastScrollY) {
-          setIsCompressed(false);
-        }
-      } else {
-        // At top of page - always expanded
+      // Only expand when at the very top (scrollY === 0)
+      // Otherwise stay compressed once scrolled
+      if (currentScrollY === 0) {
         setIsCompressed(false);
+      } else if (currentScrollY > 50) {
+        setIsCompressed(true);
       }
 
       setLastScrollY(currentScrollY);
@@ -63,7 +56,7 @@ export default function SaleHeader() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, [lastScrollY, setIsCompressed]);
 
   const formatTime = (num: number) => String(num).padStart(2, '0');
 
@@ -75,13 +68,13 @@ export default function SaleHeader() {
   };
 
   return (
-    <div className={`sticky top-0 z-50 bg-gradient-to-r from-red-600 via-pink-600 to-purple-600 text-white shadow-lg transition-all duration-300 ${isCompressed ? 'py-1' : 'py-3'}`}>
+    <div className={`sticky top-0 z-50 bg-gradient-to-r from-red-600 via-pink-600 to-purple-600 text-white shadow-lg transition-all duration-300 ${isCompressed ? 'py-1 md:py-1' : 'py-3'}`}>
       <div className="section-container">
-        <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">🔥</span>
-            <span className="font-bold text-lg">SPECIAL OFFER:</span>
-            <span className="text-lg">3 E-Books for $10!</span>
+        <div className={`flex flex-col md:flex-row items-center justify-center transition-all duration-300 ${isCompressed ? 'gap-0 md:gap-6' : 'gap-3 md:gap-6'}`}>
+          <div className={`flex items-center gap-2 ${isCompressed ? 'text-sm' : ''}`}>
+            <span className={isCompressed ? 'text-lg' : 'text-2xl'}>🔥</span>
+            <span className="font-bold">SPECIAL OFFER:</span>
+            <span>3 E-Books for $10!</span>
           </div>
 
           <div className={`flex items-center gap-2 overflow-hidden transition-all duration-300 ${isCompressed ? 'max-h-0 opacity-0 scale-95' : 'max-h-20 opacity-100 scale-100'}`}>
@@ -106,7 +99,7 @@ export default function SaleHeader() {
 
           <button
             onClick={handleClaimOffer}
-            className={`px-6 py-2 bg-white text-pink-600 font-bold rounded-full hover:bg-pink-50 transition-all duration-300 hover:scale-105 shadow-lg text-sm overflow-hidden ${isCompressed ? 'max-h-0 opacity-0 md:max-h-20 md:opacity-100' : 'max-h-20 opacity-100'}`}
+            className={`px-6 py-2 bg-white text-pink-600 font-bold rounded-full hover:bg-pink-50 transition-all duration-300 hover:scale-105 shadow-lg text-sm overflow-hidden ${isCompressed ? 'hidden md:block md:max-h-20 md:opacity-100' : 'max-h-20 opacity-100'}`}
           >
             Claim Offer →
           </button>
