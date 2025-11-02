@@ -12,17 +12,29 @@ const path = require('path');
 const fs = require('fs');
 
 // Load environment variables from .env.local
-const envPath = path.join(__dirname, '..', '.env.local');
-if (fs.existsSync(envPath)) {
-  const envContent = fs.readFileSync(envPath, 'utf-8');
-  envContent.split('\n').forEach(line => {
-    if (line && !line.startsWith('#')) {
-      const [key, ...valueParts] = line.split('=');
-      if (key && valueParts.length) {
-        process.env[key.trim()] = valueParts.join('=').trim();
+// Try dotenv first (standard approach)
+try {
+  require('dotenv').config({ path: path.join(__dirname, '..', '.env.local') });
+  console.log('📄 Loaded .env.local with dotenv');
+} catch (err) {
+  // Fallback to manual parsing if dotenv not installed
+  console.log('📄 Loading .env.local manually (dotenv not available)');
+  const envPath = path.join(__dirname, '..', '.env.local');
+  if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf-8');
+    envContent.split('\n').forEach(line => {
+      if (line && !line.startsWith('#') && line.includes('=')) {
+        const [key, ...valueParts] = line.split('=');
+        if (key && valueParts.length) {
+          const value = valueParts.join('=').trim();
+          // Remove surrounding quotes if present
+          process.env[key.trim()] = value.replace(/^["']|["']$/g, '');
+        }
       }
-    }
-  });
+    });
+  } else {
+    console.warn('⚠️  .env.local file not found at:', envPath);
+  }
 }
 
 // Initialize Firebase Admin
