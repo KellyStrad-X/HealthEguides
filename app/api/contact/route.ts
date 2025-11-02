@@ -1,0 +1,172 @@
+import { NextResponse } from 'next/server';
+import sgMail from '@sendgrid/mail';
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+
+// Rate limiting map (simple in-memory - resets on server restart)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+function checkRateLimit(email: string): boolean {
+  const now = Date.now();
+  const limit = rateLimitMap.get(email);
+
+  if (!limit || now > limit.resetTime) {
+    // Reset or create new limit (3 messages per hour)
+    rateLimitMap.set(email, {
+      count: 1,
+      resetTime: now + 60 * 60 * 1000, // 1 hour
+    });
+    return true;
+  }
+
+  if (limit.count >= 3) {
+    return false; // Rate limit exceeded
+  }
+
+  limit.count++;
+  return true;
+}
+
+export async function POST(request: Request) {
+  try {
+    const { name, email, subject, message } = await request.json();
+
+    // Validate input
+    if (!name || !email || !message) {
+      return NextResponse.json(
+        { error: 'Name, email, and message are required' },
+        { status: 400 }
+      );
+    }
+
+    if (!email.includes('@')) {
+      return NextResponse.json(
+        { error: 'Invalid email address' },
+        { status: 400 }
+      );
+    }
+
+    // Rate limiting
+    if (!checkRateLimit(email)) {
+      return NextResponse.json(
+        { error: 'Too many messages. Please try again in an hour.' },
+        { status: 429 }
+      );
+    }
+
+    const finalSubject = subject || 'Contact Form Submission';
+    const recipientEmail = process.env.CONTACT_EMAIL || 'support@healtheguides.com';
+
+    // Email to you (the admin)
+    const adminEmailHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #2c3e50; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #4ECDC4 0%, #556FB5 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+          .content { background: #f8f9fa; padding: 20px; border-radius: 0 0 8px 8px; }
+          .field { margin-bottom: 15px; }
+          .field-label { font-weight: 600; color: #4ECDC4; margin-bottom: 5px; }
+          .field-value { background: white; padding: 10px; border-radius: 4px; }
+          .message-box { background: white; padding: 15px; border-left: 4px solid #4ECDC4; border-radius: 4px; white-space: pre-wrap; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h2 style="margin: 0;">📧 New Contact Form Submission</h2>
+          </div>
+          <div class="content">
+            <div class="field">
+              <div class="field-label">From:</div>
+              <div class="field-value">${name}</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Email:</div>
+              <div class="field-value"><a href="mailto:${email}" style="color: #4ECDC4;">${email}</a></div>
+            </div>
+            <div class="field">
+              <div class="field-label">Subject:</div>
+              <div class="field-value">${finalSubject}</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Message:</div>
+              <div class="message-box">${message}</div>
+            </div>
+            <div style="margin-top: 20px; padding: 15px; background: white; border-radius: 4px; text-align: center;">
+              <a href="mailto:${email}?subject=Re: ${encodeURIComponent(finalSubject)}" style="display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #4ECDC4 0%, #556FB5 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
+                Reply to ${name}
+              </a>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Send email to admin
+    await sgMail.send({
+      from: {
+        email: 'guides@healtheguides.com',
+        name: 'HealthEGuides Contact Form'
+      },
+      replyTo: email,
+      to: recipientEmail,
+      subject: `[Contact Form] ${finalSubject}`,
+      html: adminEmailHtml,
+    });
+
+    // Send confirmation email to user
+    const userEmailHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #2c3e50; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { text-align: center; margin-bottom: 30px; }
+          .content { background: #f8f9fa; padding: 30px; border-radius: 12px; border-left: 4px solid #4ECDC4; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1 style="color: #4ECDC4; margin: 0;">✅ Message Received</h1>
+          </div>
+          <div class="content">
+            <p>Hi ${name},</p>
+            <p>Thanks for contacting us! We've received your message and will get back to you as soon as possible.</p>
+            <p><strong>Your message:</strong></p>
+            <div style="background: white; padding: 15px; border-radius: 8px; margin: 15px 0; white-space: pre-wrap;">${message}</div>
+            <p>We typically respond within 24 hours during business days.</p>
+            <p style="margin-top: 30px;">Best regards,<br><strong>The HealthEGuides Team</strong></p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    await sgMail.send({
+      from: {
+        email: 'guides@healtheguides.com',
+        name: 'HealthEGuides'
+      },
+      to: email,
+      subject: 'We received your message - HealthEGuides',
+      html: userEmailHtml,
+    });
+
+    return NextResponse.json({ success: true });
+
+  } catch (error) {
+    console.error('Contact form error:', error);
+    return NextResponse.json(
+      { error: 'Failed to send message. Please try again or email us directly at support@healtheguides.com' },
+      { status: 500 }
+    );
+  }
+}

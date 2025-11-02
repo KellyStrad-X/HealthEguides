@@ -76,25 +76,59 @@ export async function getAllGuides(): Promise<Guide[]> {
       return 0; // keep original order within groups
     });
 
-    return guidesData;
+    // Normalize all guides to ensure required fields are valid
+    // This prevents client-side crashes from missing/invalid data
+    const normalizedGuides = guidesData.map(guide => ({
+      ...guide,
+      features: Array.isArray(guide.features) ? guide.features : [],
+      price: typeof guide.price === 'number' && !isNaN(guide.price) ? guide.price : 0,
+      keywords: Array.isArray(guide.keywords) ? guide.keywords : [],
+    }));
+
+    return normalizedGuides;
   } catch (error) {
     console.error('Error fetching guides:', error);
-    return hardcodedGuides;
+    // Normalize hardcoded guides before returning as fallback
+    return hardcodedGuides.map(guide => ({
+      ...guide,
+      features: Array.isArray(guide.features) ? guide.features : [],
+      price: typeof guide.price === 'number' && !isNaN(guide.price) ? guide.price : 0,
+      keywords: Array.isArray(guide.keywords) ? guide.keywords : [],
+    }));
   }
 }
 
 /**
  * Fetches a single guide by slug
  * Checks hardcoded guides first, then Firebase
+ * Always normalizes the guide data before returning
  */
 export async function getGuideBySlugFromAll(slug: string): Promise<Guide | null> {
   // Check hardcoded guides first (faster)
   const hardcodedGuide = hardcodedGuides.find(g => g.slug === slug);
   if (hardcodedGuide) {
-    return hardcodedGuide;
+    // Normalize before returning
+    return {
+      ...hardcodedGuide,
+      features: Array.isArray(hardcodedGuide.features) ? hardcodedGuide.features : [],
+      price: typeof hardcodedGuide.price === 'number' && !isNaN(hardcodedGuide.price) ? hardcodedGuide.price : 0,
+      keywords: Array.isArray(hardcodedGuide.keywords) ? hardcodedGuide.keywords : [],
+    };
   }
 
   // If not in hardcoded, fetch all guides (including Firebase) and find by slug
   const allGuides = await getAllGuides();
-  return allGuides.find(g => g.slug === slug) || null;
+  const guide = allGuides.find(g => g.slug === slug);
+
+  // getAllGuides() already normalizes, but be explicit
+  if (guide) {
+    return {
+      ...guide,
+      features: Array.isArray(guide.features) ? guide.features : [],
+      price: typeof guide.price === 'number' && !isNaN(guide.price) ? guide.price : 0,
+      keywords: Array.isArray(guide.keywords) ? guide.keywords : [],
+    };
+  }
+
+  return null;
 }

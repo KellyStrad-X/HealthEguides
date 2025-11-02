@@ -26,9 +26,9 @@ export default function Footer() {
             <Link href="/terms" className="text-white/70 hover:text-white transition-colors">
               Terms of Service
             </Link>
-            <a href="mailto:support@healtheguides.com" className="text-white/70 hover:text-white transition-colors">
+            <Link href="/contact" className="text-white/70 hover:text-white transition-colors">
               Contact
-            </a>
+            </Link>
           </div>
 
           {/* Copyright */}
