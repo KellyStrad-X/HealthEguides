@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useHeader } from '@/lib/headerContext';
 
 export default function SaleHeader() {
   const [timeLeft, setTimeLeft] = useState({
@@ -8,7 +9,7 @@ export default function SaleHeader() {
     minutes: 0,
     seconds: 0,
   });
-  const [isCompressed, setIsCompressed] = useState(false);
+  const { isCompressed, setIsCompressed } = useHeader();
   const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
@@ -74,7 +75,7 @@ export default function SaleHeader() {
   };
 
   return (
-    <div className={`sticky top-0 z-50 bg-gradient-to-r from-red-600 via-pink-600 to-purple-600 text-white shadow-lg transition-all duration-300 ${isCompressed ? 'py-1.5' : 'py-3'}`}>
+    <div className={`sticky top-0 z-50 bg-gradient-to-r from-red-600 via-pink-600 to-purple-600 text-white shadow-lg transition-all duration-300 ${isCompressed ? 'py-1' : 'py-3'}`}>
       <div className="section-container">
         <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
           <div className="flex items-center gap-2">

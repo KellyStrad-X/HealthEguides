@@ -1,3 +1,4 @@
+import { HeaderProvider } from '@/lib/headerContext';
 import SaleHeader from '@/components/SaleHeader';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
@@ -10,16 +11,18 @@ import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
-      <SaleHeader />
-      <Header />
-      <Hero />
-      <Stats />
-      <BundleOffer />
-      <GuidesGrid />
-      <WhyChooseUs />
-      <CTASection />
-      <Footer />
-    </main>
+    <HeaderProvider>
+      <main className="min-h-screen">
+        <SaleHeader />
+        <Header />
+        <Hero />
+        <Stats />
+        <BundleOffer />
+        <GuidesGrid />
+        <WhyChooseUs />
+        <CTASection />
+        <Footer />
+      </main>
+    </HeaderProvider>
   );
 }

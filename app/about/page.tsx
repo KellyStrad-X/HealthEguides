@@ -1,17 +1,16 @@
+'use client';
+
+import { HeaderProvider } from '@/lib/headerContext';
 import SaleHeader from '@/components/SaleHeader';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-export const metadata = {
-  title: 'About Us | Health E-Guides',
-  description: 'Learn about Health E-Guides and our mission to provide evidence-based health information for women.',
-};
-
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <SaleHeader />
-      <Header />
+    <HeaderProvider>
+      <div className="min-h-screen bg-[#0a0a0a]">
+        <SaleHeader />
+        <Header />
 
       <main className="pt-32 pb-20">
         <div className="section-container max-w-4xl">
@@ -86,7 +85,8 @@ export default function AboutPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </HeaderProvider>
   );
 }

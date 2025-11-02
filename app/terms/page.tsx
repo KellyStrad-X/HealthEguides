@@ -1,17 +1,16 @@
+'use client';
+
+import { HeaderProvider } from '@/lib/headerContext';
 import SaleHeader from '@/components/SaleHeader';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-export const metadata = {
-  title: 'Terms of Service | Health E-Guides',
-  description: 'Terms of Service for Health E-Guides - Read our terms and conditions for using our services.',
-};
-
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <SaleHeader />
-      <Header />
+    <HeaderProvider>
+      <div className="min-h-screen bg-[#0a0a0a]">
+        <SaleHeader />
+        <Header />
 
       <main className="pt-32 pb-20">
         <div className="section-container max-w-4xl">
@@ -169,7 +168,8 @@ export default function TermsPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </HeaderProvider>
   );
 }

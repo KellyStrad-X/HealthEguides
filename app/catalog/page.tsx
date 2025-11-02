@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { HeaderProvider } from '@/lib/headerContext';
 import { guides, getAllCategories } from '@/lib/guides';
 import GuideCard from '@/components/GuideCard';
 import SaleHeader from '@/components/SaleHeader';
@@ -16,9 +17,10 @@ export default function CatalogPage() {
     : guides.filter(guide => guide.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <SaleHeader />
-      <Header />
+    <HeaderProvider>
+      <div className="min-h-screen bg-[#0a0a0a]">
+        <SaleHeader />
+        <Header />
       <div className="pt-24 pb-20">
       <div className="section-container">
         {/* Header */}
@@ -94,6 +96,7 @@ export default function CatalogPage() {
       </div>
       </div>
       <Footer />
-    </div>
+      </div>
+    </HeaderProvider>
   );
 }

@@ -2,12 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useHeader } from '@/lib/headerContext';
 
 export default function Header() {
   const pathname = usePathname();
+  const { isCompressed } = useHeader();
 
   return (
-    <header className="sticky top-[72px] z-40 bg-[#0a0a0a]/80 backdrop-blur-lg border-b border-white/10">
+    <header className={`sticky z-40 bg-[#0a0a0a]/80 backdrop-blur-lg border-b border-white/10 transition-all duration-300 ${isCompressed ? 'top-[48px]' : 'top-[72px]'}`}>
       <nav className="section-container py-4">
         <div className="flex items-center justify-between">
           <Link href="/" className="text-2xl font-bold gradient-text">

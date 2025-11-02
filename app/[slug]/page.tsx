@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getGuideBySlug, getAllGuideSlugs } from '@/lib/guides';
 import type { Metadata } from 'next';
+import { HeaderProvider } from '@/lib/headerContext';
 import SaleHeader from '@/components/SaleHeader';
 import GuideLandingHero from '@/components/GuideLandingHero';
 import GuideProblemAgitation from '@/components/GuideProblemAgitation';
@@ -47,13 +48,15 @@ export default function GuidePage({ params }: PageProps) {
   }
 
   return (
-    <main className="min-h-screen">
-      <SaleHeader />
-      <GuideLandingHero guide={guide} />
-      <GuideProblemAgitation guide={guide} />
-      <GuideBenefits guide={guide} />
-      <GuideEmailCapture guide={guide} />
-      <Footer />
-    </main>
+    <HeaderProvider>
+      <main className="min-h-screen">
+        <SaleHeader />
+        <GuideLandingHero guide={guide} />
+        <GuideProblemAgitation guide={guide} />
+        <GuideBenefits guide={guide} />
+        <GuideEmailCapture guide={guide} />
+        <Footer />
+      </main>
+    </HeaderProvider>
   );
 }
