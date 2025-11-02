@@ -191,7 +191,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
               <p>Your access has been verified. The full guide content will be available here shortly.</p>
               <p>Your purchase includes:</p>
               <ul>
-                ${guide?.features.map(f => `<li>${f}</li>`).join('')}
+                ${guide?.features.map((f: string) => `<li>${f}</li>`).join('')}
               </ul>
               <p style="margin-top: 30px; padding: 20px; background: white; border-radius: 8px;">
                 <strong>📧 Note:</strong> You can bookmark this page or save the link from your email. Your access never expires!
