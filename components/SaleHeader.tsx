@@ -8,6 +8,8 @@ export default function SaleHeader() {
     minutes: 0,
     seconds: 0,
   });
+  const [isCompressed, setIsCompressed] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     // Calculate time until midnight
@@ -36,6 +38,32 @@ export default function SaleHeader() {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Only compress if scrolled down more than 50px
+      if (currentScrollY > 50) {
+        // Scrolling down - compress
+        if (currentScrollY > lastScrollY) {
+          setIsCompressed(true);
+        }
+        // Scrolling up - expand
+        else if (currentScrollY < lastScrollY) {
+          setIsCompressed(false);
+        }
+      } else {
+        // At top of page - always expanded
+        setIsCompressed(false);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
   const formatTime = (num: number) => String(num).padStart(2, '0');
 
   const handleClaimOffer = () => {
@@ -46,7 +74,7 @@ export default function SaleHeader() {
   };
 
   return (
-    <div className="sticky top-0 z-50 bg-gradient-to-r from-red-600 via-pink-600 to-purple-600 text-white py-3 shadow-lg">
+    <div className={`sticky top-0 z-50 bg-gradient-to-r from-red-600 via-pink-600 to-purple-600 text-white shadow-lg transition-all duration-300 ${isCompressed ? 'py-1.5' : 'py-3'}`}>
       <div className="section-container">
         <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
           <div className="flex items-center gap-2">
@@ -55,8 +83,8 @@ export default function SaleHeader() {
             <span className="text-lg">3 E-Books for $10!</span>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold">ENDS IN:</span>
+          <div className={`flex items-center gap-2 overflow-hidden transition-all duration-300 ${isCompressed ? 'max-h-0 opacity-0 scale-95' : 'max-h-20 opacity-100 scale-100'}`}>
+            <span className="text-sm font-semibold whitespace-nowrap">ENDS IN:</span>
             <div className="flex gap-2">
               <div className="bg-white/20 backdrop-blur-sm px-2 py-1 rounded min-w-[40px] text-center">
                 <div className="font-bold">{formatTime(timeLeft.hours)}</div>

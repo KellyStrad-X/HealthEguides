@@ -14,6 +14,9 @@ interface PageProps {
   };
 }
 
+// Only match slugs from generateStaticParams - don't catch other routes like /catalog, /about, etc.
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return getAllGuideSlugs().map((slug) => ({
     slug: slug,

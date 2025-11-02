@@ -1,0 +1,570 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { guides } from '@/lib/guides';
+import type { Guide } from '@/lib/guides';
+
+export default function AdminPage() {
+  const [authenticated, setAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  // Check if already authenticated
+  useEffect(() => {
+    const isAuth = sessionStorage.getItem('admin_authenticated') === 'true';
+    setAuthenticated(isAuth);
+    setLoading(false);
+  }, []);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      const response = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+
+      if (response.ok) {
+        sessionStorage.setItem('admin_authenticated', 'true');
+        setAuthenticated(true);
+      } else {
+        setError('Invalid password');
+      }
+    } catch (err) {
+      setError('Authentication failed');
+    }
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('admin_authenticated');
+    setAuthenticated(false);
+    setPassword('');
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-gray-600">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!authenticated) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+        <div className="bg-white rounded-lg shadow-md p-8 max-w-md w-full">
+          <h1 className="text-2xl font-bold text-gray-800 mb-6">Admin Access</h1>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Password
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                placeholder="Enter admin password"
+                required
+              />
+            </div>
+            {error && (
+              <div className="text-red-600 text-sm">{error}</div>
+            )}
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            >
+              Login
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <AdminDashboard onLogout={handleLogout} />
+    </div>
+  );
+}
+
+function AdminDashboard({ onLogout }: { onLogout: () => void }) {
+  const [guidesList, setGuidesList] = useState<Guide[]>(guides);
+  const [editingGuide, setEditingGuide] = useState<Guide | null>(null);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [uploadingPdf, setUploadingPdf] = useState<string | null>(null);
+
+  const handleDeleteGuide = async (guideId: string) => {
+    if (!confirm('Are you sure you want to delete this guide?')) return;
+
+    try {
+      const response = await fetch('/api/admin/guides', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ guideId }),
+      });
+
+      if (response.ok) {
+        setGuidesList(guidesList.filter(g => g.id !== guideId));
+      } else {
+        alert('Failed to delete guide');
+      }
+    } catch (err) {
+      alert('Error deleting guide');
+    }
+  };
+
+  const handleUploadPdf = async (guideId: string, file: File) => {
+    setUploadingPdf(guideId);
+    const formData = new FormData();
+    formData.append('pdf', file);
+    formData.append('guideId', guideId);
+
+    try {
+      const response = await fetch('/api/admin/upload-pdf', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        alert('PDF uploaded successfully!');
+      } else {
+        alert('Failed to upload PDF');
+      }
+    } catch (err) {
+      alert('Error uploading PDF');
+    } finally {
+      setUploadingPdf(null);
+    }
+  };
+
+  return (
+    <div>
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
+          <button
+            onClick={onLogout}
+            className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Actions */}
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-gray-800">Manage Guides</h2>
+          <button
+            onClick={() => setShowCreateForm(true)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          >
+            + Create New Guide
+          </button>
+        </div>
+
+        {/* Create/Edit Form */}
+        {(showCreateForm || editingGuide) && (
+          <GuideForm
+            guide={editingGuide}
+            onClose={() => {
+              setShowCreateForm(false);
+              setEditingGuide(null);
+            }}
+            onSave={(guide) => {
+              if (editingGuide) {
+                setGuidesList(guidesList.map(g => g.id === guide.id ? guide : g));
+              } else {
+                setGuidesList([...guidesList, guide]);
+              }
+              setShowCreateForm(false);
+              setEditingGuide(null);
+            }}
+          />
+        )}
+
+        {/* Guides List */}
+        <div className="grid grid-cols-1 gap-4">
+          {guidesList.map((guide) => (
+            <div key={guide.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-3xl">{guide.emoji}</span>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-800">{guide.title}</h3>
+                      <p className="text-sm text-gray-500">{guide.category} • ${guide.price.toFixed(2)}</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 text-sm mb-3">{guide.description}</p>
+                  <div className="flex items-center gap-4 text-sm text-gray-500">
+                    <span>Slug: /{guide.slug}</span>
+                    <span>ID: {guide.id}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <label className="cursor-pointer">
+                    <input
+                      type="file"
+                      accept=".pdf"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleUploadPdf(guide.id, file);
+                      }}
+                      disabled={uploadingPdf === guide.id}
+                    />
+                    <span className="px-3 py-1.5 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm font-medium">
+                      {uploadingPdf === guide.id ? 'Uploading...' : 'Upload PDF'}
+                    </span>
+                  </label>
+                  <button
+                    onClick={() => setEditingGuide(guide)}
+                    className="px-3 py-1.5 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors text-sm font-medium"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteGuide(guide.id)}
+                    className="px-3 py-1.5 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {guidesList.length === 0 && (
+          <div className="text-center py-12 text-gray-500">
+            No guides yet. Create your first guide to get started!
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function GuideForm({
+  guide,
+  onClose,
+  onSave
+}: {
+  guide: Guide | null;
+  onClose: () => void;
+  onSave: (guide: Guide) => void;
+}) {
+  const [formData, setFormData] = useState<Partial<Guide>>(
+    guide || {
+      id: '',
+      title: '',
+      description: '',
+      emoji: '📚',
+      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      features: [],
+      price: 4.99,
+      slug: '',
+      gumroadUrl: '',
+      metaDescription: '',
+      keywords: [],
+      category: 'Health'
+    }
+  );
+  const [featureInput, setFeatureInput] = useState('');
+  const [keywordInput, setKeywordInput] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('/api/admin/guides', {
+        method: guide ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const savedGuide = await response.json();
+        onSave(savedGuide);
+      } else {
+        alert('Failed to save guide');
+      }
+    } catch (err) {
+      alert('Error saving guide');
+    }
+  };
+
+  const addFeature = () => {
+    if (featureInput.trim()) {
+      setFormData({
+        ...formData,
+        features: [...(formData.features || []), featureInput.trim()]
+      });
+      setFeatureInput('');
+    }
+  };
+
+  const removeFeature = (index: number) => {
+    setFormData({
+      ...formData,
+      features: formData.features?.filter((_, i) => i !== index) || []
+    });
+  };
+
+  const addKeyword = () => {
+    if (keywordInput.trim()) {
+      setFormData({
+        ...formData,
+        keywords: [...(formData.keywords || []), keywordInput.trim()]
+      });
+      setKeywordInput('');
+    }
+  };
+
+  const removeKeyword = (index: number) => {
+    setFormData({
+      ...formData,
+      keywords: formData.keywords?.filter((_, i) => i !== index) || []
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-gray-800">
+            {guide ? 'Edit Guide' : 'Create New Guide'}
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 text-2xl"
+          >
+            ×
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                ID (unique identifier)
+              </label>
+              <input
+                type="text"
+                value={formData.id}
+                onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                required
+                disabled={!!guide}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Slug (URL path)
+              </label>
+              <input
+                type="text"
+                value={formData.slug}
+                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Title
+            </label>
+            <input
+              type="text"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Description
+            </label>
+            <textarea
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              rows={3}
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Emoji
+              </label>
+              <input
+                type="text"
+                value={formData.emoji}
+                onChange={(e) => setFormData({ ...formData, emoji: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Price ($)
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                value={formData.price}
+                onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Category
+              </label>
+              <input
+                type="text"
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Gradient (CSS)
+            </label>
+            <input
+              type="text"
+              value={formData.gradient}
+              onChange={(e) => setFormData({ ...formData, gradient: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              placeholder="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Features
+            </label>
+            <div className="flex gap-2 mb-2">
+              <input
+                type="text"
+                value={featureInput}
+                onChange={(e) => setFeatureInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addFeature())}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                placeholder="Add a feature"
+              />
+              <button
+                type="button"
+                onClick={addFeature}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              >
+                Add
+              </button>
+            </div>
+            <div className="space-y-1">
+              {formData.features?.map((feature, index) => (
+                <div key={index} className="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-md">
+                  <span className="flex-1 text-sm text-gray-700">{feature}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeFeature(index)}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Meta Description
+            </label>
+            <textarea
+              value={formData.metaDescription}
+              onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              rows={2}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Keywords
+            </label>
+            <div className="flex gap-2 mb-2">
+              <input
+                type="text"
+                value={keywordInput}
+                onChange={(e) => setKeywordInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addKeyword())}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                placeholder="Add a keyword"
+              />
+              <button
+                type="button"
+                onClick={addKeyword}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              >
+                Add
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {formData.keywords?.map((keyword, index) => (
+                <div key={index} className="flex items-center gap-1 bg-gray-50 px-3 py-1 rounded-full text-sm">
+                  <span className="text-gray-700">{keyword}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeKeyword(index)}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 pt-4 border-t border-gray-200">
+            <button
+              type="submit"
+              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
+            >
+              {guide ? 'Update Guide' : 'Create Guide'}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}

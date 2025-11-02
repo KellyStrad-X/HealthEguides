@@ -172,7 +172,11 @@ export default function BundleOffer() {
               {allGuides.map((guide, index) => {
                 const isSelected = selectedGuides.includes(guide.id);
                 const isDisabled = !isSelected && selectedGuides.length >= 3;
-                const isHidden = !showMore && index >= 3;
+                // Don't hide selected guides, even if they're past index 3
+                const isHidden = !showMore && index >= 3 && !isSelected;
+
+                // Completely remove hidden cards from DOM to prevent layout issues
+                if (isHidden) return null;
 
                 return (
                   <button
@@ -180,8 +184,7 @@ export default function BundleOffer() {
                     onClick={() => !isDisabled && toggleGuide(guide.id)}
                     disabled={isDisabled}
                     className={`
-                      p-4 rounded-xl border-2 transition-all duration-500 ease-in-out text-left
-                      ${isHidden ? 'opacity-0 scale-95 h-0 overflow-hidden p-0 border-0' : 'opacity-100 scale-100'}
+                      p-4 rounded-xl border-2 transition-all duration-300 ease-in-out text-left
                       ${isSelected
                         ? 'border-yellow-300 bg-yellow-300/20 scale-105'
                         : isDisabled

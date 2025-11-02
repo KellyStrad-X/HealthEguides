@@ -1,7 +1,7 @@
 'use client';
 
 import { Guide } from '@/lib/guides';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface GuideEmailCaptureProps {
   guide: Guide;
@@ -11,6 +11,30 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const emailInputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-focus when section comes into view
+  useEffect(() => {
+    const section = document.getElementById('get-guide');
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+            // Small delay to ensure smooth scroll completes
+            setTimeout(() => {
+              emailInputRef.current?.focus();
+            }, 300);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,6 +111,7 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <input
+                  ref={emailInputRef}
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
