@@ -10,9 +10,27 @@ interface GuideCardProps {
 export default function GuideCard({ guide }: GuideCardProps) {
   const router = useRouter();
 
+  console.log('[GuideCard] Rendering guide:', guide.id, {
+    hasFeatures: !!guide.features,
+    featuresType: typeof guide.features,
+    featuresIsArray: Array.isArray(guide.features),
+    featuresValue: guide.features,
+    hasPrice: !!guide.price,
+    priceType: typeof guide.price,
+    priceValue: guide.price,
+    fullGuide: guide
+  });
+
   // Defensive guards for missing data
   const safeFeatures = Array.isArray(guide.features) ? guide.features : [];
   const safePrice = typeof guide.price === 'number' && !isNaN(guide.price) ? guide.price : 0;
+
+  if (!Array.isArray(guide.features)) {
+    console.error('[GuideCard] ERROR: features is not an array for guide:', guide.id, guide.features);
+  }
+  if (typeof guide.price !== 'number') {
+    console.error('[GuideCard] ERROR: price is not a number for guide:', guide.id, guide.price);
+  }
 
   const handleClick = () => {
     // Don't navigate if coming soon

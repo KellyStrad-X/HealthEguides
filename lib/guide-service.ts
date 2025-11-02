@@ -8,8 +8,10 @@ import { join } from 'path';
  * This is shared logic used by both the API route and page components
  */
 export async function getAllGuides(): Promise<Guide[]> {
+  console.log('[getAllGuides] Starting guide fetch...');
   try {
     let guidesData = [...hardcodedGuides];
+    console.log('[getAllGuides] Hardcoded guides count:', guidesData.length);
     const hardcodedIds = new Set(hardcodedGuides.map(g => g.id));
 
     // Try to fetch and merge with Firestore data
@@ -19,6 +21,14 @@ export async function getAllGuides(): Promise<Guide[]> {
 
       guidesSnapshot.forEach((doc) => {
         const data = doc.data();
+        console.log('[getAllGuides] Firestore guide:', doc.id, {
+          hasFeatures: !!data.features,
+          featuresType: typeof data.features,
+          featuresIsArray: Array.isArray(data.features),
+          hasPrice: !!data.price,
+          priceType: typeof data.price,
+          priceValue: data.price
+        });
         firestoreGuides.set(doc.id, { ...data, id: doc.id });
       });
 
@@ -78,12 +88,38 @@ export async function getAllGuides(): Promise<Guide[]> {
 
     // Normalize all guides to ensure required fields are valid
     // This prevents client-side crashes from missing/invalid data
-    const normalizedGuides = guidesData.map(guide => ({
-      ...guide,
-      features: Array.isArray(guide.features) ? guide.features : [],
-      price: typeof guide.price === 'number' && !isNaN(guide.price) ? guide.price : 0,
-      keywords: Array.isArray(guide.keywords) ? guide.keywords : [],
-    }));
+    const normalizedGuides = guidesData.map(guide => {
+      const normalized = {
+        ...guide,
+        features: Array.isArray(guide.features) ? guide.features : [],
+        price: typeof guide.price === 'number' && !isNaN(guide.price) ? guide.price : 0,
+        keywords: Array.isArray(guide.keywords) ? guide.keywords : [],
+      };
+
+      // Log if normalization changed anything
+      if (!Array.isArray(guide.features) || typeof guide.price !== 'number') {
+        console.log('[getAllGuides] NORMALIZED guide:', guide.id, {
+          beforeFeatures: guide.features,
+          afterFeatures: normalized.features,
+          beforePrice: guide.price,
+          afterPrice: normalized.price
+        });
+      }
+
+      return normalized;
+    });
+
+    console.log('[getAllGuides] Returning', normalizedGuides.length, 'guides');
+    // Log first guide structure to verify
+    if (normalizedGuides.length > 0) {
+      console.log('[getAllGuides] First guide sample:', {
+        id: normalizedGuides[0].id,
+        hasFeatures: !!normalizedGuides[0].features,
+        featuresLength: normalizedGuides[0].features?.length,
+        hasPrice: !!normalizedGuides[0].price,
+        priceValue: normalizedGuides[0].price
+      });
+    }
 
     return normalizedGuides;
   } catch (error) {

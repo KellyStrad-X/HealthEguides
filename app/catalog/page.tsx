@@ -15,9 +15,24 @@ export default function CatalogPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
   useEffect(() => {
+    console.log('[Catalog] Fetching guides from API...');
     fetch('/api/guides')
       .then(res => res.json())
       .then(data => {
+        console.log('[Catalog] Received guides:', data.length);
+        // Check first guide structure
+        if (data.length > 0) {
+          console.log('[Catalog] First guide:', {
+            id: data[0].id,
+            hasFeatures: !!data[0].features,
+            featuresType: typeof data[0].features,
+            featuresIsArray: Array.isArray(data[0].features),
+            featuresValue: data[0].features,
+            hasPrice: !!data[0].price,
+            priceType: typeof data[0].price,
+            priceValue: data[0].price
+          });
+        }
         setGuides(data);
         setLoading(false);
       })
