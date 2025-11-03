@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { guides } from '@/lib/guides';
 import { trackPurchase } from '@/components/MetaPixel';
+import { trackGoogleAdsPurchase } from '@/components/GoogleAds';
 
 // Force dynamic rendering since this page uses search params
 export const dynamic = 'force-dynamic';
@@ -61,6 +62,9 @@ function PurchaseSuccessContent() {
             const contentIds = data.purchases.map((p: any) => p.guideId);
             const totalValue = data.purchases.reduce((sum: number, p: any) => sum + (p.amount || 0), 0) / 100; // Convert cents to dollars
             trackPurchase(contentNames, contentIds, totalValue, data.purchases.length);
+
+            // Track Google Ads conversion
+            trackGoogleAdsPurchase(sessionId, totalValue, 'USD');
 
             setLoading(false);
             return; // Success!

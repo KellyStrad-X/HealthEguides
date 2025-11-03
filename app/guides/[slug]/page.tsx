@@ -267,10 +267,30 @@ function GuideViewerContent({ params }: GuideViewerProps) {
           headerVisible ? 'translate-y-0' : '-translate-y-full'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-center">
-          <Link href="/" className="text-xl font-bold text-[#4ECDC4] hover:opacity-80 transition">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          {/* Back to Home Button */}
+          <Link
+            href="/"
+            className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-[#4ECDC4] hover:bg-gray-50 rounded-lg transition-all font-medium"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+            </svg>
+            <span>Home</span>
+          </Link>
+
+          {/* Center Logo */}
+          <Link href="/" className="absolute left-1/2 transform -translate-x-1/2 text-xl font-bold text-[#4ECDC4] hover:opacity-80 transition">
             Health eGuides
           </Link>
+
+          {/* Spacer for layout balance */}
+          <div className="w-24"></div>
         </div>
       </header>
 

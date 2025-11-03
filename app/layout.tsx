@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import "./globals.css";
 import MetaPixel from "@/components/MetaPixel";
+import GoogleAds from "@/components/GoogleAds";
 
 export const metadata: Metadata = {
   title: "Health E-Guides | Evidence-Based Women's Health Guides",
@@ -42,6 +43,7 @@ export default function RootLayout({
       <body className="scrollbar-thin">
         <Suspense fallback={null}>
           <MetaPixel />
+          <GoogleAds />
         </Suspense>
         {children}
       </body>
