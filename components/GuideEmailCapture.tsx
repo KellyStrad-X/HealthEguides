@@ -15,6 +15,7 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const emailInputRef = useRef<HTMLInputElement>(null);
 
   // Auto-focus when section comes into view
@@ -42,8 +43,15 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
+
+    // Validate terms agreement
+    if (!agreedToTerms) {
+      setError('Please agree to the Terms of Service and medical disclaimer to continue.');
+      return;
+    }
+
+    setLoading(true);
 
     try {
       // Track begin_checkout event (Google Analytics)
@@ -132,9 +140,42 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
                 <div className="text-red-400 text-sm text-center">{error}</div>
               )}
 
+              {/* Terms Agreement Checkbox */}
+              <div className="flex items-start gap-3 p-4 bg-white/5 rounded-lg border border-white/10">
+                <input
+                  type="checkbox"
+                  id="terms-agreement"
+                  checked={agreedToTerms}
+                  onChange={(e) => setAgreedToTerms(e.target.checked)}
+                  className="mt-1 w-4 h-4 rounded border-white/20 bg-white/10 text-primary focus:ring-primary focus:ring-offset-0"
+                  required
+                />
+                <label htmlFor="terms-agreement" className="text-sm text-white/80 leading-relaxed">
+                  I agree to the{' '}
+                  <a
+                    href="/terms"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    Terms of Service
+                  </a>
+                  {' '}and{' '}
+                  <a
+                    href="/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    Privacy Policy
+                  </a>
+                  . I understand this guide provides educational information only and is not medical advice. I should consult a healthcare provider before making health decisions.
+                </label>
+              </div>
+
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !agreedToTerms}
                 className="w-full btn-primary text-xl py-5 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Processing...' : `Get Your Guide Now - $${safePrice.toFixed(2)}`}

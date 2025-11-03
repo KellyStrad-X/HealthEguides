@@ -17,6 +17,7 @@ export default function BundleSelectionModal({ isOpen, onClose, currentGuide }: 
   const [showEmailCapture, setShowEmailCapture] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -72,8 +73,15 @@ export default function BundleSelectionModal({ isOpen, onClose, currentGuide }: 
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
+
+    // Validate terms agreement
+    if (!agreedToTerms) {
+      setError('Please agree to the Terms of Service and medical disclaimer to continue.');
+      return;
+    }
+
+    setLoading(true);
 
     try {
       if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -272,9 +280,42 @@ export default function BundleSelectionModal({ isOpen, onClose, currentGuide }: 
                   </div>
                 )}
 
+                {/* Terms Agreement Checkbox */}
+                <div className="flex items-start gap-3 p-4 bg-white/5 rounded-lg border border-white/10">
+                  <input
+                    type="checkbox"
+                    id="bundle-terms-agreement"
+                    checked={agreedToTerms}
+                    onChange={(e) => setAgreedToTerms(e.target.checked)}
+                    className="mt-1 w-4 h-4 rounded border-white/20 bg-white/10 text-yellow-300 focus:ring-yellow-300 focus:ring-offset-0"
+                    required
+                  />
+                  <label htmlFor="bundle-terms-agreement" className="text-sm text-white/80 leading-relaxed">
+                    I agree to the{' '}
+                    <a
+                      href="/terms"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-yellow-300 hover:underline"
+                    >
+                      Terms of Service
+                    </a>
+                    {' '}and{' '}
+                    <a
+                      href="/privacy"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-yellow-300 hover:underline"
+                    >
+                      Privacy Policy
+                    </a>
+                    . I understand these guides provide educational information only and are not medical advice. I should consult a healthcare provider before making health decisions.
+                  </label>
+                </div>
+
                 <button
                   type="submit"
-                  disabled={loading || !email}
+                  disabled={loading || !email || !agreedToTerms}
                   className="w-full px-8 py-4 bg-yellow-300 text-purple-900 rounded-lg font-bold text-lg hover:bg-yellow-200 transition-all disabled:opacity-50"
                 >
                   {loading ? 'Processing...' : 'Continue to Checkout - $10'}
@@ -286,6 +327,7 @@ export default function BundleSelectionModal({ isOpen, onClose, currentGuide }: 
                     setShowEmailCapture(false);
                     setEmail('');
                     setError('');
+                    setAgreedToTerms(false);
                   }}
                   className="w-full px-4 py-2 text-white/70 hover:text-white text-sm transition-colors"
                 >
