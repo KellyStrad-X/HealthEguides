@@ -11,6 +11,7 @@ export default function BundleOffer() {
   const [showEmailCapture, setShowEmailCapture] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   useEffect(() => {
     fetch('/api/guides')
@@ -255,6 +256,31 @@ export default function BundleOffer() {
                   className="w-full px-6 py-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent transition-all"
                 />
 
+                {/* Terms Agreement Checkbox */}
+                <div className="border-2 border-yellow-300/40 rounded-lg p-5 bg-yellow-300/10">
+                  <div className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      id="bundle-terms-agreement"
+                      checked={agreedToTerms}
+                      onChange={(e) => setAgreedToTerms(e.target.checked)}
+                      className="mt-1 w-5 h-5 rounded border-2 border-yellow-300 bg-white/10 text-yellow-300 focus:ring-2 focus:ring-yellow-300 focus:ring-offset-0 cursor-pointer"
+                      required
+                    />
+                    <label htmlFor="bundle-terms-agreement" className="text-sm text-white leading-relaxed cursor-pointer">
+                      <span className="font-semibold">Required:</span> I agree to the{' '}
+                      <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-yellow-300 hover:underline font-semibold">
+                        Terms of Service
+                      </a>
+                      {' '}and{' '}
+                      <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-yellow-300 hover:underline font-semibold">
+                        Privacy Policy
+                      </a>
+                      . I understand these guides provide educational information only and are not medical advice. Results may vary.
+                    </label>
+                  </div>
+                </div>
+
                 {error && (
                   <div className="text-red-300 text-sm text-center bg-red-500/20 border border-red-300/30 rounded-lg py-2">
                     {error}
@@ -263,7 +289,7 @@ export default function BundleOffer() {
 
                 <button
                   type="submit"
-                  disabled={loading || !email}
+                  disabled={loading || !email || !agreedToTerms}
                   className="w-full px-8 py-4 bg-yellow-300 text-purple-900 rounded-lg font-bold text-lg hover:bg-yellow-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Processing...' : 'Continue to Checkout - $10'}
@@ -275,6 +301,7 @@ export default function BundleOffer() {
                     setShowEmailCapture(false);
                     setEmail('');
                     setError('');
+                    setAgreedToTerms(false);
                   }}
                   className="w-full px-4 py-2 text-white/70 hover:text-white text-sm transition-colors"
                 >
