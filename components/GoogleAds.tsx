@@ -14,22 +14,19 @@ export default function GoogleAds() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const adsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
+  const searchParamsString = searchParams.toString();
 
   useEffect(() => {
     if (!adsId) return;
+    if (typeof window === 'undefined') return;
+    if (typeof window.gtag !== 'function') return;
 
-    // Initialize gtag if not already done
-    if (!window.gtag) {
-      window.dataLayer = window.dataLayer || [];
-      window.gtag = function() {
-        window.dataLayer.push(arguments);
-      };
-      window.gtag('js', new Date());
-    }
+    const pagePath = searchParamsString ? `${pathname}?${searchParamsString}` : pathname;
 
-    // Configure Google Ads
-    window.gtag('config', adsId);
-  }, [adsId, pathname, searchParams]);
+    window.gtag('config', adsId, {
+      page_path: pagePath,
+    });
+  }, [adsId, pathname, searchParamsString]);
 
   return null;
 }
