@@ -275,42 +275,44 @@ export default function BundleSelectionModal({ isOpen, onClose, currentGuide }: 
                 />
 
                 {error && (
-                  <div className="text-red-300 text-sm text-center bg-red-500/20 border border-red-300/30 rounded-lg py-2">
+                  <div className="text-red-300 text-sm text-center bg-red-500/20 border border-red-300/30 rounded-lg py-3 font-semibold">
                     {error}
                   </div>
                 )}
 
-                {/* Terms Agreement Checkbox */}
-                <div className="flex items-start gap-3 p-4 bg-white/5 rounded-lg border border-white/10">
-                  <input
-                    type="checkbox"
-                    id="bundle-terms-agreement"
-                    checked={agreedToTerms}
-                    onChange={(e) => setAgreedToTerms(e.target.checked)}
-                    className="mt-1 w-4 h-4 rounded border-white/20 bg-white/10 text-yellow-300 focus:ring-yellow-300 focus:ring-offset-0"
-                    required
-                  />
-                  <label htmlFor="bundle-terms-agreement" className="text-sm text-white/80 leading-relaxed">
-                    I agree to the{' '}
-                    <a
-                      href="/terms"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-yellow-300 hover:underline"
-                    >
-                      Terms of Service
-                    </a>
-                    {' '}and{' '}
-                    <a
-                      href="/privacy"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-yellow-300 hover:underline"
-                    >
-                      Privacy Policy
-                    </a>
-                    . I understand these guides provide educational information only and are not medical advice. I should consult a healthcare provider before making health decisions.
-                  </label>
+                {/* Terms Agreement Checkbox - More Prominent */}
+                <div className="border-2 border-yellow-300/40 rounded-lg p-5 bg-yellow-300/10">
+                  <div className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      id="bundle-terms-agreement"
+                      checked={agreedToTerms}
+                      onChange={(e) => setAgreedToTerms(e.target.checked)}
+                      className="mt-1 w-5 h-5 rounded border-2 border-yellow-300 bg-white/10 text-yellow-300 focus:ring-2 focus:ring-yellow-300 focus:ring-offset-0 cursor-pointer"
+                      required
+                    />
+                    <label htmlFor="bundle-terms-agreement" className="text-sm text-white leading-relaxed cursor-pointer">
+                      <span className="font-semibold">Required:</span> I agree to the{' '}
+                      <a
+                        href="/terms"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-yellow-300 hover:underline font-semibold"
+                      >
+                        Terms of Service
+                      </a>
+                      {' '}and{' '}
+                      <a
+                        href="/privacy"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-yellow-300 hover:underline font-semibold"
+                      >
+                        Privacy Policy
+                      </a>
+                      . I understand these guides provide educational information only and are not medical advice. I should consult a healthcare provider before making health decisions.
+                    </label>
+                  </div>
                 </div>
 
                 <button
