@@ -6,6 +6,7 @@ import Stats from '@/components/Stats';
 import BundleOffer from '@/components/BundleOffer';
 import GuidesGrid from '@/components/GuidesGrid';
 import WhyChooseUs from '@/components/WhyChooseUs';
+import GuideRequestSection from '@/components/GuideRequestSection';
 import CTASection from '@/components/CTASection';
 import Footer from '@/components/Footer';
 
@@ -20,6 +21,7 @@ export default function Home() {
         <BundleOffer />
         <GuidesGrid />
         <WhyChooseUs />
+        <GuideRequestSection />
         <CTASection />
         <Footer />
       </main>
