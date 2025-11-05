@@ -66,7 +66,7 @@ export default function FeedbackForm({ onClose, isModal = false }: FeedbackFormP
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           placeholder="Your name"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
           required
           disabled={isSubmitting}
         />
@@ -82,7 +82,7 @@ export default function FeedbackForm({ onClose, isModal = false }: FeedbackFormP
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           placeholder="your.email@example.com"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
           required
           disabled={isSubmitting}
         />
@@ -98,7 +98,7 @@ export default function FeedbackForm({ onClose, isModal = false }: FeedbackFormP
           value={formData.subject}
           onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
           placeholder="What's your feedback about?"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
           required
           disabled={isSubmitting}
         />
@@ -114,7 +114,7 @@ export default function FeedbackForm({ onClose, isModal = false }: FeedbackFormP
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
           placeholder="Share your thoughts, suggestions, or concerns..."
           rows={6}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none text-gray-900"
           required
           disabled={isSubmitting}
         />

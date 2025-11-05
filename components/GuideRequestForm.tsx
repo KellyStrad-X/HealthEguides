@@ -65,7 +65,7 @@ export default function GuideRequestForm({ onClose, isModal = false }: GuideRequ
           value={formData.topic}
           onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
           placeholder="e.g., Managing Endometriosis"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
           required
           disabled={isSubmitting}
         />
@@ -81,7 +81,7 @@ export default function GuideRequestForm({ onClose, isModal = false }: GuideRequ
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           placeholder="Tell us more about what you'd like to learn..."
           rows={4}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none text-gray-900"
           disabled={isSubmitting}
         />
       </div>
@@ -96,7 +96,7 @@ export default function GuideRequestForm({ onClose, isModal = false }: GuideRequ
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           placeholder="your.email@example.com"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
           disabled={isSubmitting}
         />
         <p className="text-xs text-gray-500 mt-1">
