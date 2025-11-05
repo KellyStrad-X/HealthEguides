@@ -105,6 +105,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [uploadingHtml, setUploadingHtml] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [replyingToFeedback, setReplyingToFeedback] = useState<any | null>(null);
 
   // Fetch data based on active tab
   useEffect(() => {
@@ -508,12 +509,12 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                         <option value="reviewed">Reviewed</option>
                         <option value="responded">Responded</option>
                       </select>
-                      <a
-                        href={`mailto:${feedback.email}?subject=Re: ${feedback.subject}`}
+                      <button
+                        onClick={() => setReplyingToFeedback(feedback)}
                         className="px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
                       >
                         Reply
-                      </a>
+                      </button>
                       <button
                         onClick={async () => {
                           if (confirm('Delete this feedback?')) {
@@ -539,6 +540,18 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           </div>
         )}
       </div>
+
+      {/* Reply Modal */}
+      {replyingToFeedback && (
+        <ReplyModal
+          feedback={replyingToFeedback}
+          onClose={() => setReplyingToFeedback(null)}
+          onSuccess={() => {
+            setReplyingToFeedback(null);
+            fetchFeedback();
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -846,6 +859,136 @@ function GuideForm({
               type="button"
               onClick={onClose}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function ReplyModal({
+  feedback,
+  onClose,
+  onSuccess
+}: {
+  feedback: any;
+  onClose: () => void;
+  onSuccess: () => void;
+}) {
+  const [replyMessage, setReplyMessage] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (!replyMessage.trim()) {
+      setError('Please enter a reply message');
+      return;
+    }
+
+    setIsSending(true);
+
+    try {
+      const response = await fetch('/api/feedback/reply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          feedbackId: feedback.id,
+          replyMessage: replyMessage.trim(),
+        }),
+      });
+
+      if (response.ok) {
+        onSuccess();
+      } else {
+        const data = await response.json();
+        setError(data.error || 'Failed to send reply');
+      }
+    } catch (err) {
+      setError('Error sending reply. Please try again.');
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-gray-800">Reply to Feedback</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 text-2xl"
+            disabled={isSending}
+          >
+            ×
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6">
+          {/* Original Feedback */}
+          <div className="mb-6 bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h3 className="text-sm font-semibold text-gray-700 mb-3">Original Feedback:</h3>
+            <div className="space-y-2 text-sm">
+              <p className="text-gray-600">
+                <strong>From:</strong> {feedback.name} ({feedback.email})
+              </p>
+              <p className="text-gray-600">
+                <strong>Subject:</strong> {feedback.subject}
+              </p>
+              <p className="text-gray-600">
+                <strong>Date:</strong> {new Date(feedback.submittedAt).toLocaleString()}
+              </p>
+              <div className="mt-3 pt-3 border-t border-gray-200">
+                <p className="text-gray-800 whitespace-pre-wrap">{feedback.message}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Reply Message */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Your Reply
+            </label>
+            <textarea
+              value={replyMessage}
+              onChange={(e) => setReplyMessage(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 resize-none"
+              rows={8}
+              placeholder="Type your reply here..."
+              required
+              disabled={isSending}
+            />
+            <p className="text-xs text-gray-500 mt-2">
+              This will be sent to {feedback.email} from support@healtheguides.com via SendGrid
+            </p>
+          </div>
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-600">{error}</p>
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="flex items-center gap-3">
+            <button
+              type="submit"
+              disabled={isSending}
+              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:bg-blue-400 disabled:cursor-not-allowed"
+            >
+              {isSending ? 'Sending...' : 'Send Reply'}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={isSending}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
               Cancel
             </button>
