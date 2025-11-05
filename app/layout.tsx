@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import MetaPixel from "@/components/MetaPixel";
 import GoogleAds from "@/components/GoogleAds";
@@ -72,6 +73,7 @@ export default function RootLayout({
           <GoogleAds />
         </Suspense>
         {children}
+        <Analytics />
       </body>
     </html>
   );

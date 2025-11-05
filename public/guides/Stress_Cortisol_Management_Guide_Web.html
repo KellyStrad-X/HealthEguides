@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=375, initial-scale=1.0">
+    <title>Reclaim Your Energy: Stress & Cortisol Recovery Guide - HealthEGuides</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Stress/Cortisol Guide - Warm Sunrise Palette */
+            --primary-coral: #FF6B6B;
+            --secondary-teal: #4ECDC4;
+            --accent-gold: #FFD166;
+            --soft-purple: #667eea;
+
+            /* Text Colors */
+            --text-dark: #2c3e50;
+            --text-medium: #5a6c7d;
+            --text-light: #7f8c8d;
+
+            /* Background Colors */
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --bg-warm: #fdfbf7;
+
+            /* Gradients */
+            --gradient-main: linear-gradient(135deg, #FF6B6B 0%, #FFD166 100%);
+            --gradient-teal: linear-gradient(135deg, #4ECDC4 0%, #556FB5 100%);
+            --gradient-light-coral: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+            --gradient-light-teal: linear-gradient(135deg, #e8f9f7 0%, #d4f4f1 100%);
+            --gradient-light-gold: linear-gradient(135deg, #fff9e6 0%, #fff3cc 100%);
+            --gradient-light-purple: linear-gradient(135deg, #f0f4ff 0%, #e8eeff 100%);
+
+            /* Design System */
+            --border-radius: 12px;
+            --box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-white);
+            width: 375px;
+            margin: 0 auto;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .page {
+            width: 375px;
+            min-height: 600px;
+            padding: 24px 20px;
+            page-break-after: always;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page:last-child {
+            page-break-after: auto;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-coral);
+            margin-top: 24px;
+        }
+
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-top: 20px;
+        }
+
+        h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-top: 16px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        /* Hero/Cover Page - Warm Sunrise Theme */
+        .hero {
+            background: var(--gradient-main);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            color: white;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            line-height: 1.5;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .hero-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 40px;
+            width: 100%;
+            padding-top: 40px;
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .hero-stat-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Section Backgrounds */
+        .section-light-coral {
+            background: var(--gradient-light-coral);
+        }
+
+        .section-light-teal {
+            background: var(--gradient-light-teal);
+        }
+
+        .section-light-gold {
+            background: var(--gradient-light-gold);
+        }
+
+        .section-light-purple {
+            background: var(--gradient-light-purple);
+        }
+
+        .section-gradient {
+            background: var(--gradient-teal);
+            color: white;
+            position: relative;
+        }
+
+        .section-gradient h2,
+        .section-gradient h3,
+        .section-gradient h4 {
+            color: white;
+        }
+
+        .section-gradient p,
+        .section-gradient li {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Section Icons */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .section-icon {
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-left: 5px solid var(--primary-coral);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin: 16px 0;
+            box-shadow: var(--box-shadow);
+        }
+
+        .card h4 {
+            color: var(--primary-coral);
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .card p:last-child {
+            margin-bottom: 0;
+        }
+
+        .card-teal {
+            border-left-color: var(--secondary-teal);
+        }
+
+        .card-teal h4 {
+            color: var(--secondary-teal);
+        }
+
+        .card-purple {
+            border-left-color: var(--soft-purple);
+        }
+
+        .card-purple h4 {
+            color: var(--soft-purple);
+        }
+
+        /* Callout Boxes */
+        .tip-box {
+            background: rgba(78, 205, 196, 0.1);
+            border-left: 6px solid var(--secondary-teal);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .warning-box {
+            background: rgba(255, 107, 107, 0.12);
+            border-left: 6px solid var(--primary-coral);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .stat-box {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-coral);
+            display: block;
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: var(--text-medium);
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        strong {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Pull Quote */
+        .pull-quote {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-coral);
+            font-style: italic;
+            margin: 24px 0;
+            padding-left: 20px;
+            border-left: 4px solid var(--primary-coral);
+            line-height: 1.4;
+        }
+
+        /* Checklist */
+        .checklist {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 24px 0;
+            box-shadow: var(--box-shadow);
+        }
+
+        .checklist-item {
+            padding: 10px 0;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .checkbox {
+            font-size: 18px;
+            color: var(--primary-coral);
+            line-height: 1.6;
+        }
+
+        /* Chapter Divider */
+        .chapter-divider {
+            text-align: center;
+            padding: 40px 20px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chapter-emoji {
+            font-size: 56px;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        .chapter-title {
+            font-size: 28px;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 16px;
+        }
+
+        .chapter-description {
+            font-size: 16px;
+            max-width: 300px;
+        }
+
+        /* Footer/Disclaimer */
+        .footer {
+            background: #f8f9fa;
+            padding: 24px 20px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--text-medium);
+        }
+
+        .footer p {
+            margin-bottom: 12px;
+        }
+
+        .footer strong {
+            color: var(--text-dark);
+        }
+
+        @media print {
+            @page {
+                size: letter;
+                margin: 0;
+            }
+
+            body {
+                width: 375px;
+            }
+
+            .page {
+                page-break-after: always;
+            }
+
+            .page:last-child {
+                page-break-after: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="page hero">
+    <h1>Reclaim Your Energy</h1>
+    <p class="hero-subtitle">A Women's Guide to Stress & Cortisol Recovery—Why You're Doing Everything Right But Still Exhausted (And What Actually Helps)</p>
+
+    <div class="hero-stats">
+        <div class="hero-stat">
+            <span class="hero-stat-number">49%</span>
+            <span class="hero-stat-label">Women More Likely to Have Elevated Cortisol Than Men</span>
+        </div>
+        <div class="hero-stat">
+            <span class="hero-stat-number">53%</span>
+            <span class="hero-stat-label">Of Women Report Being in State of Burnout</span>
+        </div>
+        <div class="hero-stat">
+            <span class="hero-stat-number">HPA Axis</span>
+            <span class="hero-stat-label">Your Stress Response System You Need to Understand</span>
+        </div>
+    </div>
+
+    <p class="copyright">© 2025 HealthEGuides. All rights reserved.</p>
+</div>
+
+<!-- SECTION 1: If You're Running on Empty -->
+<div class="page section-light-coral">
+    <div class="section-header">
+        <span class="section-icon">☀️</span>
+        <h2>If You're Running on Empty, This Is For You</h2>
+    </div>
+
+    <p>You're eating clean—whole foods, no processed junk. You're exercising regularly, maybe even too much. You're trying to sleep 7-8 hours. You're doing everything the health experts say you should do.</p>
+
+    <p>And yet... you're exhausted. The weight won't budge, especially around your belly. You feel puffy and inflamed. Your brain is foggy. You snap at people you love. And you can't shake the feeling that you're failing—even though you're working harder than ever.</p>
+
+    <p><strong>If this sounds familiar, I want you to know—this isn't your fault.</strong></p>
+
+    <div class="pull-quote">
+        "You're not failing—your body is trying to protect you"
+    </div>
+
+    <h3>The "Doing Everything Right" Paradox</h3>
+
+    <p>High-achieving women everywhere are experiencing this: clean eating, consistent exercise, wellness routines—and bodies that won't respond. Stubborn weight, crushing fatigue, emotional reactivity, brain fog that affects work.</p>
+
+    <p>Your doctor says "just reduce stress" but doesn't tell you how. TikTok says "drink cortisol cocktails" but that won't fix the root cause. You need something in between.</p>
+
+    <h3>The "Wired But Tired" Reality</h3>
+
+    <p>Exhausted all day, can't sleep at night. Your body is stuck in "always on" mode—your stress response system (HPA axis) is dysregulated, and it's creating measurable physiological changes.</p>
+</div>
+
+<!-- Section 1 Continued -->
+<div class="page section-light-coral">
+    <h3>What This Guide Offers Differently</h3>
+
+    <ul>
+        <li><strong>Women-First Approach</strong> — Women are 49% more likely to have elevated cortisol; mental load, perimenopause, and invisible labor addressed head-on</li>
+        <li><strong>HPA Axis Not "Adrenal Fatigue"</strong> — Scientifically accurate terminology while validating your symptoms</li>
+        <li><strong>Nervous System Regulation</strong> — Polyvagal theory, vagus nerve practices, somatic approaches—emerging supportive tools</li>
+        <li><strong>Multi-System Framework</strong> — 6 interconnected strategies: nervous system, circadian rhythm, blood sugar, movement, adaptogens, boundaries</li>
+    </ul>
+
+    <div class="stat-box">
+        <span class="stat-number">49%</span>
+        <p class="stat-label">Women are 49% more likely to have raised cortisol levels than men—this isn't personal weakness, it's biology meeting societal pressures</p>
+    </div>
+
+    <p><strong>Breaking point awareness is your body's way of saying "something needs to change."</strong> Not that you're failing, but that you deserve support. Your body wants to heal—it needs the right approach.</p>
+
+    <p style="text-align: center; font-style: italic; color: var(--text-medium); margin-top: 24px;">"This isn't just 'in your head'—stress creates measurable physiological changes"</p>
+</div>
+
+<!-- SECTION 2: Why Your Body Isn't Responding -->
+<div class="page section-light-teal">
+    <div class="section-header">
+        <span class="section-icon">🧠</span>
+        <h2>Why Your Body Isn't Responding (Even Though You're Doing Everything Right)</h2>
+    </div>
+
+    <p>Chronic stress doesn't just make you "feel" bad—it changes your hormones, metabolism, nervous system, and immune function. Understanding these mechanisms empowers you to address root causes.</p>
+
+    <h3>The HPA Axis Explained (Not "Adrenal Fatigue")</h3>
+
+    <div class="card">
+        <h4>What Is the HPA Axis?</h4>
+        <p>Hypothalamus-Pituitary-Adrenal axis = your body's stress response system. Think of it like your home's thermostat—when functioning properly, it maintains balance. When dysregulated, temperature (stress response) swings wildly.</p>
+    </div>
+
+    <div class="card">
+        <h4>Why "Adrenal Fatigue" Isn't the Right Term</h4>
+        <p>"Adrenal fatigue" isn't medically recognized (adrenals don't "give out"). <strong>What IS happening:</strong> HPA axis dysfunction, dysregulated cortisol rhythm. Your symptoms are real—the mechanism is what we're clarifying.</p>
+    </div>
+
+    <div class="card">
+        <h4>What Goes Wrong</h4>
+        <p>2024 research shows some burnout patients have hypocortisolism (low cortisol), not high. Others have flat rhythm or reversed rhythm. It's not one-size-fits-all—your pattern is individual.</p>
+    </div>
+
+    <h3>Cortisol's Many Jobs</h3>
+
+    <p><strong>Normal function:</strong> Morning peak (cortisol awakening response = healthy), evening low for sleep.</p>
+
+    <p><strong>What goes wrong:</strong> Flat rhythm (no morning peak), reversed rhythm (high at night), chronic elevation. This affects metabolism, blood sugar, sleep, immunity, inflammation, and sex hormones.</p>
+</div>
+
+<!-- Section 2 Continued -->
+<div class="page section-light-teal">
+    <h3>Why Women Experience This Differently</h3>
+
+    <div class="card-teal card">
+        <h4>Statistical Reality</h4>
+        <p>Women are 49% more likely to have elevated cortisol than men (13.6% of women vs 11.0% of men test abnormal). This isn't personal weakness—it's biology meeting societal pressures.</p>
+    </div>
+
+    <div class="card-teal card">
+        <h4>Mental Load & Invisible Labor</h4>
+        <p>Cognitive burden of remembering, planning, organizing everything—tracking everyone's schedules, managing household, coordinating appointments. Invisible, constant, unrelenting = chronic stress activation.</p>
+    </div>
+
+    <div class="card-teal card">
+        <h4>Hormonal Transitions</h4>
+        <p>Perimenopause intensifies stress responses. Pregnenolone steal: stress hormones prioritized over progesterone production—like robbing from your sex hormone bank account to pay stress hormone bills.</p>
+    </div>
+
+    <h3>The Vicious Cycles</h3>
+
+    <ul>
+        <li><strong>Stress → poor sleep → more stress</strong></li>
+        <li><strong>Stress → blood sugar dysregulation → cortisol spikes → insulin resistance → weight gain → more stress</strong></li>
+        <li><strong>Stress → inflammation → weight gain → more stress</strong></li>
+    </ul>
+
+    <div class="pull-quote">
+        "Your body isn't holding onto weight out of spite—it's trying to protect you from what it perceives as threat"
+    </div>
+</div>
+
+<!-- Section 2 Continued - Debunking Myths -->
+<div class="page section-light-gold">
+    <h3>Debunking Cortisol Myths (Compassionately)</h3>
+
+    <div class="card">
+        <h4>"Cortisol Face"</h4>
+        <p><strong>The claim:</strong> Stress causes dramatic facial changes (moon face).</p>
+        <p><strong>The truth:</strong> Actual moon face requires Cushing's Syndrome (rare medical condition with extremely high cortisol). Stress CAN cause inflammation and water retention, but not dramatically. The reason this trend resonates: stress DOES affect your appearance (skin, puffiness)—just not in the way viral videos claim.</p>
+        <p><strong>What to do:</strong> If facial changes concern you, see doctor to rule out medical conditions.</p>
+    </div>
+
+    <div class="card">
+        <h4>"Cortisol Cocktails"</h4>
+        <p><strong>The claim:</strong> Drinks with vitamin C, electrolytes, and coconut water lower cortisol.</p>
+        <p><strong>The truth:</strong> No evidence they lower cortisol specifically. Ingredients offer nutritional support (vitamin C for adrenal function, electrolytes for hydration), but won't fix HPA dysfunction.</p>
+        <p><strong>What to do:</strong> Not harmful, but don't expect them to fix chronic stress. Focus on strategies that address root causes.</p>
+    </div>
+
+    <p><strong>Why trends persist:</strong> Kernel of truth + desire for simple solutions. Women seeking answers deserve compassion, not dismissal.</p>
+
+    <div class="pull-quote">
+        "This isn't just 'in your head'—stress creates measurable physiological changes"
+    </div>
+</div>
+
+<!-- CHAPTER DIVIDER: Cortisol Recovery Framework -->
+<div class="page section-gradient chapter-divider">
+    <div class="chapter-emoji">🌟</div>
+    <h2 class="chapter-title">The Cortisol Recovery Framework</h2>
+    <p class="chapter-description">Six evidence-based strategies to regulate your nervous system, restore HPA axis function, and reclaim your energy</p>
+</div>
+
+<!-- SECTION 3: Part 1 - Nervous System -->
+<div class="page section-light-coral">
+    <div class="section-header">
+        <span class="section-icon">💆</span>
+        <h2>Part 1: Nervous System Regulation—The Foundation</h2>
+    </div>
+
+    <p>Before supplements or diet changes, you need to shift your nervous system out of chronic fight-or-flight. <strong>Polyvagal theory and vagus nerve practices may offer supportive tools.</strong></p>
+
+    <h3>Understanding Your Nervous System States</h3>
+
+    <p>Polyvagal theory shows three states:</p>
+    <ul>
+        <li><strong>Ventral vagal = safe/social</strong> (calm, connected)</li>
+        <li><strong>Sympathetic = fight/flight</strong> ("always on," hypervigilant)</li>
+        <li><strong>Dorsal vagal = freeze/shutdown</strong> (overwhelmed, numb)</li>
+    </ul>
+
+    <p>Chronic stress keeps you stuck in sympathetic dominance. The goal: increase capacity for ventral vagal (felt safety) state.</p>
+
+    <h3>Vagus Nerve Practices</h3>
+
+    <p>The vagus nerve connects brain to body and is involved in regulating inflammation, heart rate, and digestion. While research on vagus nerve stimulation is emerging, these practices are reported by many as helpful for calming.</p>
+
+    <div class="checklist">
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Cold exposure:</strong> Splash cold water on face or end shower with 30 seconds cold</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Humming/singing:</strong> Vibrations may provide calming effect</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Deep breathing:</strong> 4-7-8 breath or box breathing</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Gargling:</strong> Activate throat muscles</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Massage:</strong> Neck/jaw tension release</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Yoga/gentle movement:</strong> Somatic practices</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Social connection:</strong> Co-regulation with safe people</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Laughter:</strong> Diaphragm engagement</span>
+        </div>
+    </div>
+
+    <div class="pull-quote">
+        "Many find that body-based practices complement cognitive approaches for stress management"
+    </div>
+</div>
+
+<!-- Part 2: Circadian Rhythm -->
+<div class="page section-light-teal">
+    <div class="section-header">
+        <span class="section-icon">🌅</span>
+        <h2>Part 2: Circadian Rhythm & Sleep Optimization</h2>
+    </div>
+
+    <p>Cortisol follows a natural rhythm. Optimizing light exposure, morning routines, and sleep creates the foundation for HPA axis recovery.</p>
+
+    <h3>Morning Cortisol Awakening Response (CAR) Protocol</h3>
+
+    <p>CAR should increase 50% within 30-45 minutes of waking. Setting proper morning cortisol peak cascades throughout the day.</p>
+
+    <div class="checklist">
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Sunlight within 30 min of waking:</strong> 10-30 min outdoor light exposure</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Avoid phone/screens first 30-60 min:</strong> Allows natural cortisol rise</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Protein-rich breakfast:</strong> 20-30g protein stabilizes blood sugar</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Movement:</strong> Light walk or stretching</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Gratitude practice:</strong> 3 things you're grateful for (shifts nervous system)</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Cold exposure (optional):</strong> Cold shower ending boosts cortisol appropriately</span>
+        </div>
+    </div>
+
+    <p><strong>What NOT to do:</strong> Hit snooze repeatedly (disrupts CAR), doom-scroll immediately upon waking.</p>
+
+    <h3>Evening Wind-Down Rituals</h3>
+
+    <p>Lower cortisol naturally for sleep:</p>
+
+    <ol>
+        <li>Dim lights 2-3 hrs before bed (signals melatonin production)</li>
+        <li>Screen curfew 60-90 min before bed</li>
+        <li>Warm bath/shower (temperature drop signals sleep)</li>
+        <li>Magnesium supplement: 250-400mg magnesium glycinate</li>
+        <li>Gentle movement: Yin yoga, stretching</li>
+        <li>Worry window closure: Write down tomorrow's to-dos</li>
+    </ol>
+
+    <p style="font-style: italic; text-align: center; margin-top: 24px;">"Evenings are for releasing the day, not planning tomorrow"</p>
+</div>
+
+<!-- Part 3: Blood Sugar -->
+<div class="page section-light-gold">
+    <div class="section-header">
+        <span class="section-icon">🍽️</span>
+        <h2>Part 3: Blood Sugar Balance—Breaking the Cycle</h2>
+    </div>
+
+    <p>Blood sugar swings trigger cortisol release, creating a vicious cycle. <strong>Stable blood sugar = stable energy and mood.</strong></p>
+
+    <h3>The Cortisol-Insulin Resistance Connection</h3>
+
+    <p>2024 research confirms chronic high cortisol contributes to insulin resistance.</p>
+
+    <p><strong>The cycle:</strong> Stress → cortisol → blood sugar rise → insulin surge → crash → more cortisol</p>
+
+    <p><strong>Why this causes weight gain:</strong> Insulin resistance, belly fat accumulation. And why dieting makes it worse: caloric restriction raises cortisol (especially in women).</p>
+
+    <h3>Blood Sugar Stabilization Strategies</h3>
+
+    <div class="checklist">
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Protein-first meals:</strong> 20-30g protein at breakfast (stabilizes blood sugar for hours)</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Never eat carbs alone:</strong> Pair with protein/fat to slow glucose spike</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Fiber emphasis:</strong> 25-30g daily (slows glucose absorption)</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Strategic carb timing:</strong> Complex carbs in evening support sleep</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Avoid skipping meals:</strong> Causes blood sugar drop → cortisol surge</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Limit caffeine:</strong> Especially on empty stomach (spikes cortisol)</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Balanced snacks if needed:</strong> Nut butter + apple, hard-boiled egg</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Avoid extreme restriction:</strong> 12-14 hr fasting window max for women</span>
+        </div>
+    </div>
+</div>
+
+<!-- Blood Sugar Continued - IF Caution -->
+<div class="page section-light-gold">
+    <h3>Intermittent Fasting Caution for Women</h3>
+
+    <p>2024 research shows IF can increase cortisol and disrupt hormones in women. <strong>Gender difference matters:</strong> Men improved blood sugar; women's worsened.</p>
+
+    <div class="warning-box">
+        <p><strong>⚠️ IF Recommendations for Stressed Women</strong></p>
+        <ul style="margin: 12px 0 0 0; padding-left: 20px;">
+            <li>12-14 hour windows okay (e.g., 7pm-9am)</li>
+            <li>Avoid fasting during luteal phase (days 15-28) when progesterone needs support</li>
+            <li>If already stressed, don't add fasting stress</li>
+            <li>Listen to body: hunger, irritability, poor sleep = signs to stop</li>
+        </ul>
+    </div>
+
+    <div class="pull-quote">
+        "What works for men doesn't always work for women—honor your unique physiology"
+    </div>
+</div>
+
+<!-- Part 4: Movement & Exercise -->
+<div class="page section-light-purple">
+    <div class="section-header">
+        <span class="section-icon">🏃</span>
+        <h2>Part 4: Movement & Exercise—When More Isn't Better</h2>
+    </div>
+
+    <p>Exercise raises cortisol acutely (healthy), but overtraining without recovery creates chronic elevation. <strong>Stressed women need to exercise smarter, not harder.</strong></p>
+
+    <h3>The Exercise-Cortisol Paradox</h3>
+
+    <p>2024 research on overtraining: Already-stressed body interprets intense exercise as more threat.</p>
+
+    <p><strong>Signs you're overdoing it:</strong></p>
+    <ol>
+        <li>Worsening sleep despite being tired</li>
+        <li>Stubborn weight gain despite exercise</li>
+        <li>Increased irritability/anxiety</li>
+        <li>Frequent illness</li>
+        <li>Loss of period or irregular cycles</li>
+        <li>Declining performance</li>
+        <li>Exercise feels like punishment, not energizing</li>
+    </ol>
+
+    <h3>Exercise Modifications for High-Cortisol Women</h3>
+
+    <div class="card">
+        <h4>Phase 1: Active Recovery (2-4 weeks)</h4>
+        <p>Gentle movement only: Walking, yin yoga, stretching, swimming (easy pace). Let nervous system downregulate.</p>
+    </div>
+
+    <div class="card">
+        <h4>Phase 2: Gradual Reintroduction (4-8 weeks)</h4>
+        <p>2-3x/week moderate intensity + 2-3x/week restorative (yoga, walking). Focus: Enjoyment, not calorie burn.</p>
+    </div>
+
+    <div class="card">
+        <h4>Phase 3: Sustainable Balance</h4>
+        <p>2x/week strength training + 1-2x/week HIIT (if body responds well) + daily movement (walking, stretching). Prioritize sleep and recovery.</p>
+    </div>
+
+    <div class="tip-box">
+        <p><strong>💡 Cycle-Syncing Tip</strong></p>
+        <p>Higher intensity follicular phase (days 1-14), restorative luteal phase (days 15-28). Work with your hormones, not against them.</p>
+    </div>
+
+    <p style="font-style: italic; text-align: center; margin-top: 24px;">"Rest is productive—it's when your body heals"</p>
+</div>
+
+<!-- Part 5: Adaptogens -->
+<div class="page section-light-teal">
+    <div class="section-header">
+        <span class="section-icon">🌿</span>
+        <h2>Part 5: Adaptogens & Supplements—Strategic Support</h2>
+    </div>
+
+    <p>Adaptogens help body adapt to stress when used strategically. <strong>Not all adaptogens work the same—selection and timing matter.</strong></p>
+
+    <h3>Evidence-Based Adaptogen Guide</h3>
+
+    <div class="card">
+        <h4>Ashwagandha (Tier 1: Strongest Evidence)</h4>
+        <p><strong>Best for:</strong> High cortisol, anxiety, sleep issues</p>
+        <p><strong>Evidence:</strong> 2024 research shows improvements in stress markers and estradiol in women</p>
+        <p><strong>Dosing:</strong> 300-600mg daily</p>
+        <p><strong>Timing:</strong> Evening (can be sedating)</p>
+        <p><strong>Duration:</strong> 8-12 weeks minimum to assess</p>
+        <p><strong>Caution:</strong> Avoid with thyroid conditions (can lower TSH)</p>
+    </div>
+
+    <div class="card">
+        <h4>Rhodiola Rosea (Tier 1: Strong Evidence)</h4>
+        <p><strong>Best for:</strong> Fatigue, mental performance, physical stamina</p>
+        <p><strong>Profile:</strong> Adaptogen + mild stimulant</p>
+        <p><strong>Dosing:</strong> 200-400mg daily</p>
+        <p><strong>Timing:</strong> Morning (energizing)</p>
+        <p><strong>Good for:</strong> Low cortisol/burnout phase</p>
+    </div>
+
+    <div class="card">
+        <h4>Holy Basil/Tulsi (Tier 2: Emerging Evidence)</h4>
+        <p><strong>Best for:</strong> Anxiety, blood sugar balance</p>
+        <p><strong>Profile:</strong> Gentle, balancing</p>
+        <p><strong>Dosing:</strong> 300-600mg daily</p>
+        <p><strong>Timing:</strong> Morning or afternoon</p>
+        <p><strong>Good for:</strong> Ongoing daily support</p>
+    </div>
+</div>
+
+<!-- Adaptogens Continued -->
+<div class="page section-light-teal">
+    <h3>Combination Strategies</h3>
+
+    <ul>
+        <li><strong>High cortisol:</strong> Ashwagandha (evening) + Holy Basil (morning)</li>
+        <li><strong>Low cortisol/burnout:</strong> Rhodiola (morning) + B-complex</li>
+        <li><strong>Sleep + stress:</strong> Ashwagandha (evening) + Magnesium glycinate</li>
+    </ul>
+
+    <h3>Supporting Supplements</h3>
+
+    <ul>
+        <li><strong>Magnesium Glycinate:</strong> 250-400mg evening (nervous system, sleep)</li>
+        <li><strong>Vitamin C:</strong> 500-1000mg (adrenal support, cortisol modulation)</li>
+        <li><strong>B-Complex:</strong> Morning (energy, stress resilience)</li>
+        <li><strong>L-Theanine:</strong> 200-400mg as needed (calm focus, doesn't sedate)</li>
+    </ul>
+
+    <div class="warning-box">
+        <p><strong>⚠️ Quality & Safety</strong></p>
+        <ul style="margin: 12px 0 0 0; padding-left: 20px;">
+            <li>Third-party testing: ConsumerLab, Labdoor</li>
+            <li>Consult healthcare provider if on medications (especially thyroid, blood pressure, psychiatric meds)</li>
+            <li>Start one at a time to assess response</li>
+            <li>Quality matters: organic, standardized extracts</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Part 6: Mental Load & Boundaries -->
+<div class="page section-light-coral">
+    <div class="section-header">
+        <span class="section-icon">📋</span>
+        <h2>Part 6: Mental Load & Boundaries—The Invisible Stress</h2>
+    </div>
+
+    <p>Mental load—the invisible cognitive and emotional labor of managing household/family—is a massive cortisol trigger for women. <strong>Addressing it isn't selfish; it's essential.</strong></p>
+
+    <h3>Understanding Mental Load</h3>
+
+    <p>2010 study showed wives viewing home as cluttered had rising cortisol throughout day. <strong>Mental load = cognitive burden of remembering, planning, organizing everything.</strong></p>
+
+    <p><strong>Examples of mental load:</strong></p>
+    <ul>
+        <li>Tracking everyone's schedules</li>
+        <li>Remembering when kids need permission slips</li>
+        <li>Planning meals, making grocery lists</li>
+        <li>Managing household supplies before they run out</li>
+        <li>Coordinating appointments (doctor, dentist, vet)</li>
+        <li>Gift-buying for extended family</li>
+        <li>Social obligations and RSVP management</li>
+        <li>Emotional labor of family harmony</li>
+    </ul>
+
+    <p><strong>Why this matters:</strong> Invisible, constant, unrelenting = chronic stress activation. This isn't "just life"—it's a measurable stressor affecting your cortisol.</p>
+
+    <h3>Strategies to Reduce Mental Load</h3>
+
+    <div class="checklist">
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Write it all down:</strong> Every mental task you track</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Share the list:</strong> Make invisible labor visible to partner/family</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Delegate with ownership:</strong> Not "helping"—actual responsibility transfer</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Use systems:</strong> Shared calendars, meal planning apps, auto-delivery subscriptions</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Say no:</strong> To social obligations, school volunteering you don't have capacity for</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Lower standards:</strong> "Good enough" parenting/housekeeping (perfectionism raises cortisol)</span>
+        </div>
+    </div>
+
+    <p style="font-style: italic; text-align: center; margin-top: 24px;">"You're not failing if you can't do it all—'doing it all' shouldn't be the expectation"</p>
+</div>
+
+<!-- Boundaries -->
+<div class="page section-light-coral">
+    <h3>Boundary-Setting for Nervous System Protection</h3>
+
+    <p>Without boundaries, you're perpetually in "give" mode (depletes). <strong>Setting boundaries protects your health and relationships long-term.</strong></p>
+
+    <p><strong>Types of boundaries:</strong></p>
+    <ol>
+        <li><strong>Time boundaries:</strong> "I'm unavailable after 8pm"</li>
+        <li><strong>Work boundaries:</strong> No email checking on weekends</li>
+        <li><strong>Relationship boundaries:</strong> "I can't be your therapist right now"</li>
+        <li><strong>Energy boundaries:</strong> Declining social plans when depleted</li>
+        <li><strong>Physical boundaries:</strong> Alone time, personal space</li>
+        <li><strong>Emotional boundaries:</strong> Not absorbing others' stress</li>
+    </ol>
+
+    <h4>How to Implement</h4>
+
+    <ul>
+        <li>Start small (one boundary, practice for 2 weeks)</li>
+        <li>Communicate clearly and kindly</li>
+        <li>Expect discomfort (yours and others')</li>
+        <li>Remember: Boundaries protect your health</li>
+    </ul>
+
+    <div class="pull-quote">
+        "Setting boundaries isn't selfish—it's how you ensure you can show up for what truly matters"
+    </div>
+</div>
+
+<!-- SECTION 4: Perimenopause & Stress -->
+<div class="page section-light-purple">
+    <div class="section-header">
+        <span class="section-icon">🌺</span>
+        <h2>When Stress Hits Harder—Perimenopause & HPA Axis</h2>
+    </div>
+
+    <p>If stress suddenly feels unmanageable in your late 30s-40s, it's not just "life getting harder"—perimenopause changes how your HPA axis functions.</p>
+
+    <h3>Why Perimenopause Intensifies Stress Response</h3>
+
+    <div class="card">
+        <h4>Progesterone Decline</h4>
+        <p>Reduces calming GABA signaling. Progesterone is your calming hormone—when it drops, stress tolerance plummets.</p>
+    </div>
+
+    <div class="card">
+        <h4>Estradiol Fluctuations</h4>
+        <p>Affect HPA axis sensitivity. Wildly fluctuating estrogen = unpredictable stress responses.</p>
+    </div>
+
+    <div class="card">
+        <h4>Depression Rates</h4>
+        <p>2-3 fold increase during menopause transition (Johns Hopkins Medicine). This isn't "just stress"—it's hormonal.</p>
+    </div>
+
+    <div class="card">
+        <h4>Pregnenolone Steal</h4>
+        <p>Stress prioritized over sex hormone production. Your body makes a choice: stress hormones or reproductive hormones. Stress wins.</p>
+    </div>
+
+    <h3>Common Symptoms That Emerge/Worsen</h3>
+
+    <ul>
+        <li>Morning anxiety, panic attacks seemingly "out of nowhere"</li>
+        <li>Worse stress tolerance ("I used to handle this fine")</li>
+        <li>Sleep disruption (hot flashes wake you when cortisol should be low)</li>
+        <li>Weight gain resistant to diet/exercise</li>
+        <li>Emotional reactivity intensified</li>
+    </ul>
+</div>
+
+<!-- Perimenopause Continued -->
+<div class="page section-light-purple">
+    <h3>Adapted Strategies for Perimenopause</h3>
+
+    <div class="checklist">
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Prioritize sleep above all:</strong> Hot flashes disrupt HPA axis recovery</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Consider HRT discussion:</strong> Can modulate stress response—consult doctor</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Increase adaptogens:</strong> Ashwagandha shown to improve estradiol</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Reduce exercise intensity:</strong> Body less resilient to stressors</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Emphasize nervous system regulation:</strong> Body-based practices may be supportive</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Seek community support:</strong> Validation reduces stress of "am I going crazy?"</span>
+        </div>
+    </div>
+
+    <div class="tip-box">
+        <p><strong>💡 You're Not Going Crazy—It's Your Hormones</strong></p>
+        <p>If you feel like you're handling stress worse than you used to, you're not weak—your hormones have shifted. Doctors often miss early perimenopause (ages 35-42) because periods are still regular. Trust your experience.</p>
+    </div>
+
+    <h3>When to Seek Help</h3>
+
+    <ul>
+        <li>Panic attacks disrupting daily life</li>
+        <li>Depression symptoms (hopelessness, anhedonia)</li>
+        <li>Severe insomnia despite all interventions</li>
+        <li>Suicidal thoughts → <strong>Call 988 immediately</strong></li>
+        <li>Consider functional medicine testing for hormone patterns</li>
+        <li>Mental health professional specializing in women's hormonal health</li>
+    </ul>
+</div>
+
+<!-- SECTION 5: When to Seek Help -->
+<div class="page section-light-teal">
+    <div class="section-header">
+        <span class="section-icon">🩺</span>
+        <h2>When to Seek Professional Help & Testing</h2>
+    </div>
+
+    <p>This guide empowers you with strategies, but some situations require professional evaluation, testing, or mental health support. <strong>Seeking help is strength.</strong></p>
+
+    <h3>When to See a Healthcare Provider</h3>
+
+    <div class="card-coral card">
+        <h4>Symptoms persisting >3 months</h4>
+        <p>Despite implementing strategies from this guide</p>
+    </div>
+
+    <div class="card-coral card">
+        <h4>Suspected underlying condition</h4>
+        <p>Thyroid disorder, diabetes, autoimmune condition</p>
+    </div>
+
+    <div class="card-coral card">
+        <h4>Significant weight gain/loss</h4>
+        <p>Without explanation despite implementing strategies</p>
+    </div>
+
+    <div class="card-coral card">
+        <h4>New or worsening depression/anxiety</h4>
+        <p>Panic attacks, hopelessness, inability to function</p>
+    </div>
+
+    <div class="card-coral card">
+        <h4>Suicidal thoughts</h4>
+        <p><strong>Call 988 Suicide & Crisis Lifeline immediately</strong></p>
+    </div>
+
+    <h3>Cortisol Testing Options</h3>
+
+    <ul>
+        <li><strong>Salivary cortisol (4-6 point):</strong> Shows rhythm pattern throughout day—most useful</li>
+        <li><strong>DUTCH test:</strong> Comprehensive sex hormones + cortisol metabolites (dried urine)</li>
+        <li><strong>Blood test:</strong> Single snapshot (less useful for rhythm assessment)</li>
+        <li><strong>Cost:</strong> $150-600 (often not insurance-covered)</li>
+    </ul>
+
+    <p><strong>When useful:</strong> Confirming suspicions, guiding targeted approach</p>
+    <p><strong>When not necessary:</strong> Can start with strategies based on symptoms; testing optional</p>
+</div>
+
+<!-- Help Continued -->
+<div class="page section-light-teal">
+    <h3>Mental Health Support</h3>
+
+    <ul>
+        <li><strong>Therapist specializing in:</strong> Women's health, burnout, anxiety</li>
+        <li><strong>Modalities:</strong> CBT, somatic experiencing, EMDR for trauma</li>
+        <li><strong>Psychiatrist:</strong> If medication needed</li>
+        <li><strong>Support groups:</strong> Burnout, perimenopause</li>
+    </ul>
+
+    <h3>Resources</h3>
+
+    <div class="card">
+        <h4>Testing Companies</h4>
+        <p>Rupa Health, Root Functional Medicine, ZRT Laboratory (salivary cortisol)</p>
+    </div>
+
+    <div class="card">
+        <h4>Apps & Tools</h4>
+        <p>HRV tracking (Elite HRV, Welltory), CGM (Levels, Nutrisense), Meditation (Insight Timer, Breathwrk)</p>
+    </div>
+
+    <div class="card">
+        <h4>Communities</h4>
+        <p>r/WomensHealth, r/Stress, r/Anxiety, r/Menopause</p>
+    </div>
+
+    <div class="card">
+        <h4>Practitioners</h4>
+        <p>Functional medicine doctors, endocrinologists, therapists specializing in women's health/burnout/somatic therapy. Psychology Today therapist finder.</p>
+    </div>
+
+    <div class="tip-box">
+        <p><strong>💡 You Don't Have to Figure This Out Alone</strong></p>
+        <p>If functional medicine isn't accessible, these evidence-based strategies are the same ones practitioners recommend. Implementing even ONE strategy from this guide is progress.</p>
+    </div>
+</div>
+
+<!-- LEGAL DISCLAIMER PAGE -->
+<div class="page footer">
+    <h3 style="color: var(--text-dark); font-family: 'Inter', sans-serif; font-size: 16px; margin-bottom: 16px;">Medical Disclaimer</h3>
+
+    <p><strong>Medical Disclaimer:</strong> This guide is for educational and informational purposes only and does not constitute medical advice. Always consult with qualified healthcare providers regarding medical conditions, diagnosis, and treatment. Do not disregard professional medical advice or delay seeking it because of information in this guide.</p>
+
+    <p><strong>No Doctor-Patient Relationship:</strong> Reading this guide does not create a doctor-patient or healthcare provider relationship.</p>
+
+    <p><strong>Hormone and Supplement Caution:</strong> Consult your healthcare provider before starting any supplement regimen, especially if you are pregnant, breastfeeding, taking medications (particularly thyroid medications, blood pressure medications, psychiatric medications), or have underlying health conditions. Ashwagandha can interact with thyroid medications.</p>
+
+    <p><strong>Mental Health Emergency:</strong> If you are experiencing suicidal thoughts or mental health crisis, call 988 Suicide & Crisis Lifeline immediately.</p>
+
+    <p><strong>Medical Conditions:</strong> This guide does not diagnose or treat medical conditions including but not limited to: Cushing's Syndrome, Addison's Disease, thyroid disorders, or psychiatric conditions. Seek professional evaluation for persistent symptoms.</p>
+
+    <p style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #dee2e6;"><strong>© 2025 HealthEGuides. All rights reserved.</strong></p>
+
+    <p style="margin-bottom: 0;">Evidence-Based Women's Health Information</p>
+</div>
+
+</body>
+</html>
