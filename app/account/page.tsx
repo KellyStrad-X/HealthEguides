@@ -35,7 +35,9 @@ export default function AccountPage() {
   return (
     <HeaderProvider>
       <div className="min-h-screen bg-gray-50">
-        <Header />
+        <div className="[&>header]:!top-0">
+          <Header />
+        </div>
 
         <main className="pt-20 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
