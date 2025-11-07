@@ -1,6 +1,14 @@
 'use client';
 
+import { useAuth } from '@/contexts/AuthContext';
+
 export default function CTASection() {
+  const { user } = useAuth();
+
+  // Hide this section for logged-in users
+  if (user) {
+    return null;
+  }
   const scrollToCatalog = () => {
     const catalogSection = document.getElementById('catalog');
     if (catalogSection) {

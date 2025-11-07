@@ -1,10 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import SubscriptionModal from './SubscriptionModal';
 
 export default function BundleOffer() {
+  const { user } = useAuth();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+
+  // Hide this section for logged-in users
+  if (user) {
+    return null;
+  }
 
   return (
     <>

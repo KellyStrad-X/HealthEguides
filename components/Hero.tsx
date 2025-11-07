@@ -1,6 +1,9 @@
 'use client';
 
+import { useAuth } from '@/contexts/AuthContext';
+
 export default function Hero() {
+  const { user } = useAuth();
   const scrollToCatalog = () => {
     const catalogSection = document.getElementById('catalog');
     if (catalogSection) {
@@ -47,15 +50,17 @@ export default function Hero() {
             <span className="animate-bounce">↓</span>
           </button>
 
-          <a
-            href="#subscription"
-            className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 shadow-lg"
-          >
-            Get Access to All Our Guides
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </a>
+          {!user && (
+            <a
+              href="#subscription"
+              className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 shadow-lg"
+            >
+              Get Access to All Our Guides
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </a>
+          )}
         </div>
       </div>
 
