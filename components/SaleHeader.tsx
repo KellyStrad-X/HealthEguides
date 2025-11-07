@@ -93,7 +93,7 @@ export default function SaleHeader({ onClaimClick }: SaleHeaderProps = {}) {
           <div className={`flex items-center gap-2 ${isCompressed ? 'text-sm' : ''}`}>
             <span className={isCompressed ? 'text-lg' : 'text-2xl'}>🎉</span>
             <span className="font-bold">FREE TRIAL:</span>
-            <span>7 Days Free + All Guides $5/month!</span>
+            <span>7 Days Free + All Guides!</span>
           </div>
 
           {mounted && (
