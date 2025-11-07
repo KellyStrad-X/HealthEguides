@@ -8,12 +8,12 @@ export default function WhyChooseUs() {
     {
       emoji: "💰",
       title: "Affordable",
-      description: "Just $4.99 per guide - high-quality health information for everyone"
+      description: "Just $5/month for unlimited access to all guides"
     },
     {
       emoji: "⚡",
       title: "Instant Access",
-      description: "Download immediately after purchase, no waiting"
+      description: "Access all guides immediately after subscribing, no waiting"
     },
     {
       emoji: "📱",

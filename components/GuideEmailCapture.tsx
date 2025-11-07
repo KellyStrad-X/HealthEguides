@@ -2,16 +2,12 @@
 
 import { Guide } from '@/lib/guides';
 import { useState, useRef, useEffect } from 'react';
-import { trackInitiateCheckout } from '@/components/MetaPixel';
 
 interface GuideEmailCaptureProps {
   guide: Guide;
 }
 
 export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
-  // Defensive guard for missing data
-  const safePrice = typeof guide.price === 'number' && !isNaN(guide.price) ? guide.price : 0;
-
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -54,33 +50,22 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
     setLoading(true);
 
     try {
-      // Track begin_checkout event (Google Analytics)
+      // Track subscription begin event (Google Analytics)
       if (typeof window !== 'undefined' && (window as any).gtag) {
-        (window as any).gtag('event', 'begin_checkout', {
-          value: safePrice,
-          currency: 'USD',
-          items: [
-            {
-              item_id: guide.id,
-              item_name: guide.title,
-              price: safePrice,
-            },
-          ],
+        (window as any).gtag('event', 'begin_subscription', {
+          from_guide: guide.id,
+          guide_name: guide.title,
         });
       }
 
-      // Track InitiateCheckout event (Meta Pixel)
-      trackInitiateCheckout(guide.title, guide.id, safePrice);
-
-      // Create Stripe checkout session
-      const response = await fetch('/api/stripe/create-checkout', {
+      // Create Stripe subscription checkout session
+      const response = await fetch('/api/stripe/create-subscription-checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email,
-          guideIds: [guide.id], // Single guide purchase
         }),
       });
 
@@ -112,14 +97,19 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
             <div className="text-center mb-8">
               <div className="text-6xl mb-4">{guide.emoji}</div>
               <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-                Get {guide.title}
+                Get {guide.title} + All Our Guides
               </h2>
-              <div className="text-5xl font-bold gradient-text mb-4">
-                ${safePrice.toFixed(2)}
+              <div className="mb-4">
+                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-500 px-6 py-2 rounded-full mb-3">
+                  <span className="text-2xl">🎉</span>
+                  <span className="font-bold text-sm uppercase tracking-wide">7 Days Free</span>
+                </div>
+                <div className="text-2xl font-bold text-white/90">
+                  Then $5/month or $50/year
+                </div>
               </div>
               <p className="text-white/70">
-                Enter your email to get started. You&apos;ll be redirected to secure
-                checkout.
+                Start your free trial to access this guide and our entire library.
               </p>
             </div>
 
@@ -178,11 +168,11 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
                 disabled={loading || !agreedToTerms}
                 className="w-full btn-primary text-xl py-5 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Processing...' : 'Get Your Guide'}
+                {loading ? 'Processing...' : 'Start Your Free Trial'}
               </button>
 
               <p className="text-xs text-white/50 text-center">
-                By proceeding, you agree to receive emails about this purchase. You
+                By proceeding, you agree to receive emails about your subscription. You
                 can unsubscribe at any time.
               </p>
             </form>
@@ -199,8 +189,12 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
                   <span>Instant Access</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span>💰</span>
-                  <span>Money-Back Guarantee</span>
+                  <span>🎁</span>
+                  <span>7-Day Free Trial</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span>❌</span>
+                  <span>Cancel Anytime</span>
                 </div>
               </div>
             </div>
@@ -209,7 +203,7 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
           {/* Social proof */}
           <div className="mt-8 text-center text-white/60 text-sm">
             <p className="mb-2">⭐⭐⭐⭐⭐</p>
-            <p>Join 5,000+ women who trust our guides</p>
+            <p>Join 5,000+ women accessing our complete guide library</p>
           </div>
         </div>
       </div>

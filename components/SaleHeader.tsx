@@ -72,7 +72,7 @@ export default function SaleHeader({ onClaimClick }: SaleHeaderProps = {}) {
     if (onClaimClick) {
       onClaimClick();
     } else {
-      const offerSection = document.getElementById('bundle-offer');
+      const offerSection = document.getElementById('subscription');
       if (offerSection) {
         offerSection.scrollIntoView({ behavior: 'smooth' });
       }
@@ -84,9 +84,9 @@ export default function SaleHeader({ onClaimClick }: SaleHeaderProps = {}) {
       <div className="section-container">
         <div className={`flex flex-col md:flex-row items-center justify-center transition-all duration-300 ${isCompressed ? 'gap-0 md:gap-6' : 'gap-3 md:gap-6'}`}>
           <div className={`flex items-center gap-2 ${isCompressed ? 'text-sm' : ''}`}>
-            <span className={isCompressed ? 'text-lg' : 'text-2xl'}>🔥</span>
-            <span className="font-bold">SPECIAL OFFER:</span>
-            <span>3 E-Books for $10!</span>
+            <span className={isCompressed ? 'text-lg' : 'text-2xl'}>🎉</span>
+            <span className="font-bold">FREE TRIAL:</span>
+            <span>7 Days Free + All Guides $5/month!</span>
           </div>
 
           {mounted && (
@@ -115,7 +115,7 @@ export default function SaleHeader({ onClaimClick }: SaleHeaderProps = {}) {
             onClick={handleClaimOffer}
             className={`px-6 py-2 bg-white text-pink-600 font-bold rounded-full hover:bg-pink-50 transition-all duration-300 hover:scale-105 shadow-lg text-sm overflow-hidden ${isCompressed ? 'hidden md:block md:max-h-20 md:opacity-100' : 'max-h-20 opacity-100'}`}
           >
-            Claim Offer →
+            Start Free Trial →
           </button>
         </div>
       </div>

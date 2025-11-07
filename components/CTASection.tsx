@@ -6,9 +6,9 @@ export default function CTASection() {
     catalogSection?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const scrollToBundle = () => {
-    const bundleSection = document.getElementById('bundle-offer');
-    bundleSection?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToSubscription = () => {
+    const subscriptionSection = document.getElementById('subscription');
+    subscriptionSection?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -19,15 +19,15 @@ export default function CTASection() {
         </h2>
 
         <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
-          Choose from our library of evidence-based guides
+          Get unlimited access to our complete library of evidence-based guides
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button
-            onClick={scrollToBundle}
+            onClick={scrollToSubscription}
             className="inline-flex items-center gap-2 px-10 py-5 text-lg font-semibold rounded-full bg-yellow-300 text-purple-900 hover:bg-yellow-200 transition-all duration-300 hover:scale-105 shadow-2xl"
           >
-            🔥 Get 3 for $10
+            🎉 Start Free Trial
           </button>
           <button
             onClick={scrollToCatalog}

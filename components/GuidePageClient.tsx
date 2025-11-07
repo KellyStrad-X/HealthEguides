@@ -9,7 +9,7 @@ import GuideProblemAgitation from '@/components/GuideProblemAgitation';
 import GuideBenefits from '@/components/GuideBenefits';
 import GuidePreview from '@/components/GuidePreview';
 import GuideEmailCapture from '@/components/GuideEmailCapture';
-import BundleSelectionModal from '@/components/BundleSelectionModal';
+import SubscriptionModal from '@/components/SubscriptionModal';
 import { trackViewContent } from '@/components/MetaPixel';
 
 interface GuidePageClientProps {
@@ -17,7 +17,7 @@ interface GuidePageClientProps {
 }
 
 export default function GuidePageClient({ guide }: GuidePageClientProps) {
-  const [showBundleModal, setShowBundleModal] = useState(false);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
   // Track ViewContent event when guide page loads
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function GuidePageClient({ guide }: GuidePageClientProps) {
 
   return (
     <>
-      <SaleHeader onClaimClick={() => setShowBundleModal(true)} />
+      <SaleHeader onClaimClick={() => setShowSubscriptionModal(true)} />
       <Header />
       <GuideLandingHero guide={guide} />
       <GuideProblemAgitation guide={guide} />
@@ -40,10 +40,9 @@ export default function GuidePageClient({ guide }: GuidePageClientProps) {
       </section>
 
       <GuideEmailCapture guide={guide} />
-      <BundleSelectionModal
-        isOpen={showBundleModal}
-        onClose={() => setShowBundleModal(false)}
-        currentGuide={guide}
+      <SubscriptionModal
+        isOpen={showSubscriptionModal}
+        onClose={() => setShowSubscriptionModal(false)}
       />
     </>
   );

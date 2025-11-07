@@ -2,21 +2,21 @@ export default function HowItWorks() {
   const steps = [
     {
       number: "1",
-      emoji: "🔍",
-      title: "Browse",
-      description: "Explore our catalog of evidence-based health guides"
+      emoji: "🎉",
+      title: "Start Free Trial",
+      description: "Begin your 7-day free trial with full access to all guides"
     },
     {
       number: "2",
-      emoji: "💳",
-      title: "Purchase",
-      description: "Instant checkout for just $4.99 per guide"
+      emoji: "📚",
+      title: "Access Everything",
+      description: "Explore our complete library of evidence-based health guides"
     },
     {
       number: "3",
-      emoji: "📖",
-      title: "Read",
-      description: "Download immediately and read on any device"
+      emoji: "💪",
+      title: "Take Control",
+      description: "Implement strategies and track your health journey"
     }
   ];
 
