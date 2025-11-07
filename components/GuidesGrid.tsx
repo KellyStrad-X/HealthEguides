@@ -26,7 +26,7 @@ export default function GuidesGrid() {
 
   return (
     <>
-      <section id="catalog" className="py-20 bg-[#0a0a0a]">
+      <section id="catalog" className="py-20 bg-[#0a0a0a] scroll-mt-[120px]">
         <div className="section-container">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-bold mb-4">

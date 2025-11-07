@@ -8,7 +8,7 @@ export default function BundleOffer() {
 
   return (
     <>
-      <section id="subscription" className="py-20 bg-gradient-to-br from-pink-600 via-purple-600 to-indigo-600 relative overflow-hidden">
+      <section id="subscription" className="py-20 bg-gradient-to-br from-pink-600 via-purple-600 to-indigo-600 relative overflow-hidden scroll-mt-[120px]">
         {/* Animated background pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 text-[150px]">🎁</div>

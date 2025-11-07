@@ -3,12 +3,30 @@
 export default function CTASection() {
   const scrollToCatalog = () => {
     const catalogSection = document.getElementById('catalog');
-    catalogSection?.scrollIntoView({ behavior: 'smooth' });
+    if (catalogSection) {
+      const headerOffset = 120; // Account for sticky header height
+      const elementPosition = catalogSection.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
   };
 
   const scrollToSubscription = () => {
     const subscriptionSection = document.getElementById('subscription');
-    subscriptionSection?.scrollIntoView({ behavior: 'smooth' });
+    if (subscriptionSection) {
+      const headerOffset = 120; // Account for sticky header height
+      const elementPosition = subscriptionSection.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (

@@ -3,7 +3,16 @@
 export default function Hero() {
   const scrollToCatalog = () => {
     const catalogSection = document.getElementById('catalog');
-    catalogSection?.scrollIntoView({ behavior: 'smooth' });
+    if (catalogSection) {
+      const headerOffset = 120; // Account for sticky header height
+      const elementPosition = catalogSection.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (
