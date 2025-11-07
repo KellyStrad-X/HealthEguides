@@ -133,7 +133,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, stripe:
           body: JSON.stringify({
             email,
             subscriptionId: subscription.id,
-            trialEnd: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,
+            trialEnd: subscription.trialEnd ? new Date(subscription.trialEnd * 1000) : null,
           }),
         });
 
@@ -178,13 +178,13 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   const interval = subscription.items.data[0]?.price.recurring?.interval || 'month';
 
   // Validate and convert required timestamps
-  const currentPeriodStart = safeTimestampFromUnix(subscription.current_period_start);
-  const currentPeriodEnd = safeTimestampFromUnix(subscription.current_period_end);
+  const currentPeriodStart = safeTimestampFromUnix(subscription.currentPeriodStart);
+  const currentPeriodEnd = safeTimestampFromUnix(subscription.currentPeriodEnd);
 
   if (!currentPeriodStart || !currentPeriodEnd) {
     console.error('❌ Invalid required timestamps:', {
-      current_period_start: subscription.current_period_start,
-      current_period_end: subscription.current_period_end
+      currentPeriodStart: subscription.currentPeriodStart,
+      currentPeriodEnd: subscription.currentPeriodEnd
     });
     throw new Error('Invalid subscription timestamps');
   }
@@ -202,22 +202,22 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     currency: subscription.currency,
     currentPeriodStart,
     currentPeriodEnd,
-    cancelAtPeriodEnd: subscription.cancel_at_period_end || false,
+    cancelAtPeriodEnd: subscription.cancelAtPeriodEnd || false,
     updatedAt: Timestamp.now(),
   };
 
   // Only add optional date fields if they have valid values
-  const trialStart = safeTimestampFromUnix(subscription.trial_start);
+  const trialStart = safeTimestampFromUnix(subscription.trialStart);
   if (trialStart) {
     subscriptionData.trialStart = trialStart;
   }
 
-  const trialEnd = safeTimestampFromUnix(subscription.trial_end);
+  const trialEnd = safeTimestampFromUnix(subscription.trialEnd);
   if (trialEnd) {
     subscriptionData.trialEnd = trialEnd;
   }
 
-  const canceledAt = safeTimestampFromUnix(subscription.canceled_at);
+  const canceledAt = safeTimestampFromUnix(subscription.canceledAt);
   if (canceledAt) {
     subscriptionData.canceledAt = canceledAt;
   }
@@ -287,8 +287,9 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
   console.log('Processing payment failure for invoice:', invoice.id);
 
-  const inv = invoice as any; // Type assertion for Stripe properties
-  const subscriptionId = inv.subscription as string;
+  const subscriptionId = typeof invoice.subscription === 'string'
+    ? invoice.subscription
+    : invoice.subscription?.id;
 
   if (!subscriptionId) {
     console.log('Invoice not associated with subscription');
@@ -317,7 +318,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
   console.log('✅ Marked subscription as past_due');
 
   // TODO: Send payment failed email to customer
-  const customerEmail = inv.customer_email;
+  const customerEmail = invoice.customer_email;
   if (customerEmail) {
     console.log('TODO: Send payment failed email to:', customerEmail);
   }
@@ -329,8 +330,9 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
 async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
   console.log('Processing successful payment for invoice:', invoice.id);
 
-  const inv = invoice as any; // Type assertion for Stripe properties
-  const subscriptionId = inv.subscription as string;
+  const subscriptionId = typeof invoice.subscription === 'string'
+    ? invoice.subscription
+    : invoice.subscription?.id;
 
   if (!subscriptionId) {
     console.log('Invoice not associated with subscription');
