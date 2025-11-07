@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { Guide } from '@/lib/guides';
 import SaleHeader from '@/components/SaleHeader';
 import Header from '@/components/Header';
@@ -8,6 +9,7 @@ import GuideLandingHero from '@/components/GuideLandingHero';
 import GuideProblemAgitation from '@/components/GuideProblemAgitation';
 import GuideBenefits from '@/components/GuideBenefits';
 import GuideEmailCapture from '@/components/GuideEmailCapture';
+import GuideOverview from '@/components/GuideOverview';
 import SubscriptionModal from '@/components/SubscriptionModal';
 import { trackViewContent } from '@/components/MetaPixel';
 
@@ -16,6 +18,7 @@ interface GuidePageClientProps {
 }
 
 export default function GuidePageClient({ guide }: GuidePageClientProps) {
+  const { user } = useAuth();
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
   // Track ViewContent event when guide page loads
@@ -23,6 +26,17 @@ export default function GuidePageClient({ guide }: GuidePageClientProps) {
     trackViewContent(guide.title, guide.id, guide.price);
   }, [guide]);
 
+  // Show simplified overview for logged-in users
+  if (user) {
+    return (
+      <>
+        <Header />
+        <GuideOverview guide={guide} />
+      </>
+    );
+  }
+
+  // Show full sales page for non-logged-in users
   return (
     <>
       <SaleHeader onClaimClick={() => setShowSubscriptionModal(true)} />
