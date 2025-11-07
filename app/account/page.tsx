@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
+import { HeaderProvider } from '@/lib/headerContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -32,10 +33,11 @@ export default function AccountPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
+    <HeaderProvider>
+      <div className="min-h-screen bg-gray-50">
+        <Header />
 
-      <main className="section-container pt-24 pb-12">
+        <main className="pt-20 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="mb-8">
@@ -103,9 +105,10 @@ export default function AccountPage() {
             </button>
           </div>
         </div>
-      </main>
+        </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </HeaderProvider>
   );
 }
