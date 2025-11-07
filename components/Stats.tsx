@@ -1,4 +1,15 @@
+'use client';
+
+import { useAuth } from '@/contexts/AuthContext';
+
 export default function Stats() {
+  const { user } = useAuth();
+
+  // Don't show trial messaging for logged-in users
+  if (user) {
+    return null;
+  }
+
   const benefits = [
     {
       title: "7-Day Free Trial",
