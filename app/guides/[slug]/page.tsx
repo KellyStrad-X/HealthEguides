@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { guides } from '@/lib/guides';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Force dynamic rendering since this page uses search params
 export const dynamic = 'force-dynamic';
@@ -17,6 +18,7 @@ interface GuideViewerProps {
 function GuideViewerContent({ params }: GuideViewerProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { user, loading: authLoading } = useAuth();
   const [accessGranted, setAccessGranted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,6 +27,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [guide, setGuide] = useState<any>(null);
   const [guideLoaded, setGuideLoaded] = useState(false);
+  const [accessType, setAccessType] = useState<'subscription' | 'token' | null>(null);
 
   // Fetch guide data (supports both hardcoded and Firebase guides)
   useEffect(() => {
@@ -54,8 +57,8 @@ function GuideViewerContent({ params }: GuideViewerProps) {
 
   useEffect(() => {
     async function validateAccess() {
-      // Wait for guide to be loaded before checking
-      if (!guideLoaded) {
+      // Wait for guide and auth to be loaded before checking
+      if (!guideLoaded || authLoading) {
         return;
       }
 
@@ -65,11 +68,39 @@ function GuideViewerContent({ params }: GuideViewerProps) {
         return;
       }
 
-      // Check for session_id (coming from Stripe checkout)
       const sessionId = searchParams.get('session_id');
       const accessToken = searchParams.get('access');
 
-      // If coming from Stripe, get access token
+      // Priority 1: Check if user has active subscription
+      if (user) {
+        try {
+          const res = await fetch('/api/validate-subscription-access', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId: user.uid,
+              email: user.email,
+              guideId: guide.id,
+            }),
+          });
+
+          const data = await res.json();
+
+          if (data.hasAccess) {
+            console.log('✅ Access granted via subscription');
+            setAccessGranted(true);
+            setAccessType('subscription');
+            await loadGuideContentForSubscriber();
+            setLoading(false);
+            return;
+          }
+        } catch (err) {
+          console.error('Subscription validation error:', err);
+          // Continue to check token-based access
+        }
+      }
+
+      // Priority 2: Check for session_id (coming from Stripe checkout - legacy one-time purchase)
       if (sessionId) {
         try {
           const res = await fetch('/api/get-access-from-session', {
@@ -81,11 +112,9 @@ function GuideViewerContent({ params }: GuideViewerProps) {
           const data = await res.json();
 
           if (data.purchases && data.purchases.length > 0) {
-            // Find the purchase for this guide
             const purchase = data.purchases.find((p: any) => p.guideId === guide.id);
 
             if (purchase) {
-              // Redirect to URL with access token
               router.replace(`/guides/${params.slug}?access=${purchase.accessToken}`);
               return;
             }
@@ -102,7 +131,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
         }
       }
 
-      // If access token provided, validate it
+      // Priority 3: Check for token-based access (legacy one-time purchases)
       if (accessToken) {
         try {
           const res = await fetch('/api/validate-access', {
@@ -115,40 +144,37 @@ function GuideViewerContent({ params }: GuideViewerProps) {
 
           if (data.valid) {
             setAccessGranted(true);
-
-            // Store token in localStorage for future visits
+            setAccessType('token');
             localStorage.setItem(`guide-${guide.id}-token`, accessToken);
-
-            // Load the guide content
             await loadGuideContent(accessToken);
             setLoading(false);
+            return;
           } else {
             setError(data.error || 'Invalid or expired access link.');
             setLoading(false);
+            return;
           }
         } catch (err) {
           console.error('Access validation error:', err);
           setError('Unable to validate access.');
           setLoading(false);
-        }
-      } else {
-        // Check localStorage for saved token
-        const savedToken = localStorage.getItem(`guide-${guide.id}-token`);
-        if (savedToken) {
-          router.replace(`/guides/${params.slug}?access=${savedToken}`);
           return;
         }
+      }
 
-        // No access - redirect to purchase page
-        router.push(`/${params.slug}`);
+      // Priority 4: Check localStorage for saved token (legacy)
+      const savedToken = localStorage.getItem(`guide-${guide.id}-token`);
+      if (savedToken) {
+        router.replace(`/guides/${params.slug}?access=${savedToken}`);
         return;
       }
 
-      setLoading(false);
+      // No access found - redirect to guide landing page
+      router.push(`/${params.slug}`);
     }
 
     validateAccess();
-  }, [searchParams, params.slug, guide, guideLoaded, router]);
+  }, [searchParams, params.slug, guide, guideLoaded, authLoading, user, router]);
 
   // Handle scroll to show/hide header
   useEffect(() => {
@@ -173,9 +199,55 @@ function GuideViewerContent({ params }: GuideViewerProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
+  async function loadGuideContentForSubscriber() {
+    try {
+      // Fetch guide content for subscriber (no token needed)
+      const response = await fetch('/api/get-guide-content-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${await user?.getIdToken()}`,
+        },
+        body: JSON.stringify({ guideId: guide?.id }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to load guide content');
+      }
+
+      const data = await response.json();
+
+      if (data.placeholder || !data.html) {
+        setGuideHtml(`
+          <div style="max-width: 800px; margin: 0 auto; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
+            <h1 style="color: #4ECDC4; margin-bottom: 20px;">${guide?.emoji} ${guide?.title}</h1>
+            <div style="background: #f8f9fa; padding: 30px; border-radius: 12px; border-left: 4px solid #4ECDC4;">
+              <h2 style="margin-top: 0;">Guide Content Coming Soon!</h2>
+              <p>Your subscription gives you access to this guide. The full content will be available here shortly.</p>
+              <p>This guide will include:</p>
+              <ul>
+                ${guide?.features.map((f: string) => `<li>${f}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+        `);
+      } else {
+        setGuideHtml(data.html);
+      }
+    } catch (err) {
+      console.error('Error loading guide:', err);
+      setGuideHtml(`
+        <div style="max-width: 800px; margin: 0 auto; padding: 40px 20px;">
+          <h1>${guide?.emoji} ${guide?.title}</h1>
+          <p>Error loading guide content. Please refresh the page or contact support.</p>
+        </div>
+      `);
+    }
+  }
+
   async function loadGuideContent(accessToken: string) {
     try {
-      // Fetch guide content from authenticated endpoint
+      // Fetch guide content from authenticated endpoint (legacy token-based)
       const response = await fetch('/api/get-guide-content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

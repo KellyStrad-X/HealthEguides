@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import MetaPixel from "@/components/MetaPixel";
 import GoogleAds from "@/components/GoogleAds";
+import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
   title: "Health E-Guides | Evidence-Based Women's Health Guides",
@@ -72,7 +73,9 @@ export default function RootLayout({
           <MetaPixel />
           <GoogleAds />
         </Suspense>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
         <Analytics />
       </body>
     </html>
