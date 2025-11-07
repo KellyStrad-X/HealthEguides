@@ -178,7 +178,7 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
                 disabled={loading || !agreedToTerms}
                 className="w-full btn-primary text-xl py-5 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Processing...' : `Get Your Guide Now - $${safePrice.toFixed(2)}`}
+                {loading ? 'Processing...' : 'Get Your Guide'}
               </button>
 
               <p className="text-xs text-white/50 text-center">

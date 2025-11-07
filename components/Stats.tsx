@@ -1,8 +1,8 @@
 export default function Stats() {
   const benefits = [
     {
-      title: "30-Day Guarantee",
-      description: "Money back if you're not satisfied",
+      title: "7-Day Free Trial",
+      description: "Try all our guides risk-free",
       emoji: "💰"
     },
     {

@@ -85,7 +85,7 @@ export default function BundleOffer() {
   };
 
   return (
-    <section id="bundle-offer" className="py-20 bg-gradient-to-br from-pink-600 via-purple-600 to-indigo-600 relative overflow-hidden">
+    <section id="subscription" className="py-20 bg-gradient-to-br from-pink-600 via-purple-600 to-indigo-600 relative overflow-hidden">
       {/* Animated background pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-10 left-10 text-[150px]">🎁</div>
@@ -97,22 +97,21 @@ export default function BundleOffer() {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-6 py-2 rounded-full mb-4">
             <span className="text-2xl">🔥</span>
-            <span className="font-bold text-sm uppercase tracking-wide">Limited Time Bundle</span>
+            <span className="font-bold text-sm uppercase tracking-wide">Try Free for 7 Days</span>
           </div>
 
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
-            3 Guides for Just $10
+            Start Your 7-Day Free Trial
           </h2>
 
           <p className="text-xl text-white/90 max-w-2xl mx-auto mb-2">
-            Save over 40%! Choose any 3 guides and get instant access.
+            Get unlimited access to all our guides. Just $5/month or $50/year after trial.
           </p>
 
           <div className="flex items-center justify-center gap-4 text-lg">
-            <span className="line-through text-white/60">$14.97</span>
-            <span className="text-3xl font-bold text-yellow-300">$10.00</span>
+            <span className="text-3xl font-bold text-yellow-300">7 Days Free</span>
             <span className="bg-yellow-300 text-purple-900 px-3 py-1 rounded-full font-bold text-sm">
-              SAVE $4.97
+              Cancel Anytime
             </span>
           </div>
         </div>
@@ -228,14 +227,14 @@ export default function BundleOffer() {
                 `}
               >
                 {selectedGuides.length === 3
-                  ? '🎉 Claim Bundle for $10 →'
+                  ? '🎉 Start Your Free Trial →'
                   : `Select ${3 - selectedGuides.length} More Guide${3 - selectedGuides.length !== 1 ? 's' : ''}`
                 }
               </button>
 
               {selectedGuides.length === 3 && (
                 <p className="mt-4 text-sm text-white/80">
-                  ✓ Instant access • ✓ Read on any device • ✓ Money-back guarantee
+                  ✓ 7 days free • ✓ All guides included • ✓ Cancel anytime
                 </p>
               )}
             </>

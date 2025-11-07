@@ -29,13 +29,25 @@ export default function Hero() {
           Evidence-based digital guides for every stage of your journey
         </p>
 
-        <button
-          onClick={scrollToCatalog}
-          className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105"
-        >
-          Browse Guides
-          <span className="animate-bounce">↓</span>
-        </button>
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+          <button
+            onClick={scrollToCatalog}
+            className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105"
+          >
+            Browse Guides
+            <span className="animate-bounce">↓</span>
+          </button>
+
+          <a
+            href="#subscription"
+            className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 shadow-lg"
+          >
+            Get Access to All Our Guides
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </a>
+        </div>
       </div>
 
       {/* Bottom fade gradient */}

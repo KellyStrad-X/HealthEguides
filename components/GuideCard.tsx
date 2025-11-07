@@ -110,7 +110,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
             }`}
             disabled={guide.comingSoon}
           >
-            {guide.comingSoon ? 'Coming Soon' : 'Get Your Guide →'}
+            {guide.comingSoon ? 'Coming Soon' : 'View Guide'}
           </button>
         </div>
       </div>
