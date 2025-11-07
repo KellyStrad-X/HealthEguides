@@ -180,6 +180,19 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   // Access subscription properties - Stripe API returns snake_case at runtime
   const sub = subscription as any;
 
+  // DEBUG: Log the entire subscription object to see what Stripe is actually sending
+  console.log('🔍 DEBUG - Full subscription object:', JSON.stringify({
+    id: subscription.id,
+    status: subscription.status,
+    current_period_start: sub.current_period_start,
+    current_period_end: sub.current_period_end,
+    trial_start: sub.trial_start,
+    trial_end: sub.trial_end,
+    start_date: sub.start_date,
+    billing_cycle_anchor: sub.billing_cycle_anchor,
+    allKeys: Object.keys(sub)
+  }, null, 2));
+
   // Validate and convert required timestamps
   const currentPeriodStart = safeTimestampFromUnix(sub.current_period_start);
   const currentPeriodEnd = safeTimestampFromUnix(sub.current_period_end);
