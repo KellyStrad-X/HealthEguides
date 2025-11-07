@@ -26,6 +26,8 @@ function GuideViewerContent({ params }: GuideViewerProps) {
   const [guide, setGuide] = useState<any>(null);
   const [guideLoaded, setGuideLoaded] = useState(false);
 
+  console.log('[Guide Viewer] Render - loading:', loading, 'accessGranted:', accessGranted, 'error:', error, 'guideHtml length:', guideHtml.length);
+
   // Fetch guide data (supports both hardcoded and Firebase guides)
   useEffect(() => {
     async function fetchGuide() {
@@ -54,6 +56,8 @@ function GuideViewerContent({ params }: GuideViewerProps) {
 
   useEffect(() => {
     async function validateAccess() {
+      console.log('[Guide Viewer] validateAccess called, guideLoaded:', guideLoaded, 'guide:', guide?.slug);
+
       // Wait for guide to be loaded before checking
       if (!guideLoaded) {
         return;
@@ -68,6 +72,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
       // Check for session_id (coming from Stripe checkout)
       const sessionId = searchParams.get('session_id');
       const accessToken = searchParams.get('access');
+      console.log('[Guide Viewer] sessionId:', sessionId, 'accessToken:', accessToken ? 'present' : 'none');
 
       // If coming from Stripe, get access token
       if (sessionId) {
@@ -114,14 +119,18 @@ function GuideViewerContent({ params }: GuideViewerProps) {
           const data = await res.json();
 
           if (data.valid) {
+            console.log('[Guide Viewer] Access validated successfully');
             setAccessGranted(true);
             // Store token in localStorage for future visits
             localStorage.setItem(`guide-${guide.id}-token`, accessToken);
 
             // Load the guide content
+            console.log('[Guide Viewer] Loading guide content...');
             await loadGuideContent();
+            console.log('[Guide Viewer] Content loaded, setting loading=false');
             setLoading(false);
           } else {
+            console.log('[Guide Viewer] Access validation failed:', data.error);
             setError(data.error || 'Invalid or expired access link.');
             setLoading(false);
           }
