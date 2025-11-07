@@ -74,6 +74,8 @@ function SubscriptionSuccessContent() {
     setFormError('');
     setFormLoading(true);
 
+    console.log('🚀 Starting account creation process');
+
     try {
       // Validate password match
       if (password !== confirmPassword) {
@@ -88,10 +90,15 @@ function SubscriptionSuccessContent() {
         return;
       }
 
+      console.log('📧 Creating account for:', email);
+
       // Create Firebase Auth account
       const newUser = await signUp(email, password, displayName || undefined);
 
+      console.log('✅ Firebase account created:', newUser.uid);
+
       // Link subscription to userId
+      console.log('🔗 Linking subscription to userId...');
       const token = await newUser.getIdToken();
       const response = await fetch('/api/subscription/link', {
         method: 'POST',
@@ -100,15 +107,21 @@ function SubscriptionSuccessContent() {
         },
       });
 
+      console.log('📡 Link response status:', response.status);
+
       if (!response.ok) {
         const data = await response.json();
+        console.error('❌ Failed to link subscription:', data);
         throw new Error(data.error || 'Failed to link subscription');
       }
+
+      const linkData = await response.json();
+      console.log('✅ Subscription linked successfully:', linkData);
 
       setAccountCreated(true);
       setFormLoading(false);
     } catch (err: any) {
-      console.error('Account creation error:', err);
+      console.error('❌ Account creation error:', err);
       setFormLoading(false);
 
       // User-friendly error messages
@@ -150,7 +163,7 @@ function SubscriptionSuccessContent() {
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">Something went wrong</h2>
             <p className="text-gray-600 mb-8">{error}</p>
             <Link
-              href="/catalog"
+              href="/account/guides"
               className="inline-block px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
             >
               Browse Guides
@@ -374,10 +387,10 @@ function SubscriptionSuccessContent() {
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/catalog"
+              href="/account/guides"
               className="px-8 py-4 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors text-center shadow-lg hover:shadow-xl"
             >
-              Start Reading Guides →
+              View My Guides →
             </Link>
 
             <Link

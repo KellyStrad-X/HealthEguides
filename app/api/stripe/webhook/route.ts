@@ -131,14 +131,16 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, stripe:
  * Handle subscription created or updated
  */
 async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
-  console.log('Processing subscription update:', subscription.id);
+  console.log('🔄 Processing subscription update:', subscription.id);
 
   const customerId = subscription.customer as string;
   const email = subscription.metadata?.email || '';
   const userId = subscription.metadata?.userId || '';
 
+  console.log('📧 Subscription metadata:', { email, userId, customerId });
+
   if (!email && !userId) {
-    console.error('Subscription missing both email and userId in metadata');
+    console.error('❌ Subscription missing both email and userId in metadata');
     return;
   }
 
@@ -171,6 +173,13 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     updatedAt: new Date(),
   };
 
+  console.log('💾 Subscription data to save:', {
+    userId: subscriptionData.userId,
+    email: subscriptionData.email,
+    status: subscriptionData.status,
+    trialEnd: subscriptionData.trialEnd,
+  });
+
   // Check if subscription already exists
   const existingSubQuery = await adminDb
     .collection('subscriptions')
@@ -180,16 +189,16 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
 
   if (existingSubQuery.empty) {
     // Create new subscription
-    await adminDb.collection('subscriptions').add({
+    const docRef = await adminDb.collection('subscriptions').add({
       ...subscriptionData,
       createdAt: new Date(),
     });
-    console.log('✅ Created new subscription record');
+    console.log('✅ Created new subscription record with ID:', docRef.id);
   } else {
     // Update existing subscription
     const docRef = existingSubQuery.docs[0].ref;
     await docRef.update(subscriptionData);
-    console.log('✅ Updated existing subscription record');
+    console.log('✅ Updated existing subscription record:', existingSubQuery.docs[0].id);
   }
 }
 
