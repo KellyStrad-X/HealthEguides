@@ -302,7 +302,8 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
   console.log('Processing payment failure for invoice:', invoice.id);
 
-  const subscriptionId = invoice.subscription as string;
+  const inv = invoice as any; // Type assertion for Stripe properties
+  const subscriptionId = inv.subscription as string;
 
   if (!subscriptionId) {
     console.log('Invoice not associated with subscription');
@@ -331,7 +332,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
   console.log('✅ Marked subscription as past_due');
 
   // TODO: Send payment failed email to customer
-  const customerEmail = invoice.customer_email;
+  const customerEmail = inv.customer_email;
   if (customerEmail) {
     console.log('TODO: Send payment failed email to:', customerEmail);
   }
@@ -343,7 +344,8 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
 async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
   console.log('Processing successful payment for invoice:', invoice.id);
 
-  const subscriptionId = invoice.subscription as string;
+  const inv = invoice as any; // Type assertion for Stripe properties
+  const subscriptionId = inv.subscription as string;
 
   if (!subscriptionId) {
     console.log('Invoice not associated with subscription');
