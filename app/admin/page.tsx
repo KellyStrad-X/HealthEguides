@@ -97,18 +97,29 @@ export default function AdminPage() {
 }
 
 function AdminDashboard({ onLogout }: { onLogout: () => void }) {
+  const [activeTab, setActiveTab] = useState<'guides' | 'requests' | 'feedback'>('guides');
   const [guidesList, setGuidesList] = useState<Guide[]>([]);
+  const [guideRequests, setGuideRequests] = useState<any[]>([]);
+  const [feedbackList, setFeedbackList] = useState<any[]>([]);
   const [editingGuide, setEditingGuide] = useState<Guide | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [uploadingHtml, setUploadingHtml] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [replyingToFeedback, setReplyingToFeedback] = useState<any | null>(null);
 
-  // Fetch guides from API on mount
+  // Fetch data based on active tab
   useEffect(() => {
-    fetchGuides();
-  }, []);
+    if (activeTab === 'guides') {
+      fetchGuides();
+    } else if (activeTab === 'requests') {
+      fetchGuideRequests();
+    } else if (activeTab === 'feedback') {
+      fetchFeedback();
+    }
+  }, [activeTab]);
 
   const fetchGuides = async () => {
+    setLoading(true);
     try {
       const response = await fetch('/api/admin/guides');
       if (response.ok) {
@@ -121,6 +132,36 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     } catch (error) {
       console.error('Failed to fetch guides:', error);
       setGuidesList(guides);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchGuideRequests = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/guide-requests');
+      if (response.ok) {
+        const data = await response.json();
+        setGuideRequests(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch guide requests:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchFeedback = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/feedback');
+      if (response.ok) {
+        const data = await response.json();
+        setFeedbackList(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch feedback:', error);
     } finally {
       setLoading(false);
     }
@@ -199,16 +240,55 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Actions */}
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-800">Manage Guides</h2>
-          <button
-            onClick={() => setShowCreateForm(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-          >
-            + Create New Guide
-          </button>
+        {/* Tabs */}
+        <div className="mb-6 border-b border-gray-200">
+          <nav className="-mb-px flex space-x-8">
+            <button
+              onClick={() => setActiveTab('guides')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'guides'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Manage Guides ({guidesList.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('requests')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'requests'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Guide Requests ({guideRequests.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('feedback')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'feedback'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Feedback ({feedbackList.length})
+            </button>
+          </nav>
         </div>
+
+        {/* Manage Guides Tab Content */}
+        {activeTab === 'guides' && (
+          <>
+            {/* Actions */}
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-gray-800">Manage Guides</h2>
+              <button
+                onClick={() => setShowCreateForm(true)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              >
+                + Create New Guide
+              </button>
+            </div>
 
         {/* Create/Edit Form */}
         {(showCreateForm || editingGuide) && (
@@ -301,7 +381,177 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             No guides yet. Create your first guide to get started!
           </div>
         )}
+          </>
+        )}
+
+        {/* Guide Requests Tab Content */}
+        {activeTab === 'requests' && (
+          <div className="space-y-4">
+            {loading ? (
+              <div className="text-center py-12 text-gray-500">Loading...</div>
+            ) : guideRequests.length === 0 ? (
+              <div className="text-center py-12 text-gray-500">No guide requests yet.</div>
+            ) : (
+              guideRequests.map((request: any) => (
+                <div key={request.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-gray-800 mb-2">{request.topic}</h3>
+                      {request.description && (
+                        <p className="text-gray-600 text-sm mb-3">{request.description}</p>
+                      )}
+                      <div className="flex items-center gap-4 text-sm text-gray-500">
+                        {request.email && <span>Email: {request.email}</span>}
+                        <span>Submitted: {new Date(request.submittedAt).toLocaleDateString()}</span>
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${
+                          request.status === 'new' ? 'bg-blue-100 text-blue-800' :
+                          request.status === 'reviewed' ? 'bg-yellow-100 text-yellow-800' :
+                          request.status === 'planned' ? 'bg-purple-100 text-purple-800' :
+                          'bg-green-100 text-green-800'
+                        }`}>
+                          {request.status}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <select
+                        value={request.status}
+                        onChange={async (e) => {
+                          const newStatus = e.target.value;
+                          const response = await fetch('/api/guide-requests', {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id: request.id, status: newStatus }),
+                          });
+                          if (response.ok) {
+                            fetchGuideRequests();
+                          }
+                        }}
+                        className="px-3 py-1.5 border border-gray-300 rounded-md text-sm text-gray-900"
+                      >
+                        <option value="new">New</option>
+                        <option value="reviewed">Reviewed</option>
+                        <option value="planned">Planned</option>
+                        <option value="completed">Completed</option>
+                      </select>
+                      <button
+                        onClick={async () => {
+                          if (confirm('Delete this request?')) {
+                            const response = await fetch('/api/guide-requests', {
+                              method: 'DELETE',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ id: request.id }),
+                            });
+                            if (response.ok) {
+                              fetchGuideRequests();
+                            }
+                          }
+                        }}
+                        className="px-3 py-1.5 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
+        {/* Feedback Tab Content */}
+        {activeTab === 'feedback' && (
+          <div className="space-y-4">
+            {loading ? (
+              <div className="text-center py-12 text-gray-500">Loading...</div>
+            ) : feedbackList.length === 0 ? (
+              <div className="text-center py-12 text-gray-500">No feedback yet.</div>
+            ) : (
+              feedbackList.map((feedback: any) => (
+                <div key={feedback.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="text-lg font-semibold text-gray-800">{feedback.subject}</h3>
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${
+                          feedback.status === 'new' ? 'bg-blue-100 text-blue-800' :
+                          feedback.status === 'reviewed' ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-green-100 text-green-800'
+                        }`}>
+                          {feedback.status}
+                        </span>
+                      </div>
+                      <div className="text-sm text-gray-500 mb-3">
+                        From: <span className="font-medium">{feedback.name}</span> ({feedback.email})
+                      </div>
+                      <p className="text-gray-700 text-sm mb-3 whitespace-pre-wrap">{feedback.message}</p>
+                      <div className="text-xs text-gray-400">
+                        Submitted: {new Date(feedback.submittedAt).toLocaleString()}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <select
+                        value={feedback.status}
+                        onChange={async (e) => {
+                          const newStatus = e.target.value;
+                          const response = await fetch('/api/feedback', {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id: feedback.id, status: newStatus }),
+                          });
+                          if (response.ok) {
+                            fetchFeedback();
+                          }
+                        }}
+                        className="px-3 py-1.5 border border-gray-300 rounded-md text-sm text-gray-900"
+                      >
+                        <option value="new">New</option>
+                        <option value="reviewed">Reviewed</option>
+                        <option value="responded">Responded</option>
+                      </select>
+                      <button
+                        onClick={() => setReplyingToFeedback(feedback)}
+                        className="px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+                      >
+                        Reply
+                      </button>
+                      <button
+                        onClick={async () => {
+                          if (confirm('Delete this feedback?')) {
+                            const response = await fetch('/api/feedback', {
+                              method: 'DELETE',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ id: feedback.id }),
+                            });
+                            if (response.ok) {
+                              fetchFeedback();
+                            }
+                          }
+                        }}
+                        className="px-3 py-1.5 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </div>
+
+      {/* Reply Modal */}
+      {replyingToFeedback && (
+        <ReplyModal
+          feedback={replyingToFeedback}
+          onClose={() => setReplyingToFeedback(null)}
+          onSuccess={() => {
+            setReplyingToFeedback(null);
+            fetchFeedback();
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -609,6 +859,136 @@ function GuideForm({
               type="button"
               onClick={onClose}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function ReplyModal({
+  feedback,
+  onClose,
+  onSuccess
+}: {
+  feedback: any;
+  onClose: () => void;
+  onSuccess: () => void;
+}) {
+  const [replyMessage, setReplyMessage] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (!replyMessage.trim()) {
+      setError('Please enter a reply message');
+      return;
+    }
+
+    setIsSending(true);
+
+    try {
+      const response = await fetch('/api/feedback/reply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          feedbackId: feedback.id,
+          replyMessage: replyMessage.trim(),
+        }),
+      });
+
+      if (response.ok) {
+        onSuccess();
+      } else {
+        const data = await response.json();
+        setError(data.error || 'Failed to send reply');
+      }
+    } catch (err) {
+      setError('Error sending reply. Please try again.');
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-gray-800">Reply to Feedback</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 text-2xl"
+            disabled={isSending}
+          >
+            ×
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6">
+          {/* Original Feedback */}
+          <div className="mb-6 bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h3 className="text-sm font-semibold text-gray-700 mb-3">Original Feedback:</h3>
+            <div className="space-y-2 text-sm">
+              <p className="text-gray-600">
+                <strong>From:</strong> {feedback.name} ({feedback.email})
+              </p>
+              <p className="text-gray-600">
+                <strong>Subject:</strong> {feedback.subject}
+              </p>
+              <p className="text-gray-600">
+                <strong>Date:</strong> {new Date(feedback.submittedAt).toLocaleString()}
+              </p>
+              <div className="mt-3 pt-3 border-t border-gray-200">
+                <p className="text-gray-800 whitespace-pre-wrap">{feedback.message}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Reply Message */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Your Reply
+            </label>
+            <textarea
+              value={replyMessage}
+              onChange={(e) => setReplyMessage(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 resize-none"
+              rows={8}
+              placeholder="Type your reply here..."
+              required
+              disabled={isSending}
+            />
+            <p className="text-xs text-gray-500 mt-2">
+              This will be sent to {feedback.email} from support@healtheguides.com via SendGrid
+            </p>
+          </div>
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-600">{error}</p>
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="flex items-center gap-3">
+            <button
+              type="submit"
+              disabled={isSending}
+              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:bg-blue-400 disabled:cursor-not-allowed"
+            >
+              {isSending ? 'Sending...' : 'Send Reply'}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={isSending}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
               Cancel
             </button>

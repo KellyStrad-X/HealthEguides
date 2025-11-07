@@ -46,9 +46,25 @@ export async function POST(request: Request) {
       );
     }
 
-    // Calculate price
+    // Calculate price from actual guide prices
     const isBundle = guideIds.length === 3;
-    const totalPrice = isBundle ? 1000 : guideIds.length * 499; // $10 for 3, $4.99 each otherwise
+
+    // Sum up the actual prices from selected guides (convert to cents)
+    const calculatedTotal = selectedGuides.reduce((sum, guide) => {
+      const guidePrice = typeof guide.price === 'number' && !isNaN(guide.price) ? guide.price : 4.99;
+      return sum + Math.round(guidePrice * 100);
+    }, 0);
+
+    // Apply bundle discount: cap at $10 if buying 3 guides
+    const totalPrice = isBundle ? Math.min(calculatedTotal, 1000) : calculatedTotal;
+
+    console.log('💰 Price calculation:', {
+      isBundle,
+      guideCount: selectedGuides.length,
+      calculatedTotal,
+      finalPrice: totalPrice,
+      guidePrices: selectedGuides.map(g => ({ id: g.id, price: g.price }))
+    });
 
     // Create line items for Stripe
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [

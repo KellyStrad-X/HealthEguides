@@ -7,6 +7,7 @@ import GuideCard from '@/components/GuideCard';
 import SaleHeader from '@/components/SaleHeader';
 import Header from '@/components/Header';
 import BundleOffer from '@/components/BundleOffer';
+import GuideRequestSection from '@/components/GuideRequestSection';
 import Footer from '@/components/Footer';
 
 export default function CatalogPage() {
@@ -140,6 +141,9 @@ export default function CatalogPage() {
 
       {/* Bundle Offer Section */}
       <BundleOffer />
+
+      {/* Guide Request Section */}
+      <GuideRequestSection />
 
       <Footer />
       </div>

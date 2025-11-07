@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=375, initial-scale=1.0">
+    <title>The Perimenopause Playbook - HealthEGuides</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Perimenopause-Specific Color Palette */
+            --primary-teal: #2A9D8F;
+            --secondary-coral: #E76F51;
+            --accent-plum: #6A4C93;
+            --light-teal: #64CCC5;
+
+            /* Text Colors */
+            --text-dark: #2c3e50;
+            --text-medium: #5a6c7d;
+            --text-light: #7f8c8d;
+
+            /* Background Colors */
+            --bg-light: #f8f9fa;
+            --bg-cream: #fdfbf7;
+            --bg-white: #ffffff;
+
+            /* Perimenopause-Specific Gradients */
+            --gradient-main: linear-gradient(135deg, #2A9D8F 0%, #1B7A6E 100%);
+            --gradient-coral: linear-gradient(135deg, #E76F51 0%, #D35836 100%);
+            --gradient-plum: linear-gradient(135deg, #6A4C93 0%, #583D7A 100%);
+            --gradient-light-teal: linear-gradient(135deg, #e8f7f5 0%, #d4f0ec 100%);
+            --gradient-light-coral: linear-gradient(135deg, #fef4f2 0%, #fce8e3 100%);
+            --gradient-light-plum: linear-gradient(135deg, #f3eff7 0%, #ebe4f0 100%);
+
+            /* Design System */
+            --border-radius: 12px;
+            --box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-white);
+            width: 375px;
+            margin: 0 auto;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .page {
+            width: 375px;
+            min-height: 600px;
+            padding: 24px 20px;
+            page-break-after: always;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page:last-child {
+            page-break-after: auto;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-teal);
+            margin-top: 24px;
+        }
+
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-top: 20px;
+        }
+
+        h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-top: 16px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        /* Hero/Cover Page */
+        .hero {
+            background: var(--gradient-main);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            color: white;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            line-height: 1.5;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .hero-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 40px;
+            width: 100%;
+            padding-top: 40px;
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .hero-stat-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Section Backgrounds */
+        .section-light-teal {
+            background: var(--gradient-light-teal);
+        }
+
+        .section-light-coral {
+            background: var(--gradient-light-coral);
+        }
+
+        .section-light-plum {
+            background: var(--gradient-light-plum);
+        }
+
+        .section-gradient {
+            background: var(--gradient-main);
+            color: white;
+            position: relative;
+        }
+
+        .section-gradient h2,
+        .section-gradient h3,
+        .section-gradient h4 {
+            color: white;
+        }
+
+        .section-gradient p,
+        .section-gradient li {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .section-coral-gradient {
+            background: var(--gradient-coral);
+            color: white;
+            position: relative;
+        }
+
+        .section-coral-gradient h2,
+        .section-coral-gradient h3,
+        .section-coral-gradient h4 {
+            color: white;
+        }
+
+        .section-coral-gradient p,
+        .section-coral-gradient li {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .section-plum-gradient {
+            background: var(--gradient-plum);
+            color: white;
+            position: relative;
+        }
+
+        .section-plum-gradient h2,
+        .section-plum-gradient h3,
+        .section-plum-gradient h4 {
+            color: white;
+        }
+
+        .section-plum-gradient p,
+        .section-plum-gradient li {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Section Icons */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .section-icon {
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-left: 5px solid var(--primary-teal);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin: 16px 0;
+            box-shadow: var(--box-shadow);
+        }
+
+        .card h4 {
+            color: var(--primary-teal);
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .card p:last-child {
+            margin-bottom: 0;
+        }
+
+        .card-coral {
+            border-left-color: var(--secondary-coral);
+        }
+
+        .card-coral h4 {
+            color: var(--secondary-coral);
+        }
+
+        .card-plum {
+            border-left-color: var(--accent-plum);
+        }
+
+        .card-plum h4 {
+            color: var(--accent-plum);
+        }
+
+        /* Callout Boxes */
+        .tip-box {
+            background: rgba(42, 157, 143, 0.1);
+            border-left: 6px solid var(--primary-teal);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .warning-box {
+            background: rgba(231, 111, 81, 0.12);
+            border-left: 6px solid var(--secondary-coral);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .myth-box {
+            background: rgba(106, 76, 147, 0.1);
+            border-left: 6px solid var(--accent-plum);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .stat-box {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-teal);
+            display: block;
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: var(--text-medium);
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        strong {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Symptom Checklist */
+        .symptom-category {
+            margin: 24px 0;
+        }
+
+        .category-header {
+            background: var(--primary-teal);
+            color: white;
+            padding: 12px 16px;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .symptom-list {
+            background: white;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            padding: 16px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .symptom-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .symptom-item:last-child {
+            border-bottom: none;
+        }
+
+        .checkbox {
+            font-size: 18px;
+            color: var(--primary-teal);
+            line-height: 1.6;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin: 24px 0;
+            box-shadow: var(--box-shadow);
+            overflow-x: auto;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .comparison-table th {
+            background: var(--primary-teal);
+            color: white;
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .comparison-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Timeline */
+        .timeline {
+            margin: 24px 0;
+        }
+
+        .timeline-item {
+            background: white;
+            border-left: 4px solid var(--primary-teal);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .timeline-year {
+            font-weight: 700;
+            color: var(--primary-teal);
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .timeline-description {
+            font-size: 15px;
+            color: var(--text-medium);
+        }
+
+        /* Checklist */
+        .checklist {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 24px 0;
+            box-shadow: var(--box-shadow);
+        }
+
+        .checklist-item {
+            padding: 10px 0;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+
+        /* Symptom Tracker Table */
+        .tracker-table {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin: 24px 0;
+            box-shadow: var(--box-shadow);
+            overflow-x: auto;
+        }
+
+        .tracker-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .tracker-table th {
+            background: var(--primary-teal);
+            color: white;
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .tracker-table td {
+            padding: 8px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        /* Pull Quote */
+        .pull-quote {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-teal);
+            font-style: italic;
+            margin: 24px 0;
+            padding-left: 20px;
+            border-left: 4px solid var(--primary-teal);
+            line-height: 1.4;
+        }
+
+        /* Script Box */
+        .script-box {
+            background: rgba(42, 157, 143, 0.08);
+            border-left: 4px solid var(--primary-teal);
+            border-radius: var(--border-radius);
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-style: italic;
+        }
+
+        /* Footer/Disclaimer */
+        .footer {
+            background: #f8f9fa;
+            padding: 24px 20px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--text-medium);
+        }
+
+        .footer p {
+            margin-bottom: 12px;
+        }
+
+        .footer strong {
+            color: var(--text-dark);
+        }
+
+        /* Chapter Divider */
+        .chapter-divider {
+            text-align: center;
+            padding: 40px 20px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chapter-emoji {
+            font-size: 56px;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        .chapter-title {
+            font-size: 28px;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 16px;
+        }
+
+        .chapter-description {
+            font-size: 16px;
+            color: var(--text-medium);
+            max-width: 300px;
+        }
+
+        @media print {
+            @page {
+                size: letter;
+                margin: 0;
+            }
+
+            body {
+                width: 375px;
+            }
+
+            .page {
+                page-break-after: always;
+            }
+
+            .page:last-child {
+                page-break-after: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="page hero">
+    <h1>The Perimenopause Playbook</h1>
+    <p class="hero-subtitle">36+ symptoms your doctor didn't tell you about—evidence-based strategies for navigating the transition, advocating with your doctor, and reclaiming your quality of life</p>
+
+    <div class="hero-stats">
+        <div class="hero-stat">
+            <span class="hero-stat-number">36+ Symptoms</span>
+            <span class="hero-stat-label">Now Recognized (Not Just Hot Flashes)</span>
+        </div>
+        <div class="hero-stat">
+            <span class="hero-stat-number">4-6 Years</span>
+            <span class="hero-stat-label">Typical Duration (Sometimes 2-10)</span>
+        </div>
+        <div class="hero-stat">
+            <span class="hero-stat-number">Almost All</span>
+            <span class="hero-stat-label">Women Will Experience This</span>
+        </div>
+    </div>
+
+    <p class="copyright">© 2025 HealthEGuides. All rights reserved.</p>
+</div>
+
+<!-- SECTION 1: You're Not Alone -->
+<div class="page section-light-teal">
+    <div class="section-header">
+        <span class="section-icon">💚</span>
+        <h2>You're Not Alone (And You're Not Crazy)</h2>
+    </div>
+
+    <p><em>Picture this:</em></p>
+
+    <p>You're 38. You walk into a room and forget why. Your rage at minor inconveniences shocks even you. You wake at 3am drenched in sweat. Joint pain appears out of nowhere. Your brain feels like it's swimming through fog.</p>
+
+    <p>Your doctor says you're "too young for menopause" and suggests therapy for "stress."</p>
+
+    <p><strong>Sound familiar?</strong></p>
+
+    <div class="pull-quote">
+        "What you're experiencing is real, common, and has a name—perimenopause"
+    </div>
+
+    <h3>The Truth Your Doctor Didn't Tell You</h3>
+
+    <p>Perimenopause isn't just hot flashes. It's <strong>36+ symptoms</strong> that affect virtually every body system—brain fog, rage, joint pain, insomnia, heart palpitations, and yes, hot flashes too.</p>
+
+    <p>Most women don't know this. Most <em>doctors</em> don't even mention it.</p>
+
+    <h3>Why Doctors Miss It</h3>
+
+    <ul>
+        <li><strong>No definitive test</strong>—hormones fluctuate wildly daily, so blood tests are unreliable</li>
+        <li><strong>Symptoms start earlier</strong> than taught—can begin in your 30s, not just 40s-50s</li>
+        <li><strong>Medical education lags</strong>—many doctors only learned about hot flashes</li>
+        <li><strong>Symptoms seem unrelated</strong>—rage, joint pain, and brain fog don't "feel" hormonal</li>
+    </ul>
+</div>
+
+<!-- Section 1 Continued -->
+<div class="page section-light-teal">
+    <h3>You're Part of a Wave</h3>
+
+    <p>Something is shifting. Women are speaking up, demanding better care, breaking the stigma. Celebrity advocates like Drew Barrymore, Naomi Watts, and Halle Berry are talking openly. Online communities are connecting thousands of women.</p>
+
+    <p>The FDA has convened panels in 2025 to discuss HRT warnings, though current boxed warnings remain in place. Research is validating symptoms previously dismissed as "just aging" or "stress."</p>
+
+    <div class="stat-box">
+        <span class="stat-number">Gen X</span>
+        <p class="stat-label">Hitting peak perimenopause years NOW—and demanding answers</p>
+    </div>
+
+    <p><strong>This guide exists because the medical system is failing women.</strong> Here's what you need to know to advocate for yourself, understand your options, and reclaim your quality of life.</p>
+
+    <div class="tip-box">
+        <p><strong>💡 If you've been told you're "too young" or it's "just stress"—keep reading</strong></p>
+        <p>Perimenopause can start as early as mid-30s, and stress doesn't cause the cyclical, hormone-driven symptoms you're experiencing.</p>
+    </div>
+</div>
+
+<!-- SECTION 2: The 36+ Symptoms -->
+<div class="page section-light-coral">
+    <div class="section-header">
+        <span class="section-icon">🔥</span>
+        <h2>The 36+ Symptoms Nobody Warned You About</h2>
+    </div>
+
+    <p>Hot flashes are just the tip of the iceberg. Perimenopause affects virtually every body system because <strong>estrogen and progesterone receptors exist throughout your body</strong>—brain, bones, heart, skin, GI tract, joints.</p>
+
+    <p>When hormone levels fluctuate wildly, these systems go haywire.</p>
+
+    <h3>Cognitive Symptoms</h3>
+
+    <div class="symptom-list">
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Brain fog</strong> — Difficulty concentrating, processing information</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Memory issues</strong> — Forgetfulness, losing train of thought</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Word retrieval problems</strong> — Forgetting common words mid-sentence</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Difficulty making decisions</strong> — Decision fatigue, analysis paralysis</span>
+        </div>
+    </div>
+
+    <h3>Emotional Symptoms</h3>
+
+    <div class="symptom-list">
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Rage</strong> — Intense anger at small things that wouldn't normally bother you</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Anxiety</strong> — New or worsening anxiety, panic attacks</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Depression</strong> — Sadness, hopelessness, loss of interest</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Mood swings</strong> — Rapid emotional shifts, crying easily</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Irritability</strong> — Low tolerance, easily frustrated</span>
+        </div>
+    </div>
+</div>
+
+<!-- Symptoms Continued -->
+<div class="page section-light-coral">
+    <h3>Physical Symptoms</h3>
+
+    <div class="symptom-list">
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Hot flashes</strong> — Sudden waves of heat, flushing</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Night sweats</strong> — Drenching sweats disrupting sleep</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Insomnia</strong> — Trouble falling asleep, staying asleep, or waking too early</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Joint pain</strong> — Stiffness, achiness in joints (hands, knees, shoulders)</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Muscle tension</strong> — Tightness, soreness</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Heart palpitations</strong> — Racing heart, irregular beats</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Headaches/migraines</strong> — New or worsening headaches</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Fatigue</strong> — Exhaustion not relieved by rest</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Weight gain</strong> — Especially around midsection</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Dizziness</strong> — Lightheadedness, vertigo</span>
+        </div>
+    </div>
+
+    <h3>Reproductive & Sexual Symptoms</h3>
+
+    <div class="symptom-list">
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Irregular periods</strong> — Shorter/longer cycles, heavier/lighter bleeding</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Heavy bleeding</strong> — Flooding, clots, prolonged periods</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Vaginal dryness</strong> — Discomfort, itching</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Painful sex</strong> — Discomfort or pain during intercourse</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Low libido</strong> — Decreased sex drive</span>
+        </div>
+    </div>
+</div>
+
+<!-- Symptoms Continued -->
+<div class="page section-light-coral">
+    <h3>The "Sneaky" Symptoms</h3>
+
+    <p>These symptoms seem completely unrelated to hormones—but they're reported by countless women in perimenopause:</p>
+
+    <div class="symptom-list">
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Burning mouth</strong> — Tongue or mouth burning sensation</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Electric shock sensations</strong> — Brief zap-like feelings</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Formication</strong> — Crawling skin sensations</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Tinnitus</strong> — Ringing in ears</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Dry eyes/mouth</strong> — Persistent dryness</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Changes in body odor</strong> — Different smell</span>
+        </div>
+        <div class="symptom-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Digestive issues</strong> — Bloating, changes in bowel habits</span>
+        </div>
+    </div>
+
+    <div class="warning-box">
+        <p><strong>⚠️ Important: Individual Variation</strong></p>
+        <p>You won't have all these symptoms. Common clusters exist, but your experience is personal. Having 3-5 symptoms is typical—36+ is the collective list across all women.</p>
+    </div>
+
+    <div class="warning-box">
+        <p><strong>⚠️ Medical Evaluation First</strong></p>
+        <p>Always rule out thyroid disorders, anemia, cardiac conditions, and abnormal uterine bleeding before attributing symptoms solely to hormones. Many conditions can mimic perimenopause symptoms—proper medical evaluation is essential.</p>
+    </div>
+
+    <h3>Timeline: What to Expect</h3>
+
+    <p><strong>Perimenopause usually lasts 4-6 years</strong> (sometimes 2-10 years). Symptoms wax and wane unpredictably—you might have great months followed by terrible ones. This is normal and frustrating.</p>
+
+    <div class="pull-quote">
+        "Oh my god, THAT'S why my joints hurt / I'm so angry / I can't sleep"
+    </div>
+</div>
+
+<!-- SECTION 3: Why Your Doctor Might Miss It -->
+<div class="page section-light-plum">
+    <div class="section-header">
+        <span class="section-icon">🩺</span>
+        <h2>Why Your Doctor Might Miss It (And What's Changing)</h2>
+    </div>
+
+    <p><strong>It's not you—it's a broken system.</strong></p>
+
+    <h3>The Diagnostic Challenge</h3>
+
+    <div class="card">
+        <h4>No Definitive Test</h4>
+        <p>FSH and estrogen blood tests are unreliable during perimenopause because hormones fluctuate wildly day-to-day. You can test "normal" one day and menopausal the next.</p>
+    </div>
+
+    <div class="card">
+        <h4>Diagnosis is Clinical</h4>
+        <p>Based on symptom pattern + age + menstrual changes. If you're 35-55 with irregular periods and multiple symptoms, it's likely perimenopause—no test needed.</p>
+    </div>
+
+    <div class="card">
+        <h4>Medical Education Gap</h4>
+        <p>Many doctors only learned about hot flashes, not the 36+ symptoms now recognized. Perimenopause education has been minimal in medical training.</p>
+    </div>
+
+    <h3>The Good News: A Cultural Shift is Underway</h3>
+
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-year">2002</div>
+            <div class="timeline-description">WHI study creates HRT fear—stigma and silence follow</div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-year">2010s</div>
+            <div class="timeline-description">Research begins reanalyzing data—newer studies show different safety profile</div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-year">2020s</div>
+            <div class="timeline-description">Gen X hits perimenopause—demands better care, breaks stigma online</div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-year">2025</div>
+            <div class="timeline-description">FDA reviewing HRT warnings, celebrity advocacy, mainstream media coverage, cultural renaissance</div>
+        </div>
+    </div>
+
+    <p><strong>You're part of this wave.</strong> The generation refusing to suffer in silence, demanding evidence-based care, and changing the conversation.</p>
+</div>
+
+<!-- CHAPTER DIVIDER: HRT Renaissance -->
+<div class="page section-gradient chapter-divider">
+    <div class="chapter-emoji">💊</div>
+    <h2 class="chapter-title">The HRT Renaissance</h2>
+    <p class="chapter-description">Understanding modern hormone replacement therapy—the 2002 study that scared everyone, the current science, and your options</p>
+</div>
+
+<!-- SECTION 4: The HRT Renaissance -->
+<div class="page section-light-teal">
+    <h2>What You Need to Know About HRT Now</h2>
+
+    <p>Let's talk about the treatment option your doctor might be afraid to mention—and why that fear is based on outdated science.</p>
+
+    <h3>The 2002 Study That Created HRT Fear</h3>
+
+    <p>In 2002, the Women's Health Initiative (WHI) study made headlines: "HRT increases heart disease and breast cancer risk." Women abandoned HRT overnight. Doctors stopped prescribing it.</p>
+
+    <p><strong>The problem?</strong> The study had major flaws:</p>
+
+    <ul>
+        <li><strong>Wrong age group</strong>—Average age 63 (well past menopause), not women starting HRT at perimenopause</li>
+        <li><strong>Wrong hormones</strong>—Used older synthetic hormones, not modern bioidentical options</li>
+        <li><strong>Wrong timing</strong>—Started HRT 10+ years after menopause (timing matters significantly)</li>
+    </ul>
+
+    <div class="myth-box">
+        <p><strong>💡 Myth vs. Reality</strong></p>
+        <p><strong>Myth:</strong> HRT causes heart disease in all women<br>
+        <strong>Reality:</strong> Starting HRT before age 60 or within 10 years of final period may actually <em>reduce</em> heart disease risk</p>
+    </div>
+</div>
+
+<!-- HRT Continued -->
+<div class="page section-light-teal">
+    <h3>Current Science: What Research Shows Now</h3>
+
+    <p>Decades of research since 2002 paint a different picture:</p>
+
+    <div class="card">
+        <h4>Timing is Everything</h4>
+        <p><strong>Starting HRT before age 60 or within 10 years of final period</strong> shows different risk profile than the 2002 study found. This is called the "timing hypothesis."</p>
+    </div>
+
+    <div class="card">
+        <h4>Heart Disease Risk</h4>
+        <p>Evidence suggests HRT started during perimenopause or early menopause may reduce cardiovascular risk, not increase it.</p>
+    </div>
+
+    <div class="card">
+        <h4>Breast Cancer Risk</h4>
+        <p>Small increased risk exists (comparable to alcohol consumption or obesity). Estrogen-only HRT has lower risk than combined estrogen-progesterone.</p>
+    </div>
+
+    <div class="card">
+        <h4>Stroke Risk</h4>
+        <p>For women under 60, absolute stroke risk remains low with HRT, especially with transdermal (patch) delivery.</p>
+    </div>
+
+    <h3>FDA Discussions Underway</h3>
+
+    <p>The FDA has convened 2025 panels and is considering updates to HRT warnings to reflect newer research. Current boxed warnings are still in place. This acknowledgment signals that science has evolved beyond the 2002 study.</p>
+
+    <div class="comparison-table">
+        <table>
+            <tr>
+                <th>Factor</th>
+                <th>2002 Study</th>
+                <th>Current Understanding</th>
+            </tr>
+            <tr>
+                <td><strong>Age</strong></td>
+                <td>Average 63</td>
+                <td>Safest started before 60</td>
+            </tr>
+            <tr>
+                <td><strong>Hormones</strong></td>
+                <td>Synthetic oral</td>
+                <td>Multiple options (bioidentical, patch, cream)</td>
+            </tr>
+            <tr>
+                <td><strong>Timing</strong></td>
+                <td>10+ years post-menopause</td>
+                <td>Best within 10 years</td>
+            </tr>
+            <tr>
+                <td><strong>Risk</strong></td>
+                <td>Increased CV risk</td>
+                <td>May reduce CV risk if started early</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- HRT Options -->
+<div class="page section-light-coral">
+    <h3>Your HRT Options</h3>
+
+    <p>HRT isn't one-size-fits-all. Multiple formulations and delivery methods exist:</p>
+
+    <h4>Estrogen (The Main Player)</h4>
+
+    <div class="card-coral card">
+        <h4>Systemic Estrogen</h4>
+        <p><strong>What it is:</strong> Full-body estrogen replacement (patch, pill, cream, gel)</p>
+        <p><strong>What it treats:</strong> Hot flashes, night sweats, mood, brain fog, bone density, vaginal dryness, joint pain</p>
+        <p><strong>Delivery options:</strong> Transdermal patch (preferred—bypasses liver), oral pill, topical gel/cream</p>
+    </div>
+
+    <div class="card-coral card">
+        <h4>Local Estrogen</h4>
+        <p><strong>What it is:</strong> Vaginal estrogen (cream, ring, tablet)</p>
+        <p><strong>What it treats:</strong> Vaginal dryness, painful sex, urinary symptoms only</p>
+        <p><strong>Note:</strong> Very low systemic absorption—safe for most women, even with breast cancer history</p>
+    </div>
+
+    <h4>Progesterone (If You Have a Uterus)</h4>
+
+    <div class="card-coral card">
+        <h4>Why You Need It</h4>
+        <p>If you still have a uterus, you MUST take progesterone with systemic estrogen to protect uterine lining from overgrowth.</p>
+        <p><strong>Options:</strong> Bioidentical micronized progesterone (preferred) or synthetic progestins</p>
+    </div>
+
+    <h4>Testosterone (Sometimes)</h4>
+
+    <div class="card-coral card">
+        <h4>For Libido & Energy</h4>
+        <p>Some women benefit from low-dose testosterone for sex drive, energy, muscle mass. Not standard but increasingly prescribed off-label.</p>
+    </div>
+
+    <div class="warning-box">
+        <p><strong>⚠️ Important: This Requires Medical Guidance</strong></p>
+        <p>HRT dosing and formulation must be individualized and monitored by a healthcare provider. This is educational information, not a prescription.</p>
+    </div>
+</div>
+
+<!-- HRT Who Benefits -->
+<div class="page section-light-coral">
+    <h3>Who Benefits Most from HRT</h3>
+
+    <ul>
+        <li>Women with moderate-severe symptoms impacting quality of life</li>
+        <li>Those experiencing vasomotor symptoms (hot flashes, night sweats)</li>
+        <li>Women with significant brain fog, mood changes, or sleep disruption</li>
+        <li>Those with joint pain or muscle aches</li>
+        <li>Women at risk for osteoporosis</li>
+        <li>Starting before age 60 or within 10 years of final period</li>
+    </ul>
+
+    <h3>Who Should Avoid HRT</h3>
+
+    <p><strong>Contraindications</strong> (do not use HRT if you have):</p>
+
+    <ul>
+        <li>History of breast cancer or estrogen-sensitive cancer</li>
+        <li>History of blood clots (DVT, PE)</li>
+        <li>History of stroke or heart attack</li>
+        <li>Active liver disease</li>
+        <li>Unexplained vaginal bleeding</li>
+    </ul>
+
+    <p><strong>Discuss carefully with doctor if you have:</strong> High blood pressure, diabetes, obesity, migraines, family history of breast cancer, smoking history.</p>
+
+    <h3>Individualized Approach</h3>
+
+    <p>There's no standard HRT protocol. Dosing, delivery method, and formulation get adjusted based on:</p>
+
+    <ul>
+        <li>Your symptoms and response</li>
+        <li>Your medical history</li>
+        <li>Your risk factors</li>
+        <li>Your preferences</li>
+    </ul>
+
+    <p>Finding the right fit may take 2-3 months of adjustments. Be patient and communicate with your provider.</p>
+
+    <div class="stat-box">
+        <span class="stat-number">4-12 Weeks</span>
+        <p class="stat-label">Typical timeline to feel HRT symptom improvement</p>
+    </div>
+</div>
+
+<!-- SECTION 5: Beyond HRT -->
+<div class="page section-light-plum">
+    <div class="section-header">
+        <span class="section-icon">🌟</span>
+        <h2>Beyond HRT: Your Full Treatment Toolkit</h2>
+    </div>
+
+    <p>HRT is powerful, but it's not the only path forward. Lifestyle modifications, supplements, and other interventions can significantly improve symptoms—either alone or alongside HRT.</p>
+
+    <h3>Lifestyle Foundations That Matter</h3>
+
+    <div class="card-plum card">
+        <h4>Sleep Hygiene</h4>
+        <p><strong>Why it matters:</strong> Sleep disruption amplifies all symptoms</p>
+        <p><strong>What helps:</strong> Cooling sheets/pajamas, consistent schedule, dark/cool room, limit caffeine after noon, limit alcohol (disrupts sleep architecture)</p>
+    </div>
+
+    <div class="card-plum card">
+        <h4>Exercise</h4>
+        <p><strong>Why it matters:</strong> Helps hot flashes, mood, bone density, weight, sleep</p>
+        <p><strong>What helps:</strong> Resistance training 2-3x/week (bone density, muscle), cardio 150 min/week (heart, mood), yoga/stretching (stress, flexibility)</p>
+    </div>
+
+    <div class="card-plum card">
+        <h4>Nutrition</h4>
+        <p><strong>Why it matters:</strong> Supports hormone balance, reduces inflammation</p>
+        <p><strong>What helps:</strong> Mediterranean diet pattern, adequate protein (1g per kg body weight), limit processed foods/sugar, phytoestrogens (soy, flax), stay hydrated</p>
+    </div>
+
+    <div class="card-plum card">
+        <h4>Stress Management</h4>
+        <p><strong>Why it matters:</strong> Cortisol impacts estrogen regulation</p>
+        <p><strong>What helps:</strong> Meditation, therapy, boundaries, nervous system regulation practices, social connection</p>
+    </div>
+</div>
+
+<!-- Beyond HRT Continued -->
+<div class="page section-light-plum">
+    <h3>Evidence-Based Supplements</h3>
+
+    <div class="card-plum card">
+        <h4>Black Cohosh</h4>
+        <p><strong>What it helps:</strong> Hot flashes, night sweats<br>
+        <strong>Evidence level:</strong> Moderate—some studies show benefit<br>
+        <strong>Typical dose:</strong> 20-40mg daily</p>
+    </div>
+
+    <div class="card-plum card">
+        <h4>Omega-3 Fatty Acids</h4>
+        <p><strong>What it helps:</strong> Mood, joint pain, heart health<br>
+        <strong>Evidence level:</strong> Good—well-studied benefits<br>
+        <strong>Typical dose:</strong> 1000-2000mg EPA+DHA daily</p>
+    </div>
+
+    <div class="card-plum card">
+        <h4>Vitamin D + Calcium</h4>
+        <p><strong>What it helps:</strong> Bone health during estrogen decline<br>
+        <strong>Evidence level:</strong> Strong—essential for bone density<br>
+        <strong>Typical dose:</strong> Vitamin D 1000-2000 IU, Calcium 1000-1200mg daily</p>
+    </div>
+
+    <div class="card-plum card">
+        <h4>Magnesium</h4>
+        <p><strong>What it helps:</strong> Sleep, mood, muscle relaxation<br>
+        <strong>Evidence level:</strong> Moderate—many find relief<br>
+        <strong>Typical dose:</strong> 200-400mg before bed</p>
+    </div>
+
+    <div class="warning-box">
+        <p><strong>⚠️ Supplement Caution</strong></p>
+        <p>Supplements aren't FDA regulated—quality varies significantly. Choose reputable brands with third-party testing. Discuss with your provider, especially if taking medications.</p>
+    </div>
+
+    <h3>Non-HRT Medications</h3>
+
+    <ul>
+        <li><strong>SSRIs</strong>—For mood symptoms; some help hot flashes (paroxetine, venlafaxine)</li>
+        <li><strong>Gabapentin</strong>—For hot flashes and sleep disturbances</li>
+        <li><strong>Vaginal moisturizers/lubricants</strong>—For dryness and painful sex (over-the-counter options available)</li>
+    </ul>
+
+    <h3>Emerging Approaches</h3>
+
+    <ul>
+        <li><strong>CBT for insomnia</strong>—Evidence-based therapy for sleep issues</li>
+        <li><strong>CBT for hot flashes</strong>—Helps some women manage vasomotor symptoms</li>
+        <li><strong>Acupuncture</strong>—Mixed evidence, but some women find relief</li>
+        <li><strong>Cooling devices</strong>—Wearable tech for hot flash management</li>
+    </ul>
+</div>
+
+<!-- CHAPTER DIVIDER: Medical Advocacy -->
+<div class="page section-coral-gradient chapter-divider">
+    <div class="chapter-emoji">💪</div>
+    <h2 class="chapter-title">How to Talk to Your Doctor</h2>
+    <p class="chapter-description">Advocacy scripts, preparation strategies, and knowing when to find a new provider</p>
+</div>
+
+<!-- SECTION 6: How to Talk to Your Doctor -->
+<div class="page section-light-teal">
+    <h2>Advocating for Yourself Effectively</h2>
+
+    <p>Your doctor works <strong>for you</strong>. Here's how to make the partnership work—and what to do when it doesn't.</p>
+
+    <h3>Preparing for Your Appointment</h3>
+
+    <div class="checklist">
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Complete symptom tracker for 2-3 months (see next section)</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>List your top 3 symptoms most affecting quality of life</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Write down questions so brain fog doesn't derail you</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Consider bringing partner/friend as advocate if needed</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Bring list of current medications and supplements</span>
+        </div>
+    </div>
+
+    <h3>What to Say: Specific Scripts</h3>
+
+    <div class="script-box">
+        <p><strong>Opening statement:</strong></p>
+        <p>"I'm experiencing [symptoms] that align with perimenopause based on my research. Can we discuss whether this could be hormone-related?"</p>
+    </div>
+
+    <div class="script-box">
+        <p><strong>If told you're too young:</strong></p>
+        <p>"I know I'm [age], but perimenopause can start in the 30s. Can we treat this clinically based on symptoms rather than assuming I'm too young?"</p>
+    </div>
+
+    <div class="script-box">
+        <p><strong>Discussing HRT:</strong></p>
+        <p>"I'm interested in discussing HRT. Are you familiar with the research since the 2002 WHI study that shows a different risk profile for younger women starting treatment?"</p>
+    </div>
+
+    <div class="script-box">
+        <p><strong>Emphasizing impact:</strong></p>
+        <p>"These symptoms are significantly impacting my quality of life and ability to function. What treatment options can we explore?"</p>
+    </div>
+</div>
+
+<!-- Doctor Conversation Continued -->
+<div class="page section-light-teal">
+    <h3>Questions to Ask</h3>
+
+    <ul>
+        <li>"What are the risks and benefits of HRT for my specific situation?"</li>
+        <li>"If not HRT, what other treatment options do you recommend?"</li>
+        <li>"How will we monitor and adjust treatment based on my response?"</li>
+        <li>"Should I see a menopause specialist or gynecologist with hormone expertise?"</li>
+        <li>"What lifestyle changes would you recommend alongside any treatment?"</li>
+        <li>"How long before I should expect to see improvement?"</li>
+    </ul>
+
+    <h3>Red Flags: When to Find a New Provider</h3>
+
+    <p>It's okay to seek care elsewhere if your doctor:</p>
+
+    <ul>
+        <li><strong>Dismisses symptoms</strong> as "normal aging" without discussion or evaluation</li>
+        <li><strong>Refuses to consider HRT</strong> without medical contraindication and clear explanation</li>
+        <li><strong>Says "you're too young"</strong> without clinical assessment based on symptoms</li>
+        <li><strong>Doesn't listen</strong> or repeatedly cuts you off</li>
+        <li><strong>Pushes antidepressants</strong> without discussing hormone-related causes</li>
+        <li><strong>Admits unfamiliarity</strong> but won't refer you to specialist</li>
+    </ul>
+
+    <div class="tip-box">
+        <p><strong>💡 You Deserve to Be Heard</strong></p>
+        <p>If your doctor won't listen, find one who will. This is YOUR body, YOUR quality of life, YOUR healthcare. You have the right to seek appropriate care.</p>
+    </div>
+
+    <h3>Finding the Right Provider</h3>
+
+    <ul>
+        <li><strong>Menopause specialists</strong>—Look for NAMS (North American Menopause Society) certified providers</li>
+        <li><strong>Younger doctors</strong>—May have more current training on perimenopause and HRT</li>
+        <li><strong>Gynecologists with hormone expertise</strong>—Some focus specifically on menopause care</li>
+        <li><strong>Online communities</strong>—Ask for provider recommendations in your area</li>
+        <li><strong>Telehealth menopause clinics</strong>—Emerging option if local providers insufficient</li>
+    </ul>
+</div>
+
+<!-- SECTION 7: Symptom Tracker -->
+<div class="page section-light-coral">
+    <div class="section-header">
+        <span class="section-icon">📋</span>
+        <h2>Your Perimenopause Symptom Tracker</h2>
+    </div>
+
+    <p><strong>Tracking your symptoms helps YOU see patterns and helps your DOCTOR make informed decisions.</strong></p>
+
+    <h3>Why Track</h3>
+
+    <p>Hormones fluctuate wildly during perimenopause—symptoms come and go. Tracking reveals patterns invisible day-to-day and provides objective data for your doctor.</p>
+
+    <h3>What to Track</h3>
+
+    <ul>
+        <li><strong>Symptoms</strong> (which ones, from the list in this guide)</li>
+        <li><strong>Severity</strong> (1-10 scale or mild/moderate/severe)</li>
+        <li><strong>Menstrual cycle</strong> (cycle day, bleeding patterns)</li>
+        <li><strong>Sleep quality</strong> (hours, disruptions)</li>
+        <li><strong>Life impact</strong> (work, relationships, activities affected)</li>
+    </ul>
+
+    <h3>How Long to Track</h3>
+
+    <p><strong>Track for 2-3 months before your doctor appointment</strong> for meaningful pattern data.</p>
+
+    <div class="tracker-table">
+        <p style="margin-bottom: 12px; font-size: 14px;"><strong>Sample Tracker</strong> (Use as model for your own tracking):</p>
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Cycle Day</th>
+                <th>Top Symptoms</th>
+                <th>Severity</th>
+                <th>Impact</th>
+            </tr>
+            <tr>
+                <td>Nov 1</td>
+                <td>Day 5</td>
+                <td>Fatigue, brain fog</td>
+                <td>6/10</td>
+                <td>Moderate</td>
+            </tr>
+            <tr>
+                <td>Nov 2</td>
+                <td>Day 6</td>
+                <td>Hot flashes, insomnia</td>
+                <td>8/10</td>
+                <td>High</td>
+            </tr>
+            <tr>
+                <td>Nov 3</td>
+                <td>Day 7</td>
+                <td>Rage, joint pain</td>
+                <td>7/10</td>
+                <td>High</td>
+            </tr>
+        </table>
+    </div>
+
+    <p style="font-size: 14px; margin-top: 12px;"><strong>Impact Scale:</strong> Low (minor interference) | Moderate (noticeable impact) | High (difficult to function)</p>
+
+    <div class="tip-box">
+        <p><strong>💡 Tracking Tips</strong></p>
+        <p>Use an app, spreadsheet, or simple journal—whatever you'll actually use. Don't stress about perfection. Even incomplete tracking showing patterns is helpful.</p>
+    </div>
+</div>
+
+<!-- SECTION 8: Next Steps & Resources -->
+<div class="page section-plum-gradient">
+    <div class="section-header">
+        <span class="section-icon">🎯</span>
+        <h2>Next Steps & Resources</h2>
+    </div>
+
+    <p>You have the knowledge—now take action. You've got this.</p>
+
+    <h3>Your 7-Day Action Plan</h3>
+
+    <div class="checklist">
+        <div class="checklist-item">
+            <span class="checkbox" style="color: white;">☐</span>
+            <span style="color: rgba(255, 255, 255, 0.95);"><strong>Day 1:</strong> Start symptom tracking today using the template</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox" style="color: white;">☐</span>
+            <span style="color: rgba(255, 255, 255, 0.95);"><strong>Day 2:</strong> Research providers—find NAMS-certified menopause specialists in your area</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox" style="color: white;">☐</span>
+            <span style="color: rgba(255, 255, 255, 0.95);"><strong>Day 3:</strong> Implement one lifestyle change—pick low-hanging fruit (magnesium, sleep tweak, 10-min walk)</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox" style="color: white;">☐</span>
+            <span style="color: rgba(255, 255, 255, 0.95);"><strong>Day 4:</strong> Join online community for support (r/Menopause, r/Perimenopause)</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox" style="color: white;">☐</span>
+            <span style="color: rgba(255, 255, 255, 0.95);"><strong>Day 5:</strong> Schedule doctor appointment (for 2-3 months out, after tracking period)</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox" style="color: white;">☐</span>
+            <span style="color: rgba(255, 255, 255, 0.95);"><strong>Day 6:</strong> Share this guide with a friend who might be experiencing symptoms</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox" style="color: white;">☐</span>
+            <span style="color: rgba(255, 255, 255, 0.95);"><strong>Day 7:</strong> Educate partner/family about what you're experiencing</span>
+        </div>
+    </div>
+</div>
+
+<!-- Resources Continued -->
+<div class="page section-plum-gradient">
+    <h3>Trusted Resources</h3>
+
+    <div class="card" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border-left-color: white;">
+        <h4 style="color: white;">North American Menopause Society (NAMS)</h4>
+        <p style="color: rgba(255, 255, 255, 0.9);"><strong>Website:</strong> menopause.org</p>
+        <p style="color: rgba(255, 255, 255, 0.9);">Provider directory, patient education, evidence-based guidance. Gold standard menopause organization.</p>
+    </div>
+
+    <div class="card" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border-left-color: white;">
+        <h4 style="color: white;">Reddit Communities</h4>
+        <p style="color: rgba(255, 255, 255, 0.9);"><strong>r/Menopause, r/Perimenopause</strong></p>
+        <p style="color: rgba(255, 255, 255, 0.9);">Active communities with shared experiences, support, and validation. Find your people who truly understand.</p>
+    </div>
+
+    <div class="card" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border-left-color: white;">
+        <h4 style="color: white;">Telehealth Menopause Clinics</h4>
+        <p style="color: rgba(255, 255, 255, 0.9);">Emerging services focused specifically on menopause care—option if local providers insufficient.</p>
+    </div>
+
+    <h3>Final Message</h3>
+
+    <p style="color: rgba(255, 255, 255, 0.95);">You're part of a movement changing perimenopause care. You deserve quality of life, not just "toughing it out." Treatment exists. Community exists. Hope exists.</p>
+
+    <p style="color: rgba(255, 255, 255, 0.95);">Be patient with yourself and the process—finding the right treatment takes time. But you don't have to suffer for 5-10 years waiting for menopause.</p>
+
+    <div class="pull-quote" style="color: white; border-left-color: white; text-align: center; padding: 0; margin-top: 32px; font-size: 22px;">
+        "You're not alone. You're not crazy. You deserve treatment. You've got this."
+    </div>
+</div>
+
+<!-- LEGAL DISCLAIMER PAGE -->
+<div class="page footer">
+    <h3 style="color: var(--text-dark); font-family: 'Inter', sans-serif; font-size: 16px; margin-bottom: 16px;">Medical Disclaimer</h3>
+
+    <p><strong>Medical Disclaimer:</strong> This guide is for educational and informational purposes only and does not constitute medical advice. Always consult with qualified healthcare providers regarding medical conditions, diagnosis, and treatment. Do not disregard professional medical advice or delay seeking it because of information in this guide.</p>
+
+    <p><strong>No Doctor-Patient Relationship:</strong> Reading this guide does not create a doctor-patient or healthcare provider relationship.</p>
+
+    <p><strong>HRT Information:</strong> Hormone replacement therapy has risks and benefits that vary by individual. The information provided reflects current medical understanding but may not apply to your specific situation. Discuss HRT decisions thoroughly with your healthcare provider.</p>
+
+    <p><strong>Individual Variation:</strong> Perimenopause symptoms and treatment responses vary significantly between individuals. Information provided represents general guidance based on current evidence.</p>
+
+    <p><strong>Supplement Disclaimer:</strong> Dietary supplements are not regulated by the FDA for safety and efficacy. Quality varies by manufacturer. Consult your healthcare provider before starting supplements, especially if taking medications.</p>
+
+    <p style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #dee2e6;"><strong>© 2025 HealthEGuides. All rights reserved.</strong></p>
+
+    <p style="margin-bottom: 0;">Evidence-Based Women's Health Information</p>
+</div>
+
+</body>
+</html>

@@ -37,12 +37,12 @@ export async function getAllGuides(): Promise<Guide[]> {
         const firestoreGuide = firestoreGuides.get(guide.id);
 
         if (firestoreGuide) {
-          // Merge: Firestore can override comingSoon and other status fields
+          // Merge: Firestore data takes priority, hardcoded guide is fallback
           return {
-            ...guide,
-            comingSoon: firestoreGuide.comingSoon ?? guide.comingSoon,
-            hasHtmlGuide: firestoreGuide.hasHtmlGuide,
-            htmlUrl: firestoreGuide.htmlUrl,
+            ...guide, // Start with hardcoded defaults
+            ...firestoreGuide, // Override with any Firestore data
+            // Ensure we preserve the ID
+            id: guide.id,
           };
         }
 

@@ -115,17 +115,21 @@ function GuideViewerContent({ params }: GuideViewerProps) {
 
           if (data.valid) {
             setAccessGranted(true);
+
             // Store token in localStorage for future visits
             localStorage.setItem(`guide-${guide.id}-token`, accessToken);
 
             // Load the guide content
-            await loadGuideContent();
+            await loadGuideContent(accessToken);
+            setLoading(false);
           } else {
             setError(data.error || 'Invalid or expired access link.');
+            setLoading(false);
           }
         } catch (err) {
           console.error('Access validation error:', err);
           setError('Unable to validate access.');
+          setLoading(false);
         }
       } else {
         // Check localStorage for saved token
@@ -169,16 +173,22 @@ function GuideViewerContent({ params }: GuideViewerProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
-  async function loadGuideContent() {
+  async function loadGuideContent(accessToken: string) {
     try {
-      // For now, we'll load from public/guides directory
-      // In production, you'd place your HTML guides there
-      const response = await fetch(`/guides/${guide?.id}.html`);
+      // Fetch guide content from authenticated endpoint
+      const response = await fetch('/api/get-guide-content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accessToken, guideId: guide?.id }),
+      });
 
-      if (response.ok) {
-        const html = await response.text();
-        setGuideHtml(html);
-      } else {
+      if (!response.ok) {
+        throw new Error('Failed to load guide content');
+      }
+
+      const data = await response.json();
+
+      if (data.placeholder || !data.html) {
         // Guide HTML not found - show placeholder
         setGuideHtml(`
           <div style="max-width: 800px; margin: 0 auto; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
@@ -196,6 +206,8 @@ function GuideViewerContent({ params }: GuideViewerProps) {
             </div>
           </div>
         `);
+      } else {
+        setGuideHtml(data.html);
       }
     } catch (err) {
       console.error('Error loading guide:', err);
