@@ -2,8 +2,8 @@ export default function WhyChooseUs() {
   const benefits = [
     {
       emoji: "💎",
-      title: "Research-Backed",
-      description: "Based on current scientific research and medical literature"
+      title: "Evidence-Based",
+      description: "Educational content informed by current health research"
     },
     {
       emoji: "💰",

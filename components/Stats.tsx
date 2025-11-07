@@ -11,8 +11,8 @@ export default function Stats() {
       emoji: "⚡"
     },
     {
-      title: "Research-Backed",
-      description: "Based on current medical literature",
+      title: "Evidence-Based",
+      description: "Informed by current health research",
       emoji: "📚"
     }
   ];

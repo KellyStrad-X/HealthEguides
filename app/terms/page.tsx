@@ -39,6 +39,11 @@ export default function TermsPage() {
                 <strong>IMPORTANT:</strong> Our guides provide educational information only and
                 are not intended to replace professional medical advice, diagnosis, or treatment.
               </p>
+              <p className="mb-4">
+                Our content is <strong>not created, written, or reviewed by licensed medical professionals,
+                physicians, or healthcare providers.</strong> The information in our guides is compiled from
+                publicly available health research and educational resources for informational purposes only.
+              </p>
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li>Always consult your healthcare provider before making any health-related decisions</li>
                 <li>Never disregard professional medical advice or delay seeking it because of information in our guides</li>

@@ -358,7 +358,7 @@ function SubscriptionSuccessContent() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-900 mb-1">Evidence-Based Content</h4>
-                  <p className="text-gray-600">All guides backed by research and healthcare professionals</p>
+                  <p className="text-gray-600">Educational guides informed by current health research</p>
                 </div>
               </div>
 

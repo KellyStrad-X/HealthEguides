@@ -9,7 +9,7 @@ import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
   title: "Health E-Guides | Evidence-Based Women's Health Guides",
-  description: "Affordable, research-backed digital health guides for women. Evidence-based solutions for perimenopause, PCOS, fertility, and more.",
+  description: "Affordable digital health guides for women. Educational resources informed by current health research for perimenopause, PCOS, fertility, and more.",
   keywords: ["women's health", "health guides", "perimenopause", "PCOS", "fertility"],
 };
 

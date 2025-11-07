@@ -107,18 +107,18 @@ export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: S
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start sm:items-center justify-center p-0 sm:p-4"
+      className="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-start sm:items-center justify-center p-0 sm:p-4"
       onClick={onClose}
     >
       <div
-        className="bg-stone-50 w-full sm:rounded-lg sm:max-w-2xl max-h-screen overflow-y-auto"
+        className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 w-full sm:rounded-2xl sm:max-w-2xl max-h-screen overflow-y-auto shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Sticky Close button */}
-        <div className="sticky top-0 bg-stone-50 z-10 flex justify-end p-4 border-b border-gray-100">
+        <div className="sticky top-0 bg-gradient-to-r from-indigo-50/95 via-purple-50/95 to-pink-50/95 backdrop-blur-sm z-10 flex justify-end p-4 border-b border-purple-100">
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-colors"
+            className="text-gray-600 hover:text-gray-900 bg-white/60 hover:bg-white/80 rounded-full p-2 transition-all shadow-sm"
             aria-label="Close"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,20 +130,20 @@ export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: S
         <div className="p-6 md:p-8 pb-8">
           {/* Header */}
           <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Get Access to All Guides</h2>
-            <p className="text-gray-600">Start your 7-day free trial today</p>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">Get Access to All Guides</h2>
+            <p className="text-gray-700">Start your 7-day free trial today</p>
           </div>
 
           {/* Featured Guides */}
           <div className="mb-8">
-            <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">Includes Access To:</h3>
+            <h3 className="text-sm font-semibold text-purple-700 uppercase mb-4">Includes Access To:</h3>
             <div className="space-y-3">
               {guides.map((guide, index) => (
-                <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                <div key={index} className="flex items-start gap-3 p-4 bg-white/70 backdrop-blur-sm rounded-xl border border-purple-100 hover:border-purple-200 transition-all shadow-sm">
                   <span className="text-2xl flex-shrink-0">{guide.emoji}</span>
                   <div>
                     <h4 className="font-semibold text-gray-900">{guide.title}</h4>
-                    <p className="text-sm text-gray-600">{guide.description}</p>
+                    <p className="text-sm text-gray-700">{guide.description}</p>
                   </div>
                 </div>
               ))}
@@ -151,29 +151,29 @@ export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: S
           </div>
 
           {/* Why Women Trust Us */}
-          <div className="mb-8 bg-indigo-50 border border-indigo-100 rounded-lg p-4">
-            <h3 className="font-semibold text-indigo-900 mb-2">Why Women Trust Our Guides</h3>
-            <ul className="space-y-2 text-sm text-indigo-800">
+          <div className="mb-8 bg-gradient-to-br from-purple-100 to-pink-100 border border-purple-200 rounded-xl p-5 shadow-sm">
+            <h3 className="font-semibold text-purple-900 mb-3">Why Women Trust Our Guides</h3>
+            <ul className="space-y-2.5 text-sm text-purple-900">
               <li className="flex items-start gap-2">
-                <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>New guides released every Friday</span>
               </li>
               <li className="flex items-start gap-2">
-                <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>Focused on women's health and well-being</span>
               </li>
               <li className="flex items-start gap-2">
-                <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>Comprehensive guides covering all life stages</span>
               </li>
               <li className="flex items-start gap-2">
-                <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>Cancel anytime - no commitments</span>
@@ -187,18 +187,18 @@ export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: S
             <div className="grid grid-cols-2 gap-4">
               <button
                 onClick={() => setSelectedPlan('monthly')}
-                className={`p-4 rounded-lg border-2 transition-all ${
+                className={`p-5 rounded-xl border-2 transition-all shadow-sm ${
                   selectedPlan === 'monthly'
-                    ? 'border-indigo-600 bg-indigo-50'
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-indigo-50 shadow-md'
+                    : 'border-purple-200 bg-white/60 hover:border-purple-300 hover:shadow'
                 }`}
               >
                 <div className="text-center">
                   <p className="text-2xl font-bold text-gray-900">$5</p>
-                  <p className="text-sm text-gray-600">per month</p>
+                  <p className="text-sm text-gray-700">per month</p>
                   {selectedPlan === 'monthly' && (
                     <div className="mt-2">
-                      <span className="inline-block px-2 py-1 bg-indigo-600 text-white text-xs rounded-full">
+                      <span className="inline-block px-2 py-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs rounded-full">
                         Selected
                       </span>
                     </div>
@@ -208,23 +208,23 @@ export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: S
 
               <button
                 onClick={() => setSelectedPlan('annual')}
-                className={`p-4 rounded-lg border-2 transition-all relative ${
+                className={`p-5 rounded-xl border-2 transition-all relative shadow-sm ${
                   selectedPlan === 'annual'
-                    ? 'border-indigo-600 bg-indigo-50'
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-indigo-50 shadow-md'
+                    : 'border-purple-200 bg-white/60 hover:border-purple-300 hover:shadow'
                 }`}
               >
-                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
-                  <span className="inline-block px-2 py-1 bg-green-500 text-white text-xs rounded-full">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <span className="inline-block px-3 py-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-semibold rounded-full shadow-md">
                     Save $10
                   </span>
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-gray-900">$50</p>
-                  <p className="text-sm text-gray-600">per year</p>
+                  <p className="text-sm text-gray-700">per year</p>
                   {selectedPlan === 'annual' && (
                     <div className="mt-2">
-                      <span className="inline-block px-2 py-1 bg-indigo-600 text-white text-xs rounded-full">
+                      <span className="inline-block px-2 py-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs rounded-full">
                         Selected
                       </span>
                     </div>
@@ -232,7 +232,7 @@ export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: S
                 </div>
               </button>
             </div>
-            <p className="text-xs text-gray-500 text-center mt-3">
+            <p className="text-xs text-gray-600 text-center mt-3">
               7-day free trial • Cancel anytime
             </p>
           </div>
@@ -240,7 +240,7 @@ export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: S
           {/* Email Input */}
           {!user && (
             <div className="mb-4">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-1">
                 Email Address
               </label>
               <input
@@ -248,7 +248,7 @@ export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: S
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/80 border-2 border-purple-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-400 transition-all"
                 placeholder="you@example.com"
                 required
               />
@@ -262,15 +262,15 @@ export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: S
                 type="checkbox"
                 checked={agreedToTerms}
                 onChange={(e) => setAgreedToTerms(e.target.checked)}
-                className="mt-1 w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                className="mt-1 w-4 h-4 text-purple-600 border-purple-300 rounded focus:ring-purple-500"
               />
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-700">
                 I agree to the{' '}
-                <a href="/terms" target="_blank" className="text-indigo-600 hover:text-indigo-700">
+                <a href="/terms" target="_blank" className="text-purple-600 hover:text-purple-700 font-medium">
                   Terms of Service
                 </a>{' '}
                 and{' '}
-                <a href="/privacy" target="_blank" className="text-indigo-600 hover:text-indigo-700">
+                <a href="/privacy" target="_blank" className="text-purple-600 hover:text-purple-700 font-medium">
                   Privacy Policy
                 </a>
               </span>
@@ -279,8 +279,8 @@ export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: S
 
           {/* Error message */}
           {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3">
-              <p className="text-sm text-red-600">{error}</p>
+            <div className="mb-4 bg-red-50 border-2 border-red-200 rounded-xl p-3">
+              <p className="text-sm text-red-700 font-medium">{error}</p>
             </div>
           )}
 
@@ -288,12 +288,12 @@ export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: S
           <button
             onClick={handleSubscribe}
             disabled={loading || !agreedToTerms}
-            className="w-full py-4 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-4 bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-purple-700 hover:via-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Processing...' : 'Start Free Trial'}
           </button>
 
-          <p className="text-xs text-gray-500 text-center mt-4">
+          <p className="text-xs text-gray-600 text-center mt-4">
             You won't be charged until your 7-day trial ends. Cancel anytime before then at no cost.
           </p>
         </div>

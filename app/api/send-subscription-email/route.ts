@@ -102,7 +102,7 @@ export async function POST(request: Request) {
               </svg>
               <div>
                 <strong>Evidence-Based Content</strong>
-                <p style="margin: 5px 0 0 0; color: #7f8c8d;">All guides backed by research and created by healthcare professionals</p>
+                <p style="margin: 5px 0 0 0; color: #7f8c8d;">Educational guides informed by current health research</p>
               </div>
             </div>
 
