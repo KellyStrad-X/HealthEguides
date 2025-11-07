@@ -70,10 +70,10 @@ export default function MyGuidesPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white/20 mb-4"></div>
-          <p className="text-white/60">Loading your guides...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4"></div>
+          <p className="text-gray-600">Loading your guides...</p>
         </div>
       </div>
     );
@@ -111,48 +111,70 @@ export default function MyGuidesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] pt-24 pb-20">
-      <div className="section-container">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white pt-24 pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-12">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-4">My Guides</h1>
-          <p className="text-xl text-white/70">
-            Access your complete library of health guides
+        <div className="mb-8">
+          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-3">My Guides</h1>
+          <p className="text-lg text-gray-600">
+            Your complete library of health guides
           </p>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-          <div className="glass-card p-6">
-            <div className="text-3xl mb-2">📚</div>
-            <div className="text-2xl font-bold">{totalGuides}</div>
-            <div className="text-white/60 text-sm">Total Guides</div>
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center text-2xl">
+                📚
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-gray-900">{totalGuides}</div>
+                <div className="text-sm text-gray-600">Total Guides</div>
+              </div>
+            </div>
           </div>
-          <div className="glass-card p-6">
-            <div className="text-3xl mb-2">✅</div>
-            <div className="text-2xl font-bold">{readGuides}</div>
-            <div className="text-white/60 text-sm">Guides Read</div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center text-2xl">
+                ✅
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-gray-900">{readGuides}</div>
+                <div className="text-sm text-gray-600">Guides Read</div>
+              </div>
+            </div>
           </div>
-          <div className="glass-card p-6">
-            <div className="text-3xl mb-2">📖</div>
-            <div className="text-2xl font-bold">{totalGuides - readGuides}</div>
-            <div className="text-white/60 text-sm">To Read</div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-2xl">
+                📖
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-gray-900">{totalGuides - readGuides}</div>
+                <div className="text-sm text-gray-600">To Read</div>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Recently Viewed */}
         {recentlyViewed.length > 0 && (
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4">Recently Viewed</h2>
-            <div className="flex gap-4 overflow-x-auto pb-4">
+          <div className="mb-8 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Recently Viewed</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {recentlyViewed.map(guide => (
                 <div
                   key={guide.id}
                   onClick={() => handleGuideClick(guide)}
-                  className="flex-shrink-0 w-48 glass-card p-4 cursor-pointer hover-lift hover:scale-105"
+                  className="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md cursor-pointer transition-all"
                 >
-                  <div className="text-4xl mb-2">{guide.emoji}</div>
-                  <h3 className="font-semibold text-sm line-clamp-2">{guide.title}</h3>
+                  <div className="text-3xl flex-shrink-0">{guide.emoji}</div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-900 text-sm line-clamp-2">{guide.title}</h3>
+                  </div>
                 </div>
               ))}
             </div>
@@ -160,19 +182,19 @@ export default function MyGuidesPage() {
         )}
 
         {/* Search and Filters */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+        <div className="mb-6 bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row gap-4">
             {/* Search */}
-            <div className="relative flex-1 max-w-md">
+            <div className="relative flex-1">
               <input
                 type="text"
                 placeholder="Search guides..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-3 pl-10 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-3 pl-11 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
               <svg
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/50"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -187,10 +209,10 @@ export default function MyGuidesPage() {
                 <button
                   key={f}
                   onClick={() => setFilter(f)}
-                  className={`px-6 py-2 rounded-full font-medium transition-all ${
+                  className={`px-6 py-3 rounded-lg font-medium transition-all ${
                     filter === f
-                      ? 'bg-gradient-purple text-white shadow-lg'
-                      : 'bg-white/5 text-white/70 hover:bg-white/10'
+                      ? 'bg-indigo-600 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
                   {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -202,9 +224,9 @@ export default function MyGuidesPage() {
 
         {/* Guides Grid */}
         {filteredGuides.length === 0 ? (
-          <div className="text-center py-12 glass-card">
+          <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-200">
             <div className="text-6xl mb-4">🔍</div>
-            <p className="text-xl text-white/70">
+            <p className="text-xl text-gray-600">
               {searchQuery ? 'No guides match your search' : 'No guides found in this category'}
             </p>
           </div>
@@ -218,11 +240,11 @@ export default function MyGuidesPage() {
                 <div
                   key={guide.id}
                   onClick={() => handleGuideClick(guide)}
-                  className="glass-card overflow-hidden relative hover-lift hover:scale-[1.02] cursor-pointer group"
+                  className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg hover:scale-[1.02] cursor-pointer transition-all group"
                 >
                   {/* Read Badge */}
                   {isRead && (
-                    <div className="absolute top-4 right-4 z-10 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                    <div className="absolute top-4 right-4 z-10 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-md">
                       <span>✓</span>
                       <span>Read</span>
                     </div>
@@ -240,14 +262,14 @@ export default function MyGuidesPage() {
 
                   {/* Content */}
                   <div className="p-6">
-                    <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
                       {guide.title}
                     </h3>
-                    <p className="text-white/70 text-sm mb-4 line-clamp-2">
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
                       {guide.description}
                     </p>
 
-                    <button className="w-full btn-primary text-sm py-2">
+                    <button className="w-full py-2 px-4 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors text-sm">
                       {isRead ? 'Read Again' : 'Start Reading'}
                     </button>
                   </div>

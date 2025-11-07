@@ -41,6 +41,18 @@ export default function Header() {
                 Catalog
               </Link>
 
+              {/* My Guides link - only show when logged in */}
+              {user && (
+                <Link
+                  href="/account/guides"
+                  className={`font-medium transition-colors ${
+                    pathname === '/account/guides' ? 'text-primary' : 'text-white/70 hover:text-white'
+                  }`}
+                >
+                  My Guides
+                </Link>
+              )}
+
               {/* Auth section */}
               {user ? (
                 <UserProfileButton />
