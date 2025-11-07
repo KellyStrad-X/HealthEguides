@@ -176,6 +176,22 @@ function GuideViewerContent({ params }: GuideViewerProps) {
     validateAccess();
   }, [searchParams, params.slug, guide, guideLoaded, authLoading, user, router]);
 
+  // Track guide view for subscribed users
+  useEffect(() => {
+    if (accessGranted && accessType === 'subscription' && user && guide) {
+      // Track that user viewed this guide
+      fetch('/api/user/guide-progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.uid,
+          guideId: guide.id,
+          isRead: false, // Just mark as viewed, not necessarily fully read
+        }),
+      }).catch(err => console.error('Failed to track guide view:', err));
+    }
+  }, [accessGranted, accessType, user, guide]);
+
   // Handle scroll to show/hide header
   useEffect(() => {
     const handleScroll = () => {
