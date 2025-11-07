@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { Guide } from '@/lib/guides';
-import { db } from '@/lib/firebase-admin-init';
 
 interface GuideProgress {
   guideId: string;
