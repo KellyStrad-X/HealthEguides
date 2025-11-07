@@ -36,6 +36,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
@@ -45,6 +50,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signUp = async (email: string, password: string, displayName?: string): Promise<User> => {
+    if (!auth) {
+      throw new Error('Firebase auth is not initialized');
+    }
+
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
     if (displayName && userCredential.user) {
@@ -55,15 +64,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signIn = async (email: string, password: string): Promise<User> => {
+    if (!auth) {
+      throw new Error('Firebase auth is not initialized');
+    }
+
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     return userCredential.user;
   };
 
   const logout = async () => {
+    if (!auth) {
+      throw new Error('Firebase auth is not initialized');
+    }
+
     await signOut(auth);
   };
 
   const resetPassword = async (email: string) => {
+    if (!auth) {
+      throw new Error('Firebase auth is not initialized');
+    }
+
     await sendPasswordResetEmail(auth, email);
   };
 
