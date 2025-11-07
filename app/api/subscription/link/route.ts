@@ -6,6 +6,10 @@ export async function POST(request: Request) {
   try {
     console.log('🔗 Subscription link API called');
 
+    // Initialize Firebase Admin by accessing adminDb (triggers lazy initialization)
+    // This must happen before calling getAuth()
+    const _ = adminDb;
+
     // Get auth token from header
     const authHeader = request.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
