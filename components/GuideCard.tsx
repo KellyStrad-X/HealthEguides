@@ -23,7 +23,6 @@ export default function GuideCard({ guide }: GuideCardProps) {
 
   // Defensive guards for missing data
   const safeFeatures = Array.isArray(guide.features) ? guide.features : [];
-  const safePrice = typeof guide.price === 'number' && !isNaN(guide.price) ? guide.price : 0;
 
   if (!Array.isArray(guide.features)) {
     console.error('[GuideCard] ERROR: features is not an array for guide:', guide.id, guide.features);
@@ -94,14 +93,8 @@ export default function GuideCard({ guide }: GuideCardProps) {
           ))}
         </ul>
 
-        {/* Footer with price and CTA */}
+        {/* Footer with CTA */}
         <div className="pt-4 border-t border-white/10">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-3xl font-bold gradient-text">
-              ${safePrice.toFixed(2)}
-            </span>
-          </div>
-
           <button
             className={`w-full text-center ${
               guide.comingSoon

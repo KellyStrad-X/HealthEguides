@@ -7,9 +7,6 @@ interface GuideLandingHeroProps {
 }
 
 export default function GuideLandingHero({ guide }: GuideLandingHeroProps) {
-  // Defensive guard for missing data
-  const safePrice = typeof guide.price === 'number' && !isNaN(guide.price) ? guide.price : 0;
-
   const scrollToCTA = () => {
     const ctaSection = document.getElementById('get-guide');
     ctaSection?.scrollIntoView({ behavior: 'smooth' });
@@ -39,16 +36,16 @@ export default function GuideLandingHero({ guide }: GuideLandingHeroProps) {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
           <div className="flex items-center gap-2 glass-card px-6 py-3 rounded-full">
-            <span className="text-2xl">💰</span>
-            <span className="font-semibold">Only ${safePrice.toFixed(2)}</span>
+            <span className="text-2xl">🎉</span>
+            <span className="font-semibold">7 Days Free</span>
           </div>
           <div className="flex items-center gap-2 glass-card px-6 py-3 rounded-full">
             <span className="text-2xl">⚡</span>
-            <span className="font-semibold">Instant Download</span>
+            <span className="font-semibold">Instant Access</span>
           </div>
           <div className="flex items-center gap-2 glass-card px-6 py-3 rounded-full">
             <span className="text-2xl">📚</span>
-            <span className="font-semibold">15+ Pages</span>
+            <span className="font-semibold">All Guides Included</span>
           </div>
         </div>
 
@@ -56,7 +53,7 @@ export default function GuideLandingHero({ guide }: GuideLandingHeroProps) {
           onClick={scrollToCTA}
           className="btn-primary text-xl px-12 py-5 shadow-2xl"
         >
-          Get Your Guide Now - ${safePrice.toFixed(2)}
+          Start Free Trial!
         </button>
       </div>
 

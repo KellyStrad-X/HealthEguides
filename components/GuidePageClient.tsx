@@ -7,7 +7,6 @@ import Header from '@/components/Header';
 import GuideLandingHero from '@/components/GuideLandingHero';
 import GuideProblemAgitation from '@/components/GuideProblemAgitation';
 import GuideBenefits from '@/components/GuideBenefits';
-import GuidePreview from '@/components/GuidePreview';
 import GuideEmailCapture from '@/components/GuideEmailCapture';
 import SubscriptionModal from '@/components/SubscriptionModal';
 import { trackViewContent } from '@/components/MetaPixel';
@@ -31,14 +30,6 @@ export default function GuidePageClient({ guide }: GuidePageClientProps) {
       <GuideLandingHero guide={guide} />
       <GuideProblemAgitation guide={guide} />
       <GuideBenefits guide={guide} />
-
-      {/* Preview Screenshots Section */}
-      <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
-        <div className="section-container">
-          <GuidePreview guideId={guide.id} guideTitle={guide.title} />
-        </div>
-      </section>
-
       <GuideEmailCapture guide={guide} />
       <SubscriptionModal
         isOpen={showSubscriptionModal}
