@@ -2,6 +2,7 @@
 
 import { Guide } from '@/lib/guides';
 import { useState, useRef, useEffect } from 'react';
+import SubscriptionModal from './SubscriptionModal';
 
 interface GuideEmailCaptureProps {
   guide: Guide;
@@ -9,9 +10,9 @@ interface GuideEmailCaptureProps {
 
 export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
   const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const emailInputRef = useRef<HTMLInputElement>(null);
 
   // Auto-focus when section comes into view
@@ -37,9 +38,15 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
     return () => observer.disconnect();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    // Validate email
+    if (!email || !email.includes('@')) {
+      setError('Please enter a valid email address.');
+      return;
+    }
 
     // Validate terms agreement
     if (!agreedToTerms) {
@@ -47,47 +54,16 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
       return;
     }
 
-    setLoading(true);
-
-    try {
-      // Track subscription begin event (Google Analytics)
-      if (typeof window !== 'undefined' && (window as any).gtag) {
-        (window as any).gtag('event', 'begin_subscription', {
-          from_guide: guide.id,
-          guide_name: guide.title,
-        });
-      }
-
-      // Create Stripe subscription checkout session
-      const response = await fetch('/api/stripe/create-subscription-checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          plan: 'monthly', // Default to monthly plan
-        }),
+    // Track subscription begin event (Google Analytics)
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'begin_subscription', {
+        from_guide: guide.id,
+        guide_name: guide.title,
       });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to create checkout session');
-      }
-
-      const { url } = await response.json();
-
-      // Redirect to Stripe Checkout
-      if (url) {
-        window.location.href = url;
-      } else {
-        throw new Error('No checkout URL received');
-      }
-    } catch (err) {
-      console.error('Checkout error:', err);
-      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
-      setLoading(false);
     }
+
+    // Open subscription modal to let user choose plan
+    setShowSubscriptionModal(true);
   };
 
   return (
@@ -106,7 +82,7 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
                   <span className="font-bold text-sm uppercase tracking-wide">7 Days Free</span>
                 </div>
                 <div className="text-2xl font-bold text-white/90">
-                  Then $5/month or $50/year
+                  Then $5/month
                 </div>
               </div>
               <p className="text-white/70">
@@ -166,10 +142,10 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
 
               <button
                 type="submit"
-                disabled={loading || !agreedToTerms}
+                disabled={!agreedToTerms}
                 className="w-full btn-primary text-xl py-5 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Processing...' : 'Start Your Free Trial'}
+                Start Your Free Trial
               </button>
 
               <p className="text-xs text-white/50 text-center">
@@ -208,6 +184,13 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
           </div>
         </div>
       </div>
+
+      {/* Subscription Modal */}
+      <SubscriptionModal
+        isOpen={showSubscriptionModal}
+        onClose={() => setShowSubscriptionModal(false)}
+        initialEmail={email}
+      />
     </section>
   );
 }

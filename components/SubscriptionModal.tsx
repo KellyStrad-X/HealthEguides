@@ -7,6 +7,7 @@ import { loadStripe } from '@stripe/stripe-js';
 interface SubscriptionModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialEmail?: string;
   featuredGuides?: Array<{
     emoji: string;
     title: string;
@@ -16,9 +17,9 @@ interface SubscriptionModalProps {
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: SubscriptionModalProps) {
+export default function SubscriptionModal({ isOpen, onClose, initialEmail, featuredGuides }: SubscriptionModalProps) {
   const { user } = useAuth();
-  const [email, setEmail] = useState(user?.email || '');
+  const [email, setEmail] = useState(initialEmail || user?.email || '');
   const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'annual'>('monthly');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -56,6 +57,13 @@ export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: S
       document.body.style.overflow = '';
     };
   }, [isOpen]);
+
+  // Update email when initialEmail prop changes
+  useEffect(() => {
+    if (initialEmail) {
+      setEmail(initialEmail);
+    }
+  }, [initialEmail]);
 
   if (!isOpen) return null;
 
