@@ -246,7 +246,7 @@ export default function SubscriptionModal({ isOpen, onClose, initialEmail, featu
           </div>
 
           {/* Email Input */}
-          {!user && (
+          {!user && !initialEmail && (
             <div className="mb-4">
               <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-1">
                 Email Address
@@ -256,10 +256,19 @@ export default function SubscriptionModal({ isOpen, onClose, initialEmail, featu
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-white/80 border-2 border-purple-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-400 transition-all"
+                className="w-full px-4 py-3 bg-white/80 border-2 border-purple-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-400 transition-all text-gray-900 placeholder-gray-400"
                 placeholder="you@example.com"
                 required
               />
+            </div>
+          )}
+
+          {/* Show email confirmation if pre-filled */}
+          {!user && initialEmail && (
+            <div className="mb-4 p-3 bg-purple-50 border border-purple-200 rounded-xl">
+              <p className="text-sm text-gray-700">
+                <span className="font-medium">Email:</span> {email}
+              </p>
             </div>
           )}
 
