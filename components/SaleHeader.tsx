@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { useHeader } from '@/lib/headerContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface SaleHeaderProps {
   onClaimClick?: () => void;
 }
 
 export default function SaleHeader({ onClaimClick }: SaleHeaderProps = {}) {
+  const { user } = useAuth();
   const [timeLeft, setTimeLeft] = useState({
     hours: 0,
     minutes: 0,
@@ -78,6 +80,11 @@ export default function SaleHeader({ onClaimClick }: SaleHeaderProps = {}) {
       }
     }
   };
+
+  // Hide banner for logged-in users
+  if (user) {
+    return null;
+  }
 
   return (
     <div className={`sticky top-0 z-50 bg-gradient-to-r from-red-600 via-pink-600 to-purple-600 text-white shadow-lg transition-all duration-300 ${isCompressed ? 'py-1 md:py-1' : 'py-3'}`}>

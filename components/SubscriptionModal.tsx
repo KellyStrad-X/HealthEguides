@@ -27,19 +27,19 @@ export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: S
   // Default featured guides if none provided
   const defaultGuides = [
     {
-      emoji: '🌸',
-      title: 'Perimenopause & Menopause Guide',
-      description: 'Navigate hormonal changes with confidence'
+      emoji: '😴',
+      title: 'Sleep Optimization Guide',
+      description: 'Science-backed strategies for better sleep quality'
     },
     {
-      emoji: '💝',
-      title: 'PCOS Management Guide',
-      description: 'Evidence-based strategies for managing PCOS'
+      emoji: '✨',
+      title: 'Retinol Guide',
+      description: 'Everything you need to know about retinol skincare'
     },
     {
-      emoji: '🤰',
-      title: 'Fertility & Conception Guide',
-      description: 'Optimize your journey to parenthood'
+      emoji: '🧘',
+      title: 'Stress and Cortisol Management',
+      description: 'Proven techniques to reduce stress and balance hormones'
     }
   ];
 
