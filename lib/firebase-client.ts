@@ -11,13 +11,22 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-let app: FirebaseApp;
-let auth: Auth;
+let app: FirebaseApp | undefined;
+let auth: Auth | undefined;
 
-// Initialize Firebase only on client side
+// Initialize Firebase only on client side and only if config is present
 if (typeof window !== 'undefined') {
-  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-  auth = getAuth(app);
+  // Check if Firebase config is available
+  const hasConfig = firebaseConfig.apiKey &&
+                    firebaseConfig.authDomain &&
+                    firebaseConfig.projectId;
+
+  if (hasConfig) {
+    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+    auth = getAuth(app);
+  } else {
+    console.warn('Firebase configuration missing. Authentication features will be disabled.');
+  }
 }
 
 export { auth };
