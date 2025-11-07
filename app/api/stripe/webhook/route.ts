@@ -2,9 +2,28 @@ import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { adminDb } from '@/lib/firebase-admin';
+import { Timestamp } from 'firebase-admin/firestore';
 
 // This is required to receive raw body for Stripe signature verification
 export const runtime = 'nodejs';
+
+/**
+ * Safely convert a Unix timestamp (seconds) to a Firestore Timestamp
+ * Returns null if the timestamp is invalid
+ */
+function safeTimestampFromUnix(unixTimestamp: number | null | undefined): Timestamp | null {
+  if (!unixTimestamp || typeof unixTimestamp !== 'number' || isNaN(unixTimestamp)) {
+    return null;
+  }
+
+  try {
+    // Firestore Timestamp expects seconds and nanoseconds
+    return Timestamp.fromMillis(unixTimestamp * 1000);
+  } catch (error) {
+    console.error('Error converting timestamp:', unixTimestamp, error);
+    return null;
+  }
+}
 
 export async function POST(request: Request) {
   // Initialize Stripe at runtime (not build time)
@@ -158,10 +177,19 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   const amount = subscription.items.data[0]?.price.unit_amount || 0;
   const interval = subscription.items.data[0]?.price.recurring?.interval || 'month';
 
-  // Type-safe access to subscription properties
-  const sub = subscription as any; // Use 'any' to bypass strict type checking for Stripe properties
+  // Validate and convert required timestamps
+  const currentPeriodStart = safeTimestampFromUnix(subscription.current_period_start);
+  const currentPeriodEnd = safeTimestampFromUnix(subscription.current_period_end);
 
-  // Safely convert timestamps - Firestore doesn't accept null dates
+  if (!currentPeriodStart || !currentPeriodEnd) {
+    console.error('❌ Invalid required timestamps:', {
+      current_period_start: subscription.current_period_start,
+      current_period_end: subscription.current_period_end
+    });
+    throw new Error('Invalid subscription timestamps');
+  }
+
+  // Build subscription data with validated timestamps
   const subscriptionData: any = {
     userId: userId || email, // Use email as fallback userId if not provided
     email,
@@ -172,21 +200,26 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     interval,
     amount,
     currency: subscription.currency,
-    currentPeriodStart: new Date(sub.current_period_start * 1000),
-    currentPeriodEnd: new Date(sub.current_period_end * 1000),
-    cancelAtPeriodEnd: sub.cancel_at_period_end || false,
-    updatedAt: new Date(),
+    currentPeriodStart,
+    currentPeriodEnd,
+    cancelAtPeriodEnd: subscription.cancel_at_period_end || false,
+    updatedAt: Timestamp.now(),
   };
 
   // Only add optional date fields if they have valid values
-  if (sub.trial_start && typeof sub.trial_start === 'number') {
-    subscriptionData.trialStart = new Date(sub.trial_start * 1000);
+  const trialStart = safeTimestampFromUnix(subscription.trial_start);
+  if (trialStart) {
+    subscriptionData.trialStart = trialStart;
   }
-  if (sub.trial_end && typeof sub.trial_end === 'number') {
-    subscriptionData.trialEnd = new Date(sub.trial_end * 1000);
+
+  const trialEnd = safeTimestampFromUnix(subscription.trial_end);
+  if (trialEnd) {
+    subscriptionData.trialEnd = trialEnd;
   }
-  if (sub.canceled_at && typeof sub.canceled_at === 'number') {
-    subscriptionData.canceledAt = new Date(sub.canceled_at * 1000);
+
+  const canceledAt = safeTimestampFromUnix(subscription.canceled_at);
+  if (canceledAt) {
+    subscriptionData.canceledAt = canceledAt;
   }
 
   subscriptionData.cancelReason = null;
@@ -209,7 +242,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     // Create new subscription
     const docRef = await adminDb.collection('subscriptions').add({
       ...subscriptionData,
-      createdAt: new Date(),
+      createdAt: Timestamp.now(),
     });
     console.log('✅ Created new subscription record with ID:', docRef.id);
   } else {
@@ -239,8 +272,8 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   const updatePromises = subscriptionsSnapshot.docs.map(doc =>
     doc.ref.update({
       status: 'canceled',
-      canceledAt: new Date(),
-      updatedAt: new Date(),
+      canceledAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
     })
   );
 
@@ -276,7 +309,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
   const updatePromises = subscriptionsSnapshot.docs.map(doc =>
     doc.ref.update({
       status: 'past_due',
-      updatedAt: new Date(),
+      updatedAt: Timestamp.now(),
     })
   );
 
@@ -318,7 +351,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
   const updatePromises = subscriptionsSnapshot.docs.map(doc =>
     doc.ref.update({
       status: 'active',
-      updatedAt: new Date(),
+      updatedAt: Timestamp.now(),
     })
   );
 

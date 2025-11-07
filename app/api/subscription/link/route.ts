@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
 import { getAuth } from 'firebase-admin/auth';
+import { Timestamp } from 'firebase-admin/firestore';
 
 export async function POST(request: Request) {
   try {
@@ -104,7 +105,7 @@ export async function POST(request: Request) {
       console.log('🔄 Updating subscription with userId:', userId);
       await subscriptionDoc.ref.update({
         userId,
-        updatedAt: new Date(),
+        updatedAt: Timestamp.now(),
       });
       console.log('✅ Subscription updated successfully');
     } else {
