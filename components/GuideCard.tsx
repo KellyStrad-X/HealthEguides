@@ -1,14 +1,20 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import { Guide } from '@/lib/guides';
 
 interface GuideCardProps {
   guide: Guide;
+  showFavorite?: boolean;
 }
 
-export default function GuideCard({ guide }: GuideCardProps) {
+export default function GuideCard({ guide, showFavorite = true }: GuideCardProps) {
   const router = useRouter();
+  const { user } = useAuth();
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
 
   console.log('[GuideCard] Rendering guide:', guide.id, {
     hasFeatures: !!guide.features,
@@ -30,6 +36,61 @@ export default function GuideCard({ guide }: GuideCardProps) {
   if (typeof guide.price !== 'number') {
     console.error('[GuideCard] ERROR: price is not a number for guide:', guide.id, guide.price);
   }
+
+  // Check if guide is favorited
+  useEffect(() => {
+    if (!user?.uid) return;
+
+    const checkFavorite = async () => {
+      try {
+        const response = await fetch(`/api/favorites/check?guideId=${guide.id}`, {
+          headers: {
+            Authorization: `Bearer ${await user.getIdToken()}`,
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setIsFavorited(data.isFavorited);
+        }
+      } catch (err) {
+        console.error('Failed to check favorite status:', err);
+      }
+    };
+
+    checkFavorite();
+  }, [user, guide.id]);
+
+  const handleFavoriteClick = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click
+
+    if (!user) {
+      // Redirect to login or show modal
+      return;
+    }
+
+    setIsTogglingFavorite(true);
+
+    try {
+      const token = await user.getIdToken();
+      const method = isFavorited ? 'DELETE' : 'POST';
+      const response = await fetch('/api/favorites', {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ guideId: guide.id }),
+      });
+
+      if (response.ok) {
+        setIsFavorited(!isFavorited);
+      }
+    } catch (err) {
+      console.error('Failed to toggle favorite:', err);
+    } finally {
+      setIsTogglingFavorite(false);
+    }
+  };
 
   const handleClick = () => {
     // Don't navigate if coming soon
@@ -61,6 +122,30 @@ export default function GuideCard({ guide }: GuideCardProps) {
         <div className="absolute top-4 right-4 z-10 bg-yellow-500 text-black px-3 py-1 rounded-full text-xs font-bold">
           Coming Soon
         </div>
+      )}
+
+      {/* Favorite Heart Button */}
+      {showFavorite && user && !guide.comingSoon && (
+        <button
+          onClick={handleFavoriteClick}
+          disabled={isTogglingFavorite}
+          className="absolute top-3 right-3 z-10 p-2 rounded-full bg-black/40 backdrop-blur-sm hover:bg-black/60 transition-all duration-200 group/heart"
+          aria-label={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+        >
+          <svg
+            className="w-5 h-5 transition-all duration-200"
+            fill={isFavorited ? '#ef4444' : 'none'}
+            stroke={isFavorited ? '#ef4444' : 'white'}
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+            />
+          </svg>
+        </button>
       )}
 
       {/* Gradient header with emoji */}

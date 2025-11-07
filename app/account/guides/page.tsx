@@ -27,19 +27,48 @@ export default function MyGuidesPage() {
     }
   }, [user, authLoading, router]);
 
-  // Fetch guides
+  // Fetch favorited guides only
   useEffect(() => {
-    fetch('/api/guides')
-      .then(res => res.json())
-      .then(data => {
-        setGuides(data.filter((g: Guide) => !g.comingSoon));
+    if (!user?.uid) return;
+
+    const fetchFavoritedGuides = async () => {
+      try {
+        setLoading(true);
+
+        // Get user's favorites
+        const token = await user.getIdToken();
+        const favoritesResponse = await fetch('/api/favorites', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!favoritesResponse.ok) {
+          throw new Error('Failed to fetch favorites');
+        }
+
+        const { favorites } = await favoritesResponse.json();
+        const favoriteGuideIds = favorites.map((f: any) => f.guideId);
+
+        // Fetch all guides
+        const guidesResponse = await fetch('/api/guides');
+        const allGuides = await guidesResponse.json();
+
+        // Filter to only show favorited guides
+        const favoritedGuides = allGuides.filter(
+          (g: Guide) => favoriteGuideIds.includes(g.id) && !g.comingSoon
+        );
+
+        setGuides(favoritedGuides);
+      } catch (err) {
+        console.error('Failed to fetch favorited guides:', err);
+      } finally {
         setLoading(false);
-      })
-      .catch(err => {
-        console.error('Failed to fetch guides:', err);
-        setLoading(false);
-      });
-  }, []);
+      }
+    };
+
+    fetchFavoritedGuides();
+  }, [user]);
 
   // Fetch user's guide progress
   useEffect(() => {
@@ -106,7 +135,7 @@ export default function MyGuidesPage() {
         <div className="text-center mb-8">
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-3">My Guides</h1>
           <p className="text-lg text-gray-600">
-            Your complete library of health guides
+            Your favorited health guides
           </p>
         </div>
 
@@ -147,9 +176,15 @@ export default function MyGuidesPage() {
         {/* Guides Grid */}
         {filteredGuides.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-200">
-            <div className="text-6xl mb-4">🔍</div>
-            <p className="text-xl text-gray-600">
-              No guides found in this category
+            <div className="text-6xl mb-4">❤️</div>
+            <p className="text-xl text-gray-600 mb-2">
+              {selectedCategory === 'All'
+                ? 'No favorited guides yet'
+                : 'No guides found in this category'
+              }
+            </p>
+            <p className="text-sm text-gray-500">
+              Browse the catalog and click the heart icon to save your favorite guides here
             </p>
           </div>
         ) : (
