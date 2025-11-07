@@ -4,10 +4,12 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Guide } from '@/lib/guides';
 import GuideCard from './GuideCard';
+import SubscriptionModal from './SubscriptionModal';
 
 export default function GuidesGrid() {
   const [guides, setGuides] = useState<Guide[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
   useEffect(() => {
     fetch('/api/guides')
@@ -23,16 +25,26 @@ export default function GuidesGrid() {
   }, []);
 
   return (
-    <section id="catalog" className="py-20 bg-[#0a0a0a]">
-      <div className="section-container">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-            Browse Our Guides
-          </h2>
-          <p className="text-xl text-white/70 max-w-2xl mx-auto">
-            Evidence-based solutions for your health journey
-          </p>
-        </div>
+    <>
+      <section id="catalog" className="py-20 bg-[#0a0a0a]">
+        <div className="section-container">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4">
+              Browse Our Guides
+            </h2>
+            <p className="text-xl text-white/70 max-w-2xl mx-auto mb-6">
+              Evidence-based solutions for your health journey
+            </p>
+            <button
+              onClick={() => setShowSubscriptionModal(true)}
+              className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              Get Access to All Our Guides
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </button>
+          </div>
 
         {loading ? (
           <div className="text-center py-12">
@@ -58,5 +70,17 @@ export default function GuidesGrid() {
         </div>
       </div>
     </section>
+
+    {/* Subscription Modal */}
+    <SubscriptionModal
+      isOpen={showSubscriptionModal}
+      onClose={() => setShowSubscriptionModal(false)}
+      featuredGuides={guides.slice(0, 3).map(g => ({
+        emoji: g.emoji,
+        title: g.title,
+        description: g.description
+      }))}
+    />
+  </>
   );
 }

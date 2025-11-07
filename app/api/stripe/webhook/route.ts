@@ -41,11 +41,28 @@ export async function POST(request: Request) {
   try {
     switch (event.type) {
       case 'checkout.session.completed':
-        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
+        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session, stripe);
         break;
 
       case 'charge.refunded':
         await handleChargeRefunded(event.data.object as Stripe.Charge);
+        break;
+
+      case 'customer.subscription.created':
+      case 'customer.subscription.updated':
+        await handleSubscriptionUpdate(event.data.object as Stripe.Subscription);
+        break;
+
+      case 'customer.subscription.deleted':
+        await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
+        break;
+
+      case 'invoice.payment_failed':
+        await handlePaymentFailed(event.data.object as Stripe.Invoice);
+        break;
+
+      case 'invoice.payment_succeeded':
+        await handlePaymentSucceeded(event.data.object as Stripe.Invoice);
         break;
 
       default:
@@ -63,18 +80,56 @@ export async function POST(request: Request) {
 }
 
 /**
- * Handle successful checkout - create purchase records and send email
+ * Handle successful checkout - create purchase records OR subscription and send email
  */
-async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+async function handleCheckoutCompleted(session: Stripe.Checkout.Session, stripe: Stripe) {
   console.log('Processing checkout:', session.id);
+  console.log('Mode:', session.mode);
 
   const email = session.customer_email;
 
   if (!email) {
-    console.error(`Session ${session.id} missing customer email; skipping purchase creation.`);
+    console.error(`Session ${session.id} missing customer email; skipping.`);
     return;
   }
 
+  // Handle subscription checkout
+  if (session.mode === 'subscription') {
+    console.log('📝 Subscription checkout detected');
+
+    if (!session.subscription) {
+      console.error(`Session ${session.id} missing subscription ID`);
+      return;
+    }
+
+    // Fetch the full subscription object
+    const subscription = await stripe.subscriptions.retrieve(
+      session.subscription as string
+    );
+
+    // Create or update subscription record
+    await handleSubscriptionUpdate(subscription);
+
+    // Send welcome email
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/send-subscription-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          subscriptionId: subscription.id,
+          trialEnd: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,
+        }),
+      });
+      console.log('Subscription welcome email sent to:', email);
+    } catch (emailError) {
+      console.error('Failed to send subscription email:', emailError);
+    }
+
+    return;
+  }
+
+  // Handle one-time payment checkout (legacy)
   if (session.payment_status !== 'paid') {
     console.log(`Session ${session.id} payment status: ${session.payment_status}. Skipping purchase creation.`);
     return;
@@ -145,4 +200,171 @@ async function handleChargeRefunded(charge: Stripe.Charge) {
   await Promise.all(updatePromises);
 
   console.log(`Revoked access for ${purchasesSnapshot.size} purchases`);
+}
+
+/**
+ * Handle subscription created or updated
+ */
+async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
+  console.log('Processing subscription update:', subscription.id);
+
+  const customerId = subscription.customer as string;
+  const email = subscription.metadata?.email || '';
+  const userId = subscription.metadata?.userId || '';
+
+  if (!email && !userId) {
+    console.error('Subscription missing both email and userId in metadata');
+    return;
+  }
+
+  // Get price details
+  const priceId = subscription.items.data[0]?.price.id;
+  const amount = subscription.items.data[0]?.price.unit_amount || 0;
+  const interval = subscription.items.data[0]?.price.recurring?.interval || 'month';
+
+  // Prepare subscription data
+  const subscriptionData = {
+    userId: userId || email, // Use email as fallback userId if not provided
+    email,
+    stripeCustomerId: customerId,
+    stripeSubscriptionId: subscription.id,
+    stripePriceId: priceId,
+    status: subscription.status,
+    interval,
+    amount,
+    currency: subscription.currency,
+    trialStart: subscription.trial_start ? new Date(subscription.trial_start * 1000) : null,
+    trialEnd: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,
+    currentPeriodStart: new Date(subscription.current_period_start * 1000),
+    currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+    cancelAtPeriodEnd: subscription.cancel_at_period_end,
+    canceledAt: subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : null,
+    cancelReason: null,
+    updatedAt: new Date(),
+  };
+
+  // Check if subscription already exists
+  const existingSubQuery = await adminDb
+    .collection('subscriptions')
+    .where('stripeSubscriptionId', '==', subscription.id)
+    .limit(1)
+    .get();
+
+  if (existingSubQuery.empty) {
+    // Create new subscription
+    await adminDb.collection('subscriptions').add({
+      ...subscriptionData,
+      createdAt: new Date(),
+    });
+    console.log('✅ Created new subscription record');
+  } else {
+    // Update existing subscription
+    const docRef = existingSubQuery.docs[0].ref;
+    await docRef.update(subscriptionData);
+    console.log('✅ Updated existing subscription record');
+  }
+}
+
+/**
+ * Handle subscription deleted/canceled
+ */
+async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+  console.log('Processing subscription deletion:', subscription.id);
+
+  const subscriptionsSnapshot = await adminDb
+    .collection('subscriptions')
+    .where('stripeSubscriptionId', '==', subscription.id)
+    .get();
+
+  if (subscriptionsSnapshot.empty) {
+    console.log('No subscription found for:', subscription.id);
+    return;
+  }
+
+  const updatePromises = subscriptionsSnapshot.docs.map(doc =>
+    doc.ref.update({
+      status: 'canceled',
+      canceledAt: new Date(),
+      updatedAt: new Date(),
+    })
+  );
+
+  await Promise.all(updatePromises);
+  console.log('✅ Marked subscription as canceled');
+}
+
+/**
+ * Handle payment failed
+ */
+async function handlePaymentFailed(invoice: Stripe.Invoice) {
+  console.log('Processing payment failure for invoice:', invoice.id);
+
+  const subscriptionId = invoice.subscription as string;
+
+  if (!subscriptionId) {
+    console.log('Invoice not associated with subscription');
+    return;
+  }
+
+  // Update subscription status to past_due
+  const subscriptionsSnapshot = await adminDb
+    .collection('subscriptions')
+    .where('stripeSubscriptionId', '==', subscriptionId)
+    .get();
+
+  if (subscriptionsSnapshot.empty) {
+    console.log('No subscription found for:', subscriptionId);
+    return;
+  }
+
+  const updatePromises = subscriptionsSnapshot.docs.map(doc =>
+    doc.ref.update({
+      status: 'past_due',
+      updatedAt: new Date(),
+    })
+  );
+
+  await Promise.all(updatePromises);
+  console.log('✅ Marked subscription as past_due');
+
+  // TODO: Send payment failed email to customer
+  const customerEmail = invoice.customer_email;
+  if (customerEmail) {
+    console.log('TODO: Send payment failed email to:', customerEmail);
+  }
+}
+
+/**
+ * Handle successful payment (renewal)
+ */
+async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
+  console.log('Processing successful payment for invoice:', invoice.id);
+
+  const subscriptionId = invoice.subscription as string;
+
+  if (!subscriptionId) {
+    console.log('Invoice not associated with subscription');
+    return;
+  }
+
+  // Update subscription status to active (in case it was past_due)
+  const subscriptionsSnapshot = await adminDb
+    .collection('subscriptions')
+    .where('stripeSubscriptionId', '==', subscriptionId)
+    .get();
+
+  if (subscriptionsSnapshot.empty) {
+    console.log('No subscription found for:', subscriptionId);
+    return;
+  }
+
+  const updatePromises = subscriptionsSnapshot.docs.map(doc =>
+    doc.ref.update({
+      status: 'active',
+      updatedAt: new Date(),
+    })
+  );
+
+  await Promise.all(updatePromises);
+  console.log('✅ Marked subscription as active after payment');
 }
