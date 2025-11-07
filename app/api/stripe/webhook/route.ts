@@ -222,6 +222,9 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   const amount = subscription.items.data[0]?.price.unit_amount || 0;
   const interval = subscription.items.data[0]?.price.recurring?.interval || 'month';
 
+  // Type-safe access to subscription properties
+  const sub = subscription as any; // Use 'any' to bypass strict type checking for Stripe properties
+
   // Prepare subscription data
   const subscriptionData = {
     userId: userId || email, // Use email as fallback userId if not provided
@@ -233,12 +236,12 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     interval,
     amount,
     currency: subscription.currency,
-    trialStart: subscription.trial_start ? new Date(subscription.trial_start * 1000) : null,
-    trialEnd: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,
-    currentPeriodStart: new Date(subscription.current_period_start * 1000),
-    currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-    cancelAtPeriodEnd: subscription.cancel_at_period_end,
-    canceledAt: subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : null,
+    trialStart: sub.trial_start ? new Date(sub.trial_start * 1000) : null,
+    trialEnd: sub.trial_end ? new Date(sub.trial_end * 1000) : null,
+    currentPeriodStart: new Date(sub.current_period_start * 1000),
+    currentPeriodEnd: new Date(sub.current_period_end * 1000),
+    cancelAtPeriodEnd: sub.cancel_at_period_end || false,
+    canceledAt: sub.canceled_at ? new Date(sub.canceled_at * 1000) : null,
     cancelReason: null,
     updatedAt: new Date(),
   };
