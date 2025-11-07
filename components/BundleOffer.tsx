@@ -1,40 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Guide } from '@/lib/guides';
+import { useState } from 'react';
 
 export default function BundleOffer() {
-  const [guides, setGuides] = useState<Guide[]>([]);
-  const [selectedGuides, setSelectedGuides] = useState<string[]>([]);
-  const [showMore, setShowMore] = useState(false);
   const [email, setEmail] = useState('');
   const [showEmailCapture, setShowEmailCapture] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
-  useEffect(() => {
-    fetch('/api/guides')
-      .then(res => res.json())
-      .then(data => setGuides(data))
-      .catch(err => console.error('Failed to fetch guides:', err));
-  }, []);
-
-  const toggleGuide = (guide: Guide) => {
-    // Don't allow selection of coming soon guides
-    if (guide.comingSoon) return;
-
-    if (selectedGuides.includes(guide.id)) {
-      setSelectedGuides(selectedGuides.filter(id => id !== guide.id));
-    } else if (selectedGuides.length < 3) {
-      setSelectedGuides([...selectedGuides, guide.id]);
-    }
-  };
-
-  const handleClaimBundle = () => {
-    if (selectedGuides.length !== 3) {
-      return;
-    }
+  const handleStartTrial = () => {
     setShowEmailCapture(true);
   };
 
@@ -46,21 +21,19 @@ export default function BundleOffer() {
     try {
       // Track event
       if (typeof window !== 'undefined' && (window as any).gtag) {
-        (window as any).gtag('event', 'bundle_claim', {
-          selected_guides: selectedGuides,
-          bundle_price: 10,
+        (window as any).gtag('event', 'begin_subscription', {
+          subscription_type: 'trial',
         });
       }
 
-      // Create Stripe checkout session
-      const response = await fetch('/api/stripe/create-checkout', {
+      // Create Stripe subscription checkout session
+      const response = await fetch('/api/stripe/create-subscription-checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email,
-          guideIds: selectedGuides,
         }),
       });
 
@@ -116,97 +89,39 @@ export default function BundleOffer() {
           </div>
         </div>
 
-        {/* Guide selection */}
-        <div className="max-w-5xl mx-auto mb-12">
-          <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8 relative">
-            <div className="text-center mb-6">
-              <p className="text-lg font-semibold mb-2">
-                Select Your 3 Guides ({selectedGuides.length}/3)
-              </p>
-              <div className="h-2 bg-white/20 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-yellow-300 to-green-400 transition-all duration-300"
-                  style={{ width: `${(selectedGuides.length / 3) * 100}%` }}
-                ></div>
+        {/* What's Included */}
+        <div className="max-w-3xl mx-auto mb-12">
+          <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8">
+            <h3 className="text-2xl font-bold text-center mb-6">What You'll Get</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">✨</span>
+                <div>
+                  <h4 className="font-semibold mb-1">Unlimited Access</h4>
+                  <p className="text-sm text-white/80">All current and future guides included</p>
+                </div>
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {guides.map((guide, index) => {
-                const isSelected = selectedGuides.includes(guide.id);
-                const isComingSoon = guide.comingSoon === true;
-                const isDisabled = isComingSoon || (!isSelected && selectedGuides.length >= 3);
-                // Don't hide selected guides, even if they're past index 3
-                const isHidden = !showMore && index >= 3 && !isSelected;
-
-                // Completely remove hidden cards from DOM to prevent layout issues
-                if (isHidden) return null;
-
-                return (
-                  <button
-                    key={guide.id}
-                    onClick={() => !isDisabled && toggleGuide(guide)}
-                    disabled={isDisabled}
-                    className={`
-                      p-4 rounded-xl border-2 transition-all duration-300 ease-in-out text-left relative
-                      ${isSelected
-                        ? 'border-yellow-300 bg-yellow-300/20 scale-105'
-                        : isDisabled
-                          ? 'border-white/20 bg-white/5 opacity-50 cursor-not-allowed'
-                          : 'border-white/30 bg-white/10 hover:border-white/50 hover:bg-white/20 hover:scale-105 cursor-pointer'
-                      }
-                    `}
-                  >
-                    {/* Coming Soon Badge */}
-                    {isComingSoon && (
-                      <div className="absolute top-2 right-2 bg-yellow-500 text-black px-2 py-0.5 rounded-full text-[10px] font-bold">
-                        Coming Soon
-                      </div>
-                    )}
-
-                    <div className="flex items-start gap-3">
-                      <div className="text-3xl flex-shrink-0">{guide.emoji}</div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-sm mb-1 line-clamp-2">
-                          {guide.title}
-                        </h3>
-                        <p className="text-xs text-white/70 line-clamp-2">
-                          {guide.description}
-                        </p>
-                      </div>
-                      <div className="flex-shrink-0">
-                        {isComingSoon ? (
-                          <span className="text-white/30 text-2xl">⏳</span>
-                        ) : isSelected ? (
-                          <span className="text-yellow-300 text-2xl">✓</span>
-                        ) : (
-                          <span className="text-white/40 text-2xl">○</span>
-                        )}
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* See More / See Less Button - Small and bottom right */}
-            <div className="flex justify-end mt-4">
-              <button
-                onClick={() => setShowMore(!showMore)}
-                className="inline-flex items-center gap-1 px-3 py-1.5 text-xs rounded-full bg-white/10 border border-white/30 hover:bg-white/20 transition-all duration-300 font-medium"
-              >
-                {showMore ? (
-                  <>
-                    <span>See Less</span>
-                    <span className="text-sm">↑</span>
-                  </>
-                ) : (
-                  <>
-                    <span>See More</span>
-                    <span className="text-sm">↓</span>
-                  </>
-                )}
-              </button>
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">📱</span>
+                <div>
+                  <h4 className="font-semibold mb-1">Read Anywhere</h4>
+                  <p className="text-sm text-white/80">Access on any device, anytime</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">🔄</span>
+                <div>
+                  <h4 className="font-semibold mb-1">Regular Updates</h4>
+                  <p className="text-sm text-white/80">Guides updated with latest research</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">💰</span>
+                <div>
+                  <h4 className="font-semibold mb-1">Cancel Anytime</h4>
+                  <p className="text-sm text-white/80">No long-term commitment required</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -216,33 +131,21 @@ export default function BundleOffer() {
           {!showEmailCapture ? (
             <>
               <button
-                onClick={handleClaimBundle}
-                disabled={selectedGuides.length !== 3}
-                className={`
-                  px-12 py-5 text-xl font-bold rounded-full shadow-2xl transition-all duration-300
-                  ${selectedGuides.length === 3
-                    ? 'bg-yellow-300 text-purple-900 hover:bg-yellow-200 hover:scale-105 cursor-pointer'
-                    : 'bg-white/20 text-white/50 cursor-not-allowed'
-                  }
-                `}
+                onClick={handleStartTrial}
+                className="px-12 py-5 text-xl font-bold rounded-full shadow-2xl transition-all duration-300 bg-yellow-300 text-purple-900 hover:bg-yellow-200 hover:scale-105 cursor-pointer"
               >
-                {selectedGuides.length === 3
-                  ? '🎉 Start Your Free Trial →'
-                  : `Select ${3 - selectedGuides.length} More Guide${3 - selectedGuides.length !== 1 ? 's' : ''}`
-                }
+                🎉 Start Your Free Trial →
               </button>
 
-              {selectedGuides.length === 3 && (
-                <p className="mt-4 text-sm text-white/80">
-                  ✓ 7 days free • ✓ All guides included • ✓ Cancel anytime
-                </p>
-              )}
+              <p className="mt-4 text-sm text-white/80">
+                ✓ 7 days free • ✓ All guides included • ✓ Cancel anytime
+              </p>
             </>
           ) : (
             <div className="max-w-md mx-auto bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8">
               <h3 className="text-2xl font-bold mb-4">Almost There!</h3>
               <p className="text-white/90 mb-6">
-                Enter your email to complete your bundle purchase
+                Enter your email to start your 7-day free trial
               </p>
 
               <form onSubmit={handleCheckout} className="space-y-4">
@@ -260,13 +163,13 @@ export default function BundleOffer() {
                   <div className="flex items-start gap-3">
                     <input
                       type="checkbox"
-                      id="bundle-terms-agreement"
+                      id="subscription-terms-agreement"
                       checked={agreedToTerms}
                       onChange={(e) => setAgreedToTerms(e.target.checked)}
                       className="mt-1 w-5 h-5 rounded border-2 border-yellow-300 bg-white/10 text-yellow-300 focus:ring-2 focus:ring-yellow-300 focus:ring-offset-0 cursor-pointer"
                       required
                     />
-                    <label htmlFor="bundle-terms-agreement" className="text-sm text-white leading-relaxed cursor-pointer">
+                    <label htmlFor="subscription-terms-agreement" className="text-sm text-white leading-relaxed cursor-pointer">
                       <span className="font-semibold">Required:</span> I agree to the{' '}
                       <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-yellow-300 hover:underline font-semibold">
                         Terms of Service
@@ -291,7 +194,7 @@ export default function BundleOffer() {
                   disabled={loading || !email || !agreedToTerms}
                   className="w-full px-8 py-4 bg-yellow-300 text-purple-900 rounded-lg font-bold text-lg hover:bg-yellow-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? 'Processing...' : 'Continue to Checkout - $10'}
+                  {loading ? 'Processing...' : 'Start Free Trial'}
                 </button>
 
                 <button
@@ -304,7 +207,7 @@ export default function BundleOffer() {
                   }}
                   className="w-full px-4 py-2 text-white/70 hover:text-white text-sm transition-colors"
                 >
-                  ← Change Selection
+                  ← Go Back
                 </button>
               </form>
             </div>
