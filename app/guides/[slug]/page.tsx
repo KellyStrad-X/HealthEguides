@@ -120,12 +120,15 @@ function GuideViewerContent({ params }: GuideViewerProps) {
 
             // Load the guide content
             await loadGuideContent();
+            setLoading(false);
           } else {
             setError(data.error || 'Invalid or expired access link.');
+            setLoading(false);
           }
         } catch (err) {
           console.error('Access validation error:', err);
           setError('Unable to validate access.');
+          setLoading(false);
         }
       } else {
         // Check localStorage for saved token
