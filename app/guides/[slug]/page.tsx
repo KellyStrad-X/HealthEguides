@@ -27,7 +27,6 @@ function GuideViewerContent({ params }: GuideViewerProps) {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [guide, setGuide] = useState<any>(null);
   const [guideLoaded, setGuideLoaded] = useState(false);
-  const [accessType, setAccessType] = useState<'subscription' | 'token' | null>(null);
 
   // Fetch guide data (supports both hardcoded and Firebase guides)
   useEffect(() => {
@@ -68,117 +67,53 @@ function GuideViewerContent({ params }: GuideViewerProps) {
         return;
       }
 
-      const sessionId = searchParams.get('session_id');
-      const accessToken = searchParams.get('access');
-
-      // Priority 1: Check if user has active subscription
-      if (user) {
-        try {
-          const res = await fetch('/api/validate-subscription-access', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              userId: user.uid,
-              email: user.email,
-              guideId: guide.id,
-            }),
-          });
-
-          const data = await res.json();
-
-          if (data.hasAccess) {
-            console.log('✅ Access granted via subscription');
-            setAccessGranted(true);
-            setAccessType('subscription');
-            await loadGuideContentForSubscriber();
-            setLoading(false);
-            return;
-          }
-        } catch (err) {
-          console.error('Subscription validation error:', err);
-          // Continue to check token-based access
-        }
-      }
-
-      // Priority 2: Check for session_id (coming from Stripe checkout - legacy one-time purchase)
-      if (sessionId) {
-        try {
-          const res = await fetch('/api/get-access-from-session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ sessionId }),
-          });
-
-          const data = await res.json();
-
-          if (data.purchases && data.purchases.length > 0) {
-            const purchase = data.purchases.find((p: any) => p.guideId === guide.id);
-
-            if (purchase) {
-              router.replace(`/guides/${params.slug}?access=${purchase.accessToken}`);
-              return;
-            }
-          }
-
-          setError('Unable to verify purchase. Please check your email for access link.');
-          setLoading(false);
-          return;
-        } catch (err) {
-          console.error('Session validation error:', err);
-          setError('Unable to verify purchase. Please check your email for access link.');
-          setLoading(false);
-          return;
-        }
-      }
-
-      // Priority 3: Check for token-based access (legacy one-time purchases)
-      if (accessToken) {
-        try {
-          const res = await fetch('/api/validate-access', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ accessToken, guideId: guide.id }),
-          });
-
-          const data = await res.json();
-
-          if (data.valid) {
-            setAccessGranted(true);
-            setAccessType('token');
-            localStorage.setItem(`guide-${guide.id}-token`, accessToken);
-            await loadGuideContent(accessToken);
-            setLoading(false);
-            return;
-          } else {
-            setError(data.error || 'Invalid or expired access link.');
-            setLoading(false);
-            return;
-          }
-        } catch (err) {
-          console.error('Access validation error:', err);
-          setError('Unable to validate access.');
-          setLoading(false);
-          return;
-        }
-      }
-
-      // Priority 4: Check localStorage for saved token (legacy)
-      const savedToken = localStorage.getItem(`guide-${guide.id}-token`);
-      if (savedToken) {
-        router.replace(`/guides/${params.slug}?access=${savedToken}`);
+      // Check if user is logged in
+      if (!user) {
+        // No user logged in - redirect to home page to sign up for subscription
+        router.push('/');
         return;
       }
 
-      // No access found - redirect to guide landing page
-      router.push(`/${params.slug}`);
+      // Check if user has active subscription
+      try {
+        const res = await fetch('/api/validate-subscription-access', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: user.uid,
+            email: user.email,
+            guideId: guide.id,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (data.hasAccess) {
+          console.log('✅ Access granted via subscription');
+          setAccessGranted(true);
+          await loadGuideContentForSubscriber();
+          setLoading(false);
+          return;
+        } else {
+          // User is logged in but doesn't have active subscription
+          setError('Active subscription required to access this guide.');
+          setLoading(false);
+          return;
+        }
+      } catch (err) {
+        console.error('Subscription validation error:', err);
+        setError('Unable to validate subscription. Please try again.');
+        setLoading(false);
+        return;
+      }
     }
 
     validateAccess();
-  }, [searchParams, params.slug, guide, guideLoaded, authLoading, user, router]);
+  }, [params.slug, guide, guideLoaded, authLoading, user, router]);
 
   // Track guide view for subscribed users
   useEffect(() => {
-    if (accessGranted && accessType === 'subscription' && user && guide) {
+    if (accessGranted && user && guide) {
       // Track that user viewed this guide
       fetch('/api/user/guide-progress', {
         method: 'POST',
@@ -190,7 +125,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
         }),
       }).catch(err => console.error('Failed to track guide view:', err));
     }
-  }, [accessGranted, accessType, user, guide]);
+  }, [accessGranted, user, guide]);
 
   // Handle scroll to show/hide header
   useEffect(() => {
@@ -261,53 +196,6 @@ function GuideViewerContent({ params }: GuideViewerProps) {
     }
   }
 
-  async function loadGuideContent(accessToken: string) {
-    try {
-      // Fetch guide content from authenticated endpoint (legacy token-based)
-      const response = await fetch('/api/get-guide-content', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ accessToken, guideId: guide?.id }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to load guide content');
-      }
-
-      const data = await response.json();
-
-      if (data.placeholder || !data.html) {
-        // Guide HTML not found - show placeholder
-        setGuideHtml(`
-          <div style="max-width: 800px; margin: 0 auto; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
-            <h1 style="color: #4ECDC4; margin-bottom: 20px;">${guide?.emoji} ${guide?.title}</h1>
-            <div style="background: #f8f9fa; padding: 30px; border-radius: 12px; border-left: 4px solid #4ECDC4;">
-              <h2 style="margin-top: 0;">Guide Content Coming Soon!</h2>
-              <p>Your access has been verified. The full guide content will be available here shortly.</p>
-              <p>Your purchase includes:</p>
-              <ul>
-                ${guide?.features.map((f: string) => `<li>${f}</li>`).join('')}
-              </ul>
-              <p style="margin-top: 30px; padding: 20px; background: white; border-radius: 8px;">
-                <strong>📧 Note:</strong> You can bookmark this page or save the link from your email. Your access never expires!
-              </p>
-            </div>
-          </div>
-        `);
-      } else {
-        setGuideHtml(data.html);
-      }
-    } catch (err) {
-      console.error('Error loading guide:', err);
-      setGuideHtml(`
-        <div style="max-width: 800px; margin: 0 auto; padding: 40px 20px;">
-          <h1>${guide?.emoji} ${guide?.title}</h1>
-          <p>Error loading guide content. Please refresh the page or contact support.</p>
-        </div>
-      `);
-    }
-  }
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f8f9fa] to-white">
@@ -324,22 +212,22 @@ function GuideViewerContent({ params }: GuideViewerProps) {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f8f9fa] to-white p-4">
         <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
           <div className="text-6xl mb-4">🔒</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Access Issue</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Subscription Required</h2>
           <p className="text-gray-600 mb-6">{error}</p>
 
           <div className="space-y-3">
             <Link
-              href={`/${params.slug}`}
+              href="/"
               className="block w-full px-6 py-3 bg-gradient-to-r from-[#4ECDC4] to-[#556FB5] text-white rounded-lg font-semibold hover:opacity-90 transition"
             >
-              Purchase This Guide
+              Start Your Free Trial
             </Link>
 
             <Link
-              href="/lost-access"
+              href="/account/subscription"
               className="block w-full px-6 py-3 border-2 border-[#4ECDC4] text-[#4ECDC4] rounded-lg font-semibold hover:bg-[#4ECDC4] hover:text-white transition"
             >
-              I Already Purchased This
+              Manage Subscription
             </Link>
 
             <a
@@ -355,7 +243,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
   }
 
   if (!accessGranted) {
-    return null; // Will redirect to purchase page
+    return null; // Will redirect to home page
   }
 
   // Display the guide content

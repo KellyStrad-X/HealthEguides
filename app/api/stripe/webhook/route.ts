@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
-import { ensurePurchasesForSession } from '@/lib/purchase-service';
 import { adminDb } from '@/lib/firebase-admin';
 
 // This is required to receive raw body for Stripe signature verification
@@ -44,10 +43,6 @@ export async function POST(request: Request) {
         await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session, stripe);
         break;
 
-      case 'charge.refunded':
-        await handleChargeRefunded(event.data.object as Stripe.Charge);
-        break;
-
       case 'customer.subscription.created':
       case 'customer.subscription.updated':
         await handleSubscriptionUpdate(event.data.object as Stripe.Subscription);
@@ -80,7 +75,7 @@ export async function POST(request: Request) {
 }
 
 /**
- * Handle successful checkout - create purchase records OR subscription and send email
+ * Handle successful checkout - create subscription and send email
  */
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session, stripe: Stripe) {
   console.log('Processing checkout:', session.id);
@@ -129,77 +124,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, stripe:
     return;
   }
 
-  // Handle one-time payment checkout (legacy)
-  if (session.payment_status !== 'paid') {
-    console.log(`Session ${session.id} payment status: ${session.payment_status}. Skipping purchase creation.`);
-    return;
-  }
-
-  const { purchases, created } = await ensurePurchasesForSession(session);
-
-  if (!purchases.length) {
-    console.error(`No purchases generated for session ${session.id}`);
-    return;
-  }
-
-  if (!created) {
-    console.log(`Purchases already existed for session ${session.id}, skipping email resend.`);
-    return;
-  }
-
-  // Send email with access links
-  try {
-    await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/send-purchase-email`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email,
-        purchases,
-        sessionId: session.id,
-      }),
-    });
-    console.log('Purchase email sent to:', email);
-  } catch (emailError) {
-    console.error('Failed to send purchase email:', emailError);
-    // Don't throw - purchase is already recorded, email can be resent manually
-  }
-}
-
-/**
- * Handle refunds - revoke access
- */
-async function handleChargeRefunded(charge: Stripe.Charge) {
-  console.log('Processing refund for charge:', charge.id);
-
-  const paymentIntentId = charge.payment_intent as string;
-
-  if (!paymentIntentId) {
-    console.error('No payment intent ID in charge');
-    return;
-  }
-
-  // Find all purchases associated with this payment intent
-  const purchasesSnapshot = await adminDb
-    .collection('purchases')
-    .where('stripePaymentIntentId', '==', paymentIntentId)
-    .get();
-
-  if (purchasesSnapshot.empty) {
-    console.log('No purchases found for payment intent:', paymentIntentId);
-    return;
-  }
-
-  // Update all associated purchases to refunded status
-  const updatePromises = purchasesSnapshot.docs.map(doc =>
-    doc.ref.update({
-      status: 'refunded',
-      refundedAt: new Date(),
-    })
-  );
-
-  await Promise.all(updatePromises);
-
-  console.log(`Revoked access for ${purchasesSnapshot.size} purchases`);
+  console.log(`Unhandled checkout mode: ${session.mode}`);
 }
 
 /**

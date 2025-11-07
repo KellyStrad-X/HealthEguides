@@ -111,11 +111,11 @@ export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: S
       onClick={onClose}
     >
       <div
-        className="bg-white w-full sm:rounded-lg sm:max-w-2xl max-h-screen overflow-y-auto"
+        className="bg-stone-50 w-full sm:rounded-lg sm:max-w-2xl max-h-screen overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Sticky Close button */}
-        <div className="sticky top-0 bg-white z-10 flex justify-end p-4 border-b border-gray-100">
+        <div className="sticky top-0 bg-stone-50 z-10 flex justify-end p-4 border-b border-gray-100">
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-colors"
@@ -158,19 +158,19 @@ export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: S
                 <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>Evidence-based content backed by research</span>
+                <span>New guides released every Friday</span>
               </li>
               <li className="flex items-start gap-2">
                 <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>Created by healthcare professionals</span>
+                <span>Focused on women's health and well-being</span>
               </li>
               <li className="flex items-start gap-2">
                 <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>Regular updates with latest health information</span>
+                <span>Comprehensive guides covering all life stages</span>
               </li>
               <li className="flex items-start gap-2">
                 <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
