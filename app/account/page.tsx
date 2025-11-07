@@ -35,7 +35,7 @@ export default function AccountPage() {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <main className="section-container py-12">
+      <main className="section-container pt-32 pb-12">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="mb-8">
