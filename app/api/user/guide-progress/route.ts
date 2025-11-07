@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/firebase-admin';
+import { adminDb as db } from '@/lib/firebase-admin';
 
 // GET - Fetch user's guide progress
 export async function GET(request: Request) {
