@@ -31,6 +31,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
   // Fetch guide data (supports both hardcoded and Firebase guides)
   useEffect(() => {
     async function fetchGuide() {
+      console.log('[fetchGuide] Starting, slug:', params.slug);
       setGuideLoaded(false);
 
       // Fetch from API to get both hardcoded and Firebase guides
@@ -39,14 +40,18 @@ function GuideViewerContent({ params }: GuideViewerProps) {
           cache: 'no-store' // Always get fresh data
         });
         const allGuides = await response.json();
+        console.log('[fetchGuide] Got guides, total count:', allGuides.length);
         const foundGuide = allGuides.find((g: any) => g.slug === params.slug);
+        console.log('[fetchGuide] Found guide:', foundGuide ? foundGuide.id : 'NOT FOUND');
         setGuide(foundGuide || null);
       } catch (err) {
-        console.error('Error fetching guide:', err);
+        console.error('[fetchGuide] Error fetching guide:', err);
         // Fallback to hardcoded guides if API fails
         const hardcodedGuide = guides.find(g => g.slug === params.slug);
+        console.log('[fetchGuide] Fallback to hardcoded, found:', hardcodedGuide ? hardcodedGuide.id : 'NOT FOUND');
         setGuide(hardcodedGuide || null);
       } finally {
+        console.log('[fetchGuide] Setting guideLoaded=true');
         setGuideLoaded(true);
       }
     }
@@ -56,23 +61,27 @@ function GuideViewerContent({ params }: GuideViewerProps) {
 
   useEffect(() => {
     async function validateAccess() {
-      console.log('[Guide Viewer] validateAccess called, guideLoaded:', guideLoaded, 'guide:', guide?.slug);
+      console.log('[validateAccess] START - guideLoaded:', guideLoaded, 'guide:', guide?.slug, 'guide?.id:', guide?.id);
 
       // Wait for guide to be loaded before checking
       if (!guideLoaded) {
+        console.log('[validateAccess] EARLY RETURN - guideLoaded is false');
         return;
       }
 
       if (!guide) {
+        console.log('[validateAccess] EARLY RETURN - guide is null');
         setError('Guide not found');
         setLoading(false);
         return;
       }
 
+      console.log('[validateAccess] Guide loaded successfully, proceeding with validation');
+
       // Check for session_id (coming from Stripe checkout)
       const sessionId = searchParams.get('session_id');
       const accessToken = searchParams.get('access');
-      console.log('[Guide Viewer] sessionId:', sessionId, 'accessToken:', accessToken ? 'present' : 'none');
+      console.log('[validateAccess] sessionId:', sessionId, 'accessToken:', accessToken ? accessToken : 'none');
 
       // If coming from Stripe, get access token
       if (sessionId) {
@@ -109,6 +118,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
 
       // If access token provided, validate it
       if (accessToken) {
+        console.log('[validateAccess] Has accessToken, validating with guide.id:', guide.id);
         try {
           const res = await fetch('/api/validate-access', {
             method: 'POST',
@@ -117,41 +127,51 @@ function GuideViewerContent({ params }: GuideViewerProps) {
           });
 
           const data = await res.json();
+          console.log('[validateAccess] Validation response:', data);
 
           if (data.valid) {
-            console.log('[Guide Viewer] Access validated successfully');
+            console.log('[validateAccess] ✓ Access validated successfully');
             setAccessGranted(true);
+            console.log('[validateAccess] ✓ Set accessGranted=true');
+
             // Store token in localStorage for future visits
             localStorage.setItem(`guide-${guide.id}-token`, accessToken);
+            console.log('[validateAccess] ✓ Stored token in localStorage');
 
             // Load the guide content
-            console.log('[Guide Viewer] Loading guide content...');
+            console.log('[validateAccess] Loading guide content for guide.id:', guide.id);
             await loadGuideContent();
-            console.log('[Guide Viewer] Content loaded, setting loading=false');
+            console.log('[validateAccess] ✓ Content loaded, setting loading=false');
             setLoading(false);
+            console.log('[validateAccess] ✓ COMPLETE - loading should now be false');
           } else {
-            console.log('[Guide Viewer] Access validation failed:', data.error);
+            console.log('[validateAccess] ✗ Access validation failed:', data.error);
             setError(data.error || 'Invalid or expired access link.');
             setLoading(false);
           }
         } catch (err) {
-          console.error('Access validation error:', err);
+          console.error('[validateAccess] ✗ Access validation error:', err);
           setError('Unable to validate access.');
           setLoading(false);
         }
       } else {
+        console.log('[validateAccess] No accessToken, checking localStorage');
         // Check localStorage for saved token
         const savedToken = localStorage.getItem(`guide-${guide.id}-token`);
+        console.log('[validateAccess] savedToken from localStorage:', savedToken ? 'found' : 'not found');
         if (savedToken) {
+          console.log('[validateAccess] Redirecting with saved token');
           router.replace(`/guides/${params.slug}?access=${savedToken}`);
           return;
         }
 
         // No access - redirect to purchase page
+        console.log('[validateAccess] No access, redirecting to purchase page');
         router.push(`/${params.slug}`);
         return;
       }
 
+      console.log('[validateAccess] END (should not reach here)');
       setLoading(false);
     }
 
@@ -182,15 +202,22 @@ function GuideViewerContent({ params }: GuideViewerProps) {
   }, [lastScrollY]);
 
   async function loadGuideContent() {
+    console.log('[loadGuideContent] START - guide?.id:', guide?.id);
     try {
       // For now, we'll load from public/guides directory
       // In production, you'd place your HTML guides there
-      const response = await fetch(`/guides/${guide?.id}.html`);
+      const guideUrl = `/guides/${guide?.id}.html`;
+      console.log('[loadGuideContent] Fetching:', guideUrl);
+      const response = await fetch(guideUrl);
+      console.log('[loadGuideContent] Response status:', response.status, response.ok ? 'OK' : 'ERROR');
 
       if (response.ok) {
         const html = await response.text();
+        console.log('[loadGuideContent] Got HTML, length:', html.length);
         setGuideHtml(html);
+        console.log('[loadGuideContent] ✓ setGuideHtml called');
       } else {
+        console.log('[loadGuideContent] Response not OK, using placeholder');
         // Guide HTML not found - show placeholder
         setGuideHtml(`
           <div style="max-width: 800px; margin: 0 auto; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
@@ -210,7 +237,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
         `);
       }
     } catch (err) {
-      console.error('Error loading guide:', err);
+      console.error('[loadGuideContent] ✗ Error loading guide:', err);
       setGuideHtml(`
         <div style="max-width: 800px; margin: 0 auto; padding: 40px 20px;">
           <h1>${guide?.emoji} ${guide?.title}</h1>
