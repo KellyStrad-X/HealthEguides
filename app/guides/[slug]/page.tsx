@@ -140,7 +140,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
 
             // Load the guide content
             console.log('[validateAccess] Loading guide content for guide.id:', guide.id);
-            await loadGuideContent();
+            await loadGuideContent(accessToken);
             console.log('[validateAccess] ✓ Content loaded, setting loading=false');
             setLoading(false);
             console.log('[validateAccess] ✓ COMPLETE - loading should now be false');
@@ -201,23 +201,28 @@ function GuideViewerContent({ params }: GuideViewerProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
-  async function loadGuideContent() {
+  async function loadGuideContent(accessToken: string) {
     console.log('[loadGuideContent] START - guide?.id:', guide?.id);
     try {
-      // For now, we'll load from public/guides directory
-      // In production, you'd place your HTML guides there
-      const guideUrl = `/guides/${guide?.id}.html`;
-      console.log('[loadGuideContent] Fetching:', guideUrl);
-      const response = await fetch(guideUrl);
+      // Fetch guide content from authenticated endpoint
+      console.log('[loadGuideContent] Calling authenticated API endpoint');
+      const response = await fetch('/api/get-guide-content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accessToken, guideId: guide?.id }),
+      });
+
       console.log('[loadGuideContent] Response status:', response.status, response.ok ? 'OK' : 'ERROR');
 
-      if (response.ok) {
-        const html = await response.text();
-        console.log('[loadGuideContent] Got HTML, length:', html.length);
-        setGuideHtml(html);
-        console.log('[loadGuideContent] ✓ setGuideHtml called');
-      } else {
-        console.log('[loadGuideContent] Response not OK, using placeholder');
+      if (!response.ok) {
+        throw new Error('Failed to load guide content');
+      }
+
+      const data = await response.json();
+      console.log('[loadGuideContent] Got response, placeholder:', data.placeholder);
+
+      if (data.placeholder || !data.html) {
+        console.log('[loadGuideContent] No HTML file, using placeholder');
         // Guide HTML not found - show placeholder
         setGuideHtml(`
           <div style="max-width: 800px; margin: 0 auto; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
@@ -235,6 +240,10 @@ function GuideViewerContent({ params }: GuideViewerProps) {
             </div>
           </div>
         `);
+      } else {
+        console.log('[loadGuideContent] Got HTML, length:', data.html.length);
+        setGuideHtml(data.html);
+        console.log('[loadGuideContent] ✓ setGuideHtml called');
       }
     } catch (err) {
       console.error('[loadGuideContent] ✗ Error loading guide:', err);
