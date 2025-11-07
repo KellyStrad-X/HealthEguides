@@ -66,6 +66,7 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
         },
         body: JSON.stringify({
           email,
+          plan: 'monthly', // Default to monthly plan
         }),
       });
 

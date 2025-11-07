@@ -34,6 +34,7 @@ export default function BundleOffer() {
         },
         body: JSON.stringify({
           email,
+          plan: 'monthly', // Default to monthly plan
         }),
       });
 
