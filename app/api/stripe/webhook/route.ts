@@ -180,29 +180,30 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   // Access subscription properties - Stripe API returns snake_case at runtime
   const sub = subscription as any;
 
-  // DEBUG: Log the entire subscription object to see what Stripe is actually sending
-  console.log('🔍 DEBUG - Full subscription object:', JSON.stringify({
-    id: subscription.id,
-    status: subscription.status,
-    current_period_start: sub.current_period_start,
-    current_period_end: sub.current_period_end,
-    trial_start: sub.trial_start,
-    trial_end: sub.trial_end,
-    start_date: sub.start_date,
-    billing_cycle_anchor: sub.billing_cycle_anchor,
-    allKeys: Object.keys(sub)
-  }, null, 2));
+  // For trial subscriptions, use trial_start/trial_end as the current period
+  // For active subscriptions, use current_period_start/current_period_end
+  let currentPeriodStart: Timestamp | null;
+  let currentPeriodEnd: Timestamp | null;
 
-  // Validate and convert required timestamps
-  const currentPeriodStart = safeTimestampFromUnix(sub.current_period_start);
-  const currentPeriodEnd = safeTimestampFromUnix(sub.current_period_end);
+  if (subscription.status === 'trialing') {
+    console.log('⏰ Trialing subscription - using trial dates as current period');
+    currentPeriodStart = safeTimestampFromUnix(sub.trial_start || sub.start_date);
+    currentPeriodEnd = safeTimestampFromUnix(sub.trial_end || sub.billing_cycle_anchor);
+  } else {
+    console.log('💳 Active/other subscription - using current period dates');
+    currentPeriodStart = safeTimestampFromUnix(sub.current_period_start);
+    currentPeriodEnd = safeTimestampFromUnix(sub.current_period_end);
+  }
 
   if (!currentPeriodStart || !currentPeriodEnd) {
-    console.error('❌ Invalid required timestamps:', {
+    console.error('❌ Invalid period timestamps:', {
+      status: subscription.status,
+      trial_start: sub.trial_start,
+      trial_end: sub.trial_end,
       current_period_start: sub.current_period_start,
       current_period_end: sub.current_period_end
     });
-    throw new Error('Invalid subscription timestamps');
+    throw new Error('Invalid subscription period timestamps');
   }
 
   // Build subscription data with validated timestamps
