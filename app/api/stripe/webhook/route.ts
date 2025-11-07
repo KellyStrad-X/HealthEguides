@@ -105,20 +105,29 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, stripe:
     // Create or update subscription record
     await handleSubscriptionUpdate(subscription);
 
-    // Send welcome email
+    // Send welcome email (optional - don't fail if it errors)
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/send-subscription-email`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          subscriptionId: subscription.id,
-          trialEnd: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,
-        }),
-      });
-      console.log('Subscription welcome email sent to:', email);
+      if (process.env.NEXT_PUBLIC_BASE_URL) {
+        const emailResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/send-subscription-email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            subscriptionId: subscription.id,
+            trialEnd: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,
+          }),
+        });
+
+        if (emailResponse.ok) {
+          console.log('✅ Subscription welcome email sent to:', email);
+        } else {
+          console.log('⚠️ Email API returned error:', emailResponse.status);
+        }
+      } else {
+        console.log('⚠️ NEXT_PUBLIC_BASE_URL not set, skipping welcome email');
+      }
     } catch (emailError) {
-      console.error('Failed to send subscription email:', emailError);
+      console.error('⚠️ Failed to send subscription email (non-fatal):', emailError);
     }
 
     return;
@@ -152,8 +161,8 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   // Type-safe access to subscription properties
   const sub = subscription as any; // Use 'any' to bypass strict type checking for Stripe properties
 
-  // Prepare subscription data
-  const subscriptionData = {
+  // Safely convert timestamps - Firestore doesn't accept null dates
+  const subscriptionData: any = {
     userId: userId || email, // Use email as fallback userId if not provided
     email,
     stripeCustomerId: customerId,
@@ -163,15 +172,24 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     interval,
     amount,
     currency: subscription.currency,
-    trialStart: sub.trial_start ? new Date(sub.trial_start * 1000) : null,
-    trialEnd: sub.trial_end ? new Date(sub.trial_end * 1000) : null,
     currentPeriodStart: new Date(sub.current_period_start * 1000),
     currentPeriodEnd: new Date(sub.current_period_end * 1000),
     cancelAtPeriodEnd: sub.cancel_at_period_end || false,
-    canceledAt: sub.canceled_at ? new Date(sub.canceled_at * 1000) : null,
-    cancelReason: null,
     updatedAt: new Date(),
   };
+
+  // Only add optional date fields if they have valid values
+  if (sub.trial_start && typeof sub.trial_start === 'number') {
+    subscriptionData.trialStart = new Date(sub.trial_start * 1000);
+  }
+  if (sub.trial_end && typeof sub.trial_end === 'number') {
+    subscriptionData.trialEnd = new Date(sub.trial_end * 1000);
+  }
+  if (sub.canceled_at && typeof sub.canceled_at === 'number') {
+    subscriptionData.canceledAt = new Date(sub.canceled_at * 1000);
+  }
+
+  subscriptionData.cancelReason = null;
 
   console.log('💾 Subscription data to save:', {
     userId: subscriptionData.userId,
