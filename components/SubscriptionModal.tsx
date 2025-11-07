@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { loadStripe } from '@stripe/stripe-js';
 
@@ -44,6 +44,18 @@ export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: S
   ];
 
   const guides = featuredGuides || defaultGuides;
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -94,19 +106,28 @@ export default function SubscriptionModal({ isOpen, onClose, featuredGuides }: S
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-lg max-w-2xl w-full my-8 relative">
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start sm:items-center justify-center p-0 sm:p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white w-full sm:rounded-lg sm:max-w-2xl max-h-screen overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Sticky Close button */}
+        <div className="sticky top-0 bg-white z-10 flex justify-end p-4 border-b border-gray-100">
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-colors"
+            aria-label="Close"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
 
-        <div className="p-6 md:p-8">
+        <div className="p-6 md:p-8 pb-8">
           {/* Header */}
           <div className="text-center mb-6">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Get Access to All Guides</h2>
