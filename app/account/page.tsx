@@ -8,8 +8,17 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 export default function AccountPage() {
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
   const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
 
   useEffect(() => {
     if (!loading && !user) {
@@ -75,7 +84,7 @@ export default function AccountPage() {
           </div>
 
           {/* Quick actions */}
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
             <button
               onClick={() => router.push('/account/subscription')}
               className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-left hover:border-indigo-300 transition-colors group"
@@ -104,6 +113,16 @@ export default function AccountPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
+            </button>
+          </div>
+
+          {/* Logout button */}
+          <div className="flex justify-center">
+            <button
+              onClick={handleLogout}
+              className="px-6 py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors"
+            >
+              Logout
             </button>
           </div>
         </div>

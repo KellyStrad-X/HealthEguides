@@ -17,7 +17,7 @@ export default function Header() {
 
   return (
     <>
-      <header className={`sticky z-40 bg-[#0a0a0a]/80 backdrop-blur-lg border-b border-white/10 transition-all duration-300 ${isCompressed ? 'top-[36px] md:top-[42px]' : 'top-[72px]'}`}>
+      <header className={`sticky z-40 bg-[#0a0a0a]/80 backdrop-blur-lg border-b border-white/10 transition-all duration-300 ${user ? 'top-0' : (isCompressed ? 'top-[36px] md:top-[42px]' : 'top-[72px]')}`}>
         <nav className="section-container py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="text-2xl font-bold gradient-text">
@@ -120,22 +120,13 @@ export default function Header() {
                 )}
 
                 {user ? (
-                  <>
-                    <Link
-                      href="/account"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="font-medium text-white/70 hover:text-white transition-colors"
-                    >
-                      My Account
-                    </Link>
-                    <Link
-                      href="/account/subscription"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="font-medium text-white/70 hover:text-white transition-colors"
-                    >
-                      Manage Subscription
-                    </Link>
-                  </>
+                  <Link
+                    href="/account"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="font-medium text-white/70 hover:text-white transition-colors"
+                  >
+                    My Account
+                  </Link>
                 ) : (
                   <button
                     onClick={() => {
