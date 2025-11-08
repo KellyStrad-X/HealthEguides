@@ -211,7 +211,12 @@ function SubscriptionSuccessContent() {
 
           {/* Account creation form */}
           {showAccountCreation && (
-            <div className="bg-white rounded-lg shadow-sm border border-indigo-200 p-8 mb-8">
+            <div className="bg-white rounded-lg shadow-sm border-2 border-indigo-400 p-8 mb-8">
+              <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-6">
+                <p className="text-indigo-800 font-medium text-center">
+                  ⚠️ Important: Create your account now to access your subscription
+                </p>
+              </div>
               <div className="mb-6">
                 <h3 className="text-2xl font-semibold text-gray-900 mb-2">Create Your Account</h3>
                 <p className="text-gray-600">
@@ -392,19 +397,29 @@ function SubscriptionSuccessContent() {
 
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/account/guides"
-              className="px-8 py-4 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors text-center shadow-lg hover:shadow-xl"
-            >
-              View My Guides →
-            </Link>
+            {accountCreated ? (
+              <>
+                <Link
+                  href="/account/guides"
+                  className="px-8 py-4 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors text-center shadow-lg hover:shadow-xl"
+                >
+                  View My Guides →
+                </Link>
 
-            <Link
-              href="/account/subscription"
-              className="px-8 py-4 border-2 border-indigo-600 text-indigo-600 rounded-lg font-semibold hover:bg-indigo-50 transition-colors text-center"
-            >
-              Manage Subscription
-            </Link>
+                <Link
+                  href="/account/subscription"
+                  className="px-8 py-4 border-2 border-indigo-600 text-indigo-600 rounded-lg font-semibold hover:bg-indigo-50 transition-colors text-center"
+                >
+                  Manage Subscription
+                </Link>
+              </>
+            ) : (
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+                <p className="text-yellow-800 font-medium">
+                  ⚠️ Please create your account above to access your guides
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Help text */}

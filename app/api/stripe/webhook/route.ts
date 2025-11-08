@@ -57,13 +57,18 @@ export async function POST(request: Request) {
 
   // Handle the event
   try {
+    console.log('🎯 Webhook event type:', event.type);
+    console.log('📊 Event ID:', event.id);
+
     switch (event.type) {
       case 'checkout.session.completed':
+        console.log('💳 Handling checkout.session.completed');
         await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session, stripe);
         break;
 
       case 'customer.subscription.created':
       case 'customer.subscription.updated':
+        console.log('📝 Handling subscription event:', event.type);
         await handleSubscriptionUpdate(event.data.object as Stripe.Subscription);
         break;
 
@@ -173,6 +178,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, stripe:
  */
 async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   console.log('🔄 Processing subscription update:', subscription.id);
+  console.log('📦 Full subscription object:', JSON.stringify(subscription, null, 2));
 
   const customerId = subscription.customer as string;
   const email = subscription.metadata?.email || '';
@@ -266,24 +272,48 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   });
 
   // Check if subscription already exists
+  console.log('🔍 Checking for existing subscription in Firestore...');
   const existingSubQuery = await adminDb
     .collection('subscriptions')
     .where('stripeSubscriptionId', '==', subscription.id)
     .limit(1)
     .get();
 
+  console.log('📊 Existing subscription query result:', {
+    empty: existingSubQuery.empty,
+    size: existingSubQuery.size
+  });
+
   if (existingSubQuery.empty) {
     // Create new subscription
-    const docRef = await adminDb.collection('subscriptions').add({
-      ...subscriptionData,
-      createdAt: Timestamp.now(),
-    });
-    console.log('✅ Created new subscription record with ID:', docRef.id);
+    console.log('➕ Creating new subscription document in Firestore...');
+    try {
+      const docRef = await adminDb.collection('subscriptions').add({
+        ...subscriptionData,
+        createdAt: Timestamp.now(),
+      });
+      console.log('✅ Created new subscription record with ID:', docRef.id);
+      console.log('📝 Subscription data saved:', {
+        docId: docRef.id,
+        userId: subscriptionData.userId,
+        email: subscriptionData.email,
+        status: subscriptionData.status
+      });
+    } catch (createError) {
+      console.error('❌ FAILED to create subscription document:', createError);
+      throw createError;
+    }
   } else {
     // Update existing subscription
     const docRef = existingSubQuery.docs[0].ref;
-    await docRef.update(subscriptionData);
-    console.log('✅ Updated existing subscription record:', existingSubQuery.docs[0].id);
+    console.log('🔄 Updating existing subscription:', existingSubQuery.docs[0].id);
+    try {
+      await docRef.update(subscriptionData);
+      console.log('✅ Updated existing subscription record:', existingSubQuery.docs[0].id);
+    } catch (updateError) {
+      console.error('❌ FAILED to update subscription document:', updateError);
+      throw updateError;
+    }
   }
 }
 
