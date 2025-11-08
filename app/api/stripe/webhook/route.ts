@@ -100,12 +100,25 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, stripe:
   console.log('Processing checkout:', session.id);
   console.log('Mode:', session.mode);
 
-  const email = session.customer_email;
+  // Try multiple sources for email
+  let email = session.customer_email || session.customer_details?.email;
+
+  // If still no email, try to get it from the customer object
+  if (!email && session.customer) {
+    try {
+      const customer = await stripe.customers.retrieve(session.customer as string);
+      email = (customer as Stripe.Customer).email || undefined;
+    } catch (err) {
+      console.error('Failed to retrieve customer email:', err);
+    }
+  }
 
   if (!email) {
-    console.error(`Session ${session.id} missing customer email; skipping.`);
+    console.error(`Session ${session.id} missing customer email after all attempts; skipping.`);
     return;
   }
+
+  console.log('Email retrieved:', email);
 
   // Handle subscription checkout
   if (session.mode === 'subscription') {
