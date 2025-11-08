@@ -87,7 +87,10 @@ export async function POST(request: Request) {
     });
 
     // Check if subscription already linked to a different userId
-    if (subscriptionData.userId && subscriptionData.userId !== userId) {
+    // Allow linking if the userId is currently set to the email (placeholder from checkout)
+    if (subscriptionData.userId &&
+        subscriptionData.userId !== userId &&
+        subscriptionData.userId !== email) {
       console.log('❌ Subscription already linked to different user:', subscriptionData.userId);
       return NextResponse.json(
         { error: 'This subscription is already linked to another account' },
