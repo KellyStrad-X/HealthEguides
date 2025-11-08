@@ -1,13 +1,9 @@
 import { NextResponse } from 'next/server';
-import { adminDb } from '@/lib/firebase-admin';
-import { getAuth } from 'firebase-admin/auth';
+import { adminDb, adminAuth } from '@/lib/firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 
 export async function GET(request: Request) {
   try {
-    // Initialize Firebase Admin by accessing adminDb
-    const _ = adminDb;
-
     // Get auth token from header
     const authHeader = request.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -15,7 +11,7 @@ export async function GET(request: Request) {
     }
 
     const token = authHeader.split('Bearer ')[1];
-    const decodedToken = await getAuth().verifyIdToken(token);
+    const decodedToken = await adminAuth.verifyIdToken(token);
     const userId = decodedToken.uid;
 
     // Get all favorites for this user
@@ -42,9 +38,6 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    // Initialize Firebase Admin by accessing adminDb
-    const _ = adminDb;
-
     // Get auth token from header
     const authHeader = request.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -52,7 +45,7 @@ export async function POST(request: Request) {
     }
 
     const token = authHeader.split('Bearer ')[1];
-    const decodedToken = await getAuth().verifyIdToken(token);
+    const decodedToken = await adminAuth.verifyIdToken(token);
     const userId = decodedToken.uid;
 
     const { guideId } = await request.json();
@@ -92,9 +85,6 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    // Initialize Firebase Admin by accessing adminDb
-    const _ = adminDb;
-
     // Get auth token from header
     const authHeader = request.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -102,7 +92,7 @@ export async function DELETE(request: Request) {
     }
 
     const token = authHeader.split('Bearer ')[1];
-    const decodedToken = await getAuth().verifyIdToken(token);
+    const decodedToken = await adminAuth.verifyIdToken(token);
     const userId = decodedToken.uid;
 
     const { guideId } = await request.json();

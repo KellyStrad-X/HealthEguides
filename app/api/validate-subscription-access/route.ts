@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { adminDb } from '@/lib/firebase-admin';
-import { getAuth } from 'firebase-admin/auth';
+import { adminDb, adminAuth } from '@/lib/firebase-admin';
 
 export async function POST(request: Request) {
   try {
@@ -20,7 +19,7 @@ export async function POST(request: Request) {
     let userEmail = email;
     if (userId && !userEmail) {
       try {
-        const userRecord = await getAuth().getUser(userId);
+        const userRecord = await adminAuth.getUser(userId);
         userEmail = userRecord.email || '';
       } catch (error) {
         console.error('Error fetching user:', error);

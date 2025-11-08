@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getAuth } from 'firebase-admin/auth';
-import { adminDb } from '@/lib/firebase-admin';
+import { adminDb, adminAuth } from '@/lib/firebase-admin';
 import { promises as fs } from 'fs';
 import path from 'path';
 
@@ -18,7 +17,7 @@ export async function POST(request: Request) {
     const token = authHeader.split('Bearer ')[1];
 
     // Verify Firebase token
-    const decodedToken = await getAuth().verifyIdToken(token);
+    const decodedToken = await adminAuth.verifyIdToken(token);
     const userId = decodedToken.uid;
     const email = decodedToken.email;
 

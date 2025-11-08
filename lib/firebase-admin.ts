@@ -1,8 +1,10 @@
 import { initializeApp, cert, getApps, App } from 'firebase-admin/app';
 import { getFirestore, Firestore } from 'firebase-admin/firestore';
+import { getAuth, Auth } from 'firebase-admin/auth';
 
 let app: App;
 let db: Firestore;
+let auth: Auth;
 
 /**
  * Initialize Firebase Admin SDK
@@ -25,12 +27,14 @@ export function initializeFirebaseAdmin() {
     });
 
     db = getFirestore(app);
+    auth = getAuth(app);
   } else {
     app = getApps()[0];
     db = getFirestore(app);
+    auth = getAuth(app);
   }
 
-  return { app, db };
+  return { app, db, auth };
 }
 
 // Lazy initialization - only initialize when accessed (at runtime, not build time)
@@ -48,6 +52,13 @@ function getAdminDb() {
   return db;
 }
 
+function getAdminAuth() {
+  if (!auth) {
+    initializeFirebaseAdmin();
+  }
+  return auth;
+}
+
 // Export lazy getters instead of immediate initialization
 export const adminApp = new Proxy({} as App, {
   get(target, prop) {
@@ -58,5 +69,11 @@ export const adminApp = new Proxy({} as App, {
 export const adminDb = new Proxy({} as Firestore, {
   get(target, prop) {
     return (getAdminDb() as any)[prop];
+  }
+});
+
+export const adminAuth = new Proxy({} as Auth, {
+  get(target, prop) {
+    return (getAdminAuth() as any)[prop];
   }
 });
