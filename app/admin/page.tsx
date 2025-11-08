@@ -622,6 +622,9 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                           Status
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Mode
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Plan
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -638,6 +641,8 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                         const isCanceled = subscription.status === 'canceled';
                         const willCancel = subscription.cancelAtPeriodEnd;
                         const planPrice = subscription.planInterval === 'year' ? '$50/year' : '$5/month';
+                        const isTestMode = subscription.stripeMode === 'test';
+                        const isUnknownMode = !subscription.stripeMode || subscription.stripeMode === 'unknown';
 
                         return (
                           <tr key={subscription.id} className="hover:bg-gray-50">
@@ -660,6 +665,15 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                               )}
                             </td>
                             <td className="px-6 py-4">
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                isTestMode ? 'bg-purple-100 text-purple-800' :
+                                isUnknownMode ? 'bg-gray-100 text-gray-800' :
+                                'bg-emerald-100 text-emerald-800'
+                              }`}>
+                                {isTestMode ? 'Test' : isUnknownMode ? 'Unknown' : 'Live'}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4">
                               <div className="text-sm text-gray-900">{planPrice}</div>
                               <div className="text-xs text-gray-500 capitalize">{subscription.planInterval}ly</div>
                             </td>
@@ -680,7 +694,17 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                             </td>
                             <td className="px-6 py-4">
                               <div className="flex flex-col gap-2">
-                                {!isCanceled && !willCancel && (
+                                {isTestMode && (
+                                  <div className="text-xs text-purple-600 font-medium mb-1">
+                                    Test subscription - switch to test keys to manage
+                                  </div>
+                                )}
+                                {isUnknownMode && (
+                                  <div className="text-xs text-gray-600 font-medium mb-1">
+                                    Mode unknown - may not be manageable
+                                  </div>
+                                )}
+                                {!isCanceled && !willCancel && !isTestMode && !isUnknownMode && (
                                   <>
                                     <button
                                       onClick={() => handleSubscriptionAction(subscription.id, 'cancel')}
@@ -696,7 +720,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                                     </button>
                                   </>
                                 )}
-                                {willCancel && !isCanceled && (
+                                {willCancel && !isCanceled && !isTestMode && !isUnknownMode && (
                                   <button
                                     onClick={() => handleSubscriptionAction(subscription.id, 'reactivate')}
                                     className="px-3 py-1 bg-green-600 text-white rounded text-xs hover:bg-green-700 transition-colors"
@@ -704,7 +728,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                                     Reactivate
                                   </button>
                                 )}
-                                {!isCanceled && (
+                                {!isCanceled && !isTestMode && !isUnknownMode && (
                                   <button
                                     onClick={() => {
                                       const newInterval = subscription.planInterval === 'month' ? 'year' : 'month';

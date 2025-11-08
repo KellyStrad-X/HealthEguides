@@ -45,6 +45,7 @@ export async function GET(request: Request) {
           status: data.status,
           stripeSubscriptionId: data.stripeSubscriptionId,
           stripeCustomerId: data.stripeCustomerId,
+          stripeMode: data.stripeMode || 'unknown', // 'test', 'live', or 'unknown'
           planInterval: data.planInterval || 'month', // 'month' or 'year'
           planAmount: data.planAmount || (data.planInterval === 'year' ? 5000 : 500), // in cents
           trialStart: data.trialStart?.toDate?.().toISOString() || data.trialStart || null,

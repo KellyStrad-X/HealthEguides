@@ -206,6 +206,9 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     throw new Error('Invalid subscription period timestamps');
   }
 
+  // Determine if this is a test or live subscription based on subscription ID
+  const isTestMode = subscription.id.startsWith('sub_') && subscription.livemode === false;
+
   // Build subscription data with validated timestamps
   const subscriptionData: any = {
     userId: userId || email, // Use email as fallback userId if not provided
@@ -220,6 +223,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     currentPeriodStart,
     currentPeriodEnd,
     cancelAtPeriodEnd: sub.cancel_at_period_end || false,
+    stripeMode: isTestMode ? 'test' : 'live', // Track whether this is test or live
     updatedAt: Timestamp.now(),
   };
 
