@@ -24,6 +24,9 @@ export default function SubscriptionModal({ isOpen, onClose, initialEmail, featu
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [emailExists, setEmailExists] = useState(false);
+  const [checkingEmail, setCheckingEmail] = useState(false);
+  const [emailCheckMessage, setEmailCheckMessage] = useState('');
 
   // Default featured guides if none provided
   const defaultGuides = [
@@ -65,11 +68,64 @@ export default function SubscriptionModal({ isOpen, onClose, initialEmail, featu
     }
   }, [initialEmail]);
 
+  // Check if email exists in Firebase Auth (debounced)
+  useEffect(() => {
+    // Skip check if user is logged in or email is pre-filled
+    if (user || initialEmail) {
+      return;
+    }
+
+    // Skip if email is empty or invalid
+    if (!email || !email.includes('@')) {
+      setEmailExists(false);
+      setEmailCheckMessage('');
+      return;
+    }
+
+    const timeoutId = setTimeout(async () => {
+      setCheckingEmail(true);
+      setEmailCheckMessage('');
+
+      try {
+        const response = await fetch('/api/check-email-exists', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        });
+
+        const data = await response.json();
+
+        if (data.exists) {
+          setEmailExists(true);
+          setEmailCheckMessage(data.message);
+        } else {
+          setEmailExists(false);
+          setEmailCheckMessage('');
+        }
+      } catch (error) {
+        console.error('Error checking email:', error);
+        setEmailExists(false);
+        setEmailCheckMessage('');
+      } finally {
+        setCheckingEmail(false);
+      }
+    }, 800); // Debounce 800ms
+
+    return () => clearTimeout(timeoutId);
+  }, [email, user, initialEmail]);
+
   if (!isOpen) return null;
 
   const handleSubscribe = async () => {
     if (!email || !email.includes('@')) {
       setError('Please enter a valid email address');
+      return;
+    }
+
+    if (emailExists) {
+      setError('This email is already registered. Please sign in instead.');
       return;
     }
 
@@ -251,15 +307,37 @@ export default function SubscriptionModal({ isOpen, onClose, initialEmail, featu
               <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-1">
                 Email Address
               </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-white/80 border-2 border-purple-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-400 transition-all text-gray-900 placeholder-gray-400"
-                placeholder="you@example.com"
-                required
-              />
+              <div className="relative">
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={`w-full px-4 py-3 bg-white/80 border-2 rounded-xl focus:ring-2 transition-all text-gray-900 placeholder-gray-400 ${
+                    emailExists
+                      ? 'border-red-400 focus:ring-red-500 focus:border-red-400'
+                      : 'border-purple-200 focus:ring-purple-500 focus:border-purple-400'
+                  }`}
+                  placeholder="you@example.com"
+                  required
+                />
+                {checkingEmail && (
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <svg className="animate-spin h-5 w-5 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  </div>
+                )}
+              </div>
+              {emailCheckMessage && (
+                <p className="mt-2 text-sm text-red-600 font-medium flex items-center gap-1">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                  {emailCheckMessage}
+                </p>
+              )}
             </div>
           )}
 
@@ -304,7 +382,7 @@ export default function SubscriptionModal({ isOpen, onClose, initialEmail, featu
           {/* Subscribe button */}
           <button
             onClick={handleSubscribe}
-            disabled={loading || !agreedToTerms}
+            disabled={loading || !agreedToTerms || emailExists || checkingEmail}
             className="w-full py-4 bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-purple-700 hover:via-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Processing...' : 'Start Free Trial'}
