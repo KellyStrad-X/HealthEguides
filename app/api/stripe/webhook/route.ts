@@ -90,9 +90,16 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error('Error processing webhook:', error);
+    console.error('❌ CRITICAL: Error processing webhook:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+    console.error('Error message:', error instanceof Error ? error.message : String(error));
+
     return NextResponse.json(
-      { error: 'Webhook processing failed' },
+      {
+        error: 'Webhook processing failed',
+        message: error instanceof Error ? error.message : 'Unknown error',
+        type: error instanceof Error ? error.constructor.name : typeof error
+      },
       { status: 500 }
     );
   }
