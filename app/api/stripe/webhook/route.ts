@@ -141,13 +141,37 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, stripe:
       return;
     }
 
-    // Fetch the full subscription object
-    const subscription = await stripe.subscriptions.retrieve(
-      session.subscription as string
-    );
+    // Fetch the full subscription object with expanded fields
+    let subscription;
+    try {
+      console.log('📡 Fetching subscription:', session.subscription);
+      subscription = await stripe.subscriptions.retrieve(
+        session.subscription as string,
+        {
+          expand: ['items.data.price']
+        }
+      );
+      console.log('✅ Subscription retrieved successfully');
+      console.log('📦 Subscription details:', {
+        id: subscription.id,
+        status: subscription.status,
+        customer: subscription.customer,
+        metadata: subscription.metadata
+      });
+    } catch (retrieveError) {
+      console.error('❌ Failed to retrieve subscription:', retrieveError);
+      throw retrieveError;
+    }
 
     // Create or update subscription record
-    await handleSubscriptionUpdate(subscription);
+    try {
+      console.log('💾 Calling handleSubscriptionUpdate...');
+      await handleSubscriptionUpdate(subscription);
+      console.log('✅ handleSubscriptionUpdate completed successfully');
+    } catch (updateError) {
+      console.error('❌ handleSubscriptionUpdate failed:', updateError);
+      throw updateError;
+    }
 
     // Send welcome email (optional - don't fail if it errors)
     try {
@@ -226,10 +250,17 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
       status: subscription.status,
       trial_start: sub.trial_start,
       trial_end: sub.trial_end,
+      start_date: sub.start_date,
+      billing_cycle_anchor: sub.billing_cycle_anchor,
       current_period_start: sub.current_period_start,
-      current_period_end: sub.current_period_end
+      current_period_end: sub.current_period_end,
+      created: sub.created
     });
-    throw new Error('Invalid subscription period timestamps');
+    console.error('❌ Evaluated values:', {
+      currentPeriodStart,
+      currentPeriodEnd
+    });
+    throw new Error(`Invalid subscription period timestamps: start=${currentPeriodStart}, end=${currentPeriodEnd}, status=${subscription.status}`);
   }
 
   // Determine if this is a test or live subscription based on subscription ID
