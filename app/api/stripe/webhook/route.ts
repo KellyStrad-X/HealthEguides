@@ -213,6 +213,12 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   console.log('📦 Subscription metadata:', subscription.metadata);
   console.log('📦 Subscription customer:', subscription.customer);
 
+  // Skip canceled subscriptions - they should be handled by handleSubscriptionDeleted
+  if (subscription.status === 'canceled') {
+    console.log('⏭️ Skipping canceled subscription - should be handled by subscription.deleted event');
+    return;
+  }
+
   const customerId = subscription.customer as string;
   const email = subscription.metadata?.email || '';
   const userId = subscription.metadata?.userId || '';
