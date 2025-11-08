@@ -57,6 +57,17 @@ export async function POST(request: Request) {
 
     console.log('💳 Creating Stripe subscription checkout session...');
 
+    // Get base URL with fallback
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ||
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+
+    const successUrl = `${baseUrl}/subscription/success?session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = `${baseUrl}/catalog`;
+
+    console.log('🌐 Base URL:', baseUrl);
+    console.log('✅ Success URL:', successUrl);
+    console.log('❌ Cancel URL:', cancelUrl);
+
     // Create Stripe Checkout session for subscription
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
@@ -77,8 +88,8 @@ export async function POST(request: Request) {
       },
 
       // Success and cancel URLs
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/catalog`,
+      success_url: successUrl,
+      cancel_url: cancelUrl,
 
       // Allow promotion codes
       allow_promotion_codes: true,
