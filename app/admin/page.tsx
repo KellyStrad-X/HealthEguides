@@ -97,10 +97,11 @@ export default function AdminPage() {
 }
 
 function AdminDashboard({ onLogout }: { onLogout: () => void }) {
-  const [activeTab, setActiveTab] = useState<'guides' | 'requests' | 'feedback'>('guides');
+  const [activeTab, setActiveTab] = useState<'guides' | 'requests' | 'feedback' | 'subscriptions'>('guides');
   const [guidesList, setGuidesList] = useState<Guide[]>([]);
   const [guideRequests, setGuideRequests] = useState<any[]>([]);
   const [feedbackList, setFeedbackList] = useState<any[]>([]);
+  const [subscriptionsList, setSubscriptionsList] = useState<any[]>([]);
   const [editingGuide, setEditingGuide] = useState<Guide | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [uploadingHtml, setUploadingHtml] = useState<string | null>(null);
@@ -115,6 +116,8 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       fetchGuideRequests();
     } else if (activeTab === 'feedback') {
       fetchFeedback();
+    } else if (activeTab === 'subscriptions') {
+      fetchSubscriptions();
     }
   }, [activeTab]);
 
@@ -164,6 +167,58 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       console.error('Failed to fetch feedback:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchSubscriptions = async () => {
+    setLoading(true);
+    try {
+      const adminPassword = sessionStorage.getItem('admin_password');
+      const response = await fetch('/api/admin/subscriptions', {
+        headers: {
+          'X-Admin-Password': adminPassword || '',
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setSubscriptionsList(data.subscriptions || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch subscriptions:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubscriptionAction = async (subscriptionId: string, action: string, newPlanInterval?: string) => {
+    const actionText = action === 'cancel' ? 'cancel this subscription at period end' :
+                      action === 'cancel_immediately' ? 'cancel this subscription immediately' :
+                      action === 'reactivate' ? 'reactivate this subscription' :
+                      action === 'change_plan' ? `change this subscription to ${newPlanInterval}ly billing` : action;
+
+    if (!confirm(`Are you sure you want to ${actionText}?`)) return;
+
+    try {
+      const adminPassword = sessionStorage.getItem('admin_password');
+      const response = await fetch('/api/admin/subscriptions', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Password': adminPassword || '',
+        },
+        body: JSON.stringify({ subscriptionId, action, newPlanInterval }),
+      });
+
+      if (response.ok) {
+        alert('Subscription updated successfully!');
+        fetchSubscriptions();
+      } else {
+        const error = await response.json();
+        alert('Failed to update subscription: ' + (error.error || 'Unknown error'));
+      }
+    } catch (err) {
+      console.error('Subscription action error:', err);
+      alert('Error updating subscription');
     }
   };
 
@@ -265,6 +320,16 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             >
               Feedback ({feedbackList.length})
             </button>
+            <button
+              onClick={() => setActiveTab('subscriptions')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'subscriptions'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Subscriptions ({subscriptionsList.length})
+            </button>
           </nav>
         </div>
 
@@ -310,11 +375,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4">
-          {guidesList.map((guide) => {
-            // Defensive guard for missing data
-            const safePrice = typeof guide.price === 'number' && !isNaN(guide.price) ? guide.price : 0;
-
-            return (
+          {guidesList.map((guide) => (
             <div key={guide.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -322,7 +383,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                     <span className="text-3xl">{guide.emoji}</span>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-800">{guide.title}</h3>
-                      <p className="text-sm text-gray-500">{guide.category} • ${safePrice.toFixed(2)}</p>
+                      <p className="text-sm text-gray-500">{guide.category} • Included in Subscription</p>
                     </div>
                   </div>
                   <p className="text-gray-600 text-sm mb-3">{guide.description}</p>
@@ -363,8 +424,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 </div>
               </div>
             </div>
-            );
-          })}
+          ))}
           </div>
         )}
 
@@ -528,6 +588,142 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                   </div>
                 </div>
               ))
+            )}
+          </div>
+        )}
+
+        {/* Subscriptions Tab Content */}
+        {activeTab === 'subscriptions' && (
+          <div className="space-y-4">
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold text-gray-800">Manage Subscriptions</h2>
+              <p className="text-sm text-gray-600 mt-1">
+                Current pricing: $5/month or $50/year with 7-day free trial
+              </p>
+            </div>
+
+            {loading ? (
+              <div className="text-center py-12 text-gray-500">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-600 mb-4"></div>
+                <p>Loading subscriptions...</p>
+              </div>
+            ) : subscriptionsList.length === 0 ? (
+              <div className="text-center py-12 text-gray-500">No subscriptions yet.</div>
+            ) : (
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          User
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Plan
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Trial/Period
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {subscriptionsList.map((subscription: any) => {
+                        const isTrialing = subscription.status === 'trialing';
+                        const isCanceled = subscription.status === 'canceled';
+                        const willCancel = subscription.cancelAtPeriodEnd;
+                        const planPrice = subscription.planInterval === 'year' ? '$50/year' : '$5/month';
+
+                        return (
+                          <tr key={subscription.id} className="hover:bg-gray-50">
+                            <td className="px-6 py-4">
+                              <div className="text-sm font-medium text-gray-900">{subscription.userName}</div>
+                              <div className="text-sm text-gray-500">{subscription.userEmail}</div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                subscription.status === 'active' ? 'bg-green-100 text-green-800' :
+                                subscription.status === 'trialing' ? 'bg-blue-100 text-blue-800' :
+                                subscription.status === 'past_due' ? 'bg-yellow-100 text-yellow-800' :
+                                subscription.status === 'canceled' ? 'bg-red-100 text-red-800' :
+                                'bg-gray-100 text-gray-800'
+                              }`}>
+                                {subscription.status}
+                              </span>
+                              {willCancel && !isCanceled && (
+                                <div className="text-xs text-orange-600 mt-1">Cancels at period end</div>
+                              )}
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="text-sm text-gray-900">{planPrice}</div>
+                              <div className="text-xs text-gray-500 capitalize">{subscription.planInterval}ly</div>
+                            </td>
+                            <td className="px-6 py-4">
+                              {isTrialing && subscription.trialEnd ? (
+                                <div className="text-sm">
+                                  <div className="text-gray-900">Trial ends:</div>
+                                  <div className="text-gray-600">{new Date(subscription.trialEnd).toLocaleDateString()}</div>
+                                </div>
+                              ) : subscription.currentPeriodEnd ? (
+                                <div className="text-sm">
+                                  <div className="text-gray-900">Period ends:</div>
+                                  <div className="text-gray-600">{new Date(subscription.currentPeriodEnd).toLocaleDateString()}</div>
+                                </div>
+                              ) : (
+                                <span className="text-sm text-gray-500">N/A</span>
+                              )}
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="flex flex-col gap-2">
+                                {!isCanceled && !willCancel && (
+                                  <>
+                                    <button
+                                      onClick={() => handleSubscriptionAction(subscription.id, 'cancel')}
+                                      className="px-3 py-1 bg-orange-600 text-white rounded text-xs hover:bg-orange-700 transition-colors"
+                                    >
+                                      Cancel at Period End
+                                    </button>
+                                    <button
+                                      onClick={() => handleSubscriptionAction(subscription.id, 'cancel_immediately')}
+                                      className="px-3 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700 transition-colors"
+                                    >
+                                      Cancel Immediately
+                                    </button>
+                                  </>
+                                )}
+                                {willCancel && !isCanceled && (
+                                  <button
+                                    onClick={() => handleSubscriptionAction(subscription.id, 'reactivate')}
+                                    className="px-3 py-1 bg-green-600 text-white rounded text-xs hover:bg-green-700 transition-colors"
+                                  >
+                                    Reactivate
+                                  </button>
+                                )}
+                                {!isCanceled && (
+                                  <button
+                                    onClick={() => {
+                                      const newInterval = subscription.planInterval === 'month' ? 'year' : 'month';
+                                      handleSubscriptionAction(subscription.id, 'change_plan', newInterval);
+                                    }}
+                                    className="px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition-colors"
+                                  >
+                                    Switch to {subscription.planInterval === 'month' ? 'Yearly' : 'Monthly'}
+                                  </button>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             )}
           </div>
         )}
@@ -701,7 +897,7 @@ function GuideForm({
             />
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Emoji
@@ -710,19 +906,6 @@ function GuideForm({
                 type="text"
                 value={formData.emoji}
                 onChange={(e) => setFormData({ ...formData, emoji: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Price ($)
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                value={formData.price}
-                onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 required
               />
@@ -739,6 +922,12 @@ function GuideForm({
                 required
               />
             </div>
+          </div>
+
+          <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
+            <p className="text-sm text-blue-800">
+              <strong>Note:</strong> All guides are now included in the subscription model ($5/month or $50/year with 7-day free trial). Individual guide pricing is no longer displayed to users.
+            </p>
           </div>
 
           <div>
