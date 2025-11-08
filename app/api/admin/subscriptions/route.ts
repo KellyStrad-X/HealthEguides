@@ -104,15 +104,7 @@ export async function PUT(request: Request) {
     const subscriptionData = subscriptionDoc.data();
     const stripeSubscriptionId = subscriptionData?.stripeSubscriptionId;
 
-    console.log('Subscription data:', {
-      firestoreId: subscriptionId,
-      stripeSubscriptionId,
-      status: subscriptionData?.status,
-      userId: subscriptionData?.userId
-    });
-
     if (!stripeSubscriptionId) {
-      console.error('No Stripe subscription ID found in Firestore document');
       return NextResponse.json(
         { error: 'Stripe subscription ID not found', details: 'This subscription may not have been created in Stripe' },
         { status: 404 }
@@ -124,16 +116,9 @@ export async function PUT(request: Request) {
     switch (action) {
       case 'cancel':
         // Cancel the subscription in Stripe
-        console.log('Attempting to cancel subscription:', stripeSubscriptionId);
-        try {
-          result = await stripe.subscriptions.update(stripeSubscriptionId, {
-            cancel_at_period_end: true,
-          });
-          console.log('Stripe cancel successful:', result.id);
-        } catch (stripeError) {
-          console.error('Stripe cancel failed:', stripeError);
-          throw stripeError;
-        }
+        result = await stripe.subscriptions.update(stripeSubscriptionId, {
+          cancel_at_period_end: true,
+        });
 
         // Update Firestore
         await adminDb.collection('subscriptions').doc(subscriptionId).update({
@@ -144,16 +129,9 @@ export async function PUT(request: Request) {
 
       case 'reactivate':
         // Reactivate a canceled subscription
-        console.log('Attempting to reactivate subscription:', stripeSubscriptionId);
-        try {
-          result = await stripe.subscriptions.update(stripeSubscriptionId, {
-            cancel_at_period_end: false,
-          });
-          console.log('Stripe reactivate successful:', result.id);
-        } catch (stripeError) {
-          console.error('Stripe reactivate failed:', stripeError);
-          throw stripeError;
-        }
+        result = await stripe.subscriptions.update(stripeSubscriptionId, {
+          cancel_at_period_end: false,
+        });
 
         // Update Firestore
         await adminDb.collection('subscriptions').doc(subscriptionId).update({
@@ -164,14 +142,7 @@ export async function PUT(request: Request) {
 
       case 'cancel_immediately':
         // Cancel the subscription immediately in Stripe
-        console.log('Attempting to cancel immediately:', stripeSubscriptionId);
-        try {
-          result = await stripe.subscriptions.cancel(stripeSubscriptionId);
-          console.log('Stripe immediate cancel successful:', result.id);
-        } catch (stripeError) {
-          console.error('Stripe immediate cancel failed:', stripeError);
-          throw stripeError;
-        }
+        result = await stripe.subscriptions.cancel(stripeSubscriptionId);
 
         // Update Firestore
         await adminDb.collection('subscriptions').doc(subscriptionId).update({
@@ -189,30 +160,14 @@ export async function PUT(request: Request) {
           );
         }
 
-        console.log('Attempting to change plan to:', newPlanInterval);
-
         // Get the Stripe subscription to find the price ID
-        let stripeSubscription;
-        try {
-          stripeSubscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
-          console.log('Retrieved Stripe subscription:', stripeSubscription.id);
-        } catch (stripeError) {
-          console.error('Failed to retrieve Stripe subscription:', stripeError);
-          throw stripeError;
-        }
-
+        const stripeSubscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
         const currentItem = stripeSubscription.items.data[0];
 
         // Determine new price ID based on interval
         const newPriceId = newPlanInterval === 'year'
           ? process.env.STRIPE_YEARLY_PRICE_ID
           : process.env.STRIPE_MONTHLY_PRICE_ID;
-
-        console.log('Price IDs:', {
-          monthly: process.env.STRIPE_MONTHLY_PRICE_ID ? 'SET' : 'MISSING',
-          yearly: process.env.STRIPE_YEARLY_PRICE_ID ? 'SET' : 'MISSING',
-          selectedPriceId: newPriceId ? 'SET' : 'MISSING'
-        });
 
         if (!newPriceId) {
           return NextResponse.json(
@@ -222,19 +177,13 @@ export async function PUT(request: Request) {
         }
 
         // Update the subscription in Stripe
-        try {
-          result = await stripe.subscriptions.update(stripeSubscriptionId, {
-            items: [{
-              id: currentItem.id,
-              price: newPriceId,
-            }],
-            proration_behavior: 'create_prorations',
-          });
-          console.log('Stripe plan change successful:', result.id);
-        } catch (stripeError) {
-          console.error('Stripe plan change failed:', stripeError);
-          throw stripeError;
-        }
+        result = await stripe.subscriptions.update(stripeSubscriptionId, {
+          items: [{
+            id: currentItem.id,
+            price: newPriceId,
+          }],
+          proration_behavior: 'create_prorations',
+        });
 
         // Update Firestore
         await adminDb.collection('subscriptions').doc(subscriptionId).update({
@@ -270,7 +219,7 @@ export async function PUT(request: Request) {
       // Check for common Stripe errors
       if (error.message.includes('No such subscription')) {
         errorMessage = 'Subscription not found in Stripe';
-        errorDetails = 'This subscription may have been deleted or the Stripe subscription ID is incorrect';
+        errorDetails = 'This subscription may have been deleted or you are using the wrong Stripe mode (test/live)';
       } else if (error.message.includes('No such customer')) {
         errorMessage = 'Customer not found in Stripe';
         errorDetails = 'The Stripe customer associated with this subscription no longer exists';
@@ -282,8 +231,6 @@ export async function PUT(request: Request) {
         errorDetails = 'There may be a mismatch between test/live mode keys and subscription data';
       }
     }
-
-    console.error('Detailed error:', { errorMessage, errorDetails, originalError: error });
 
     return NextResponse.json(
       { error: errorMessage, details: errorDetails },
