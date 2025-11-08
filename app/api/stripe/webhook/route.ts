@@ -209,17 +209,20 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, stripe:
  */
 async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   console.log('🔄 Processing subscription update:', subscription.id);
-  console.log('📦 Full subscription object:', JSON.stringify(subscription, null, 2));
+  console.log('📦 Subscription status:', subscription.status);
+  console.log('📦 Subscription metadata:', subscription.metadata);
+  console.log('📦 Subscription customer:', subscription.customer);
 
   const customerId = subscription.customer as string;
   const email = subscription.metadata?.email || '';
   const userId = subscription.metadata?.userId || '';
 
-  console.log('📧 Subscription metadata:', { email, userId, customerId });
+  console.log('📧 Extracted values:', { email, userId, customerId });
 
   if (!email && !userId) {
-    console.error('❌ Subscription missing both email and userId in metadata');
-    return;
+    const errorMsg = `Subscription ${subscription.id} missing both email and userId in metadata. Metadata: ${JSON.stringify(subscription.metadata)}`;
+    console.error('❌', errorMsg);
+    throw new Error(errorMsg);
   }
 
   // Get price details
@@ -325,6 +328,14 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   if (existingSubQuery.empty) {
     // Create new subscription
     console.log('➕ Creating new subscription document in Firestore...');
+    console.log('📝 Data to save:', JSON.stringify(subscriptionData, (key, value) => {
+      // Convert Timestamp objects to strings for logging
+      if (value && typeof value === 'object' && value.constructor?.name === 'Timestamp') {
+        return value.toDate().toISOString();
+      }
+      return value;
+    }, 2));
+
     try {
       const docRef = await adminDb.collection('subscriptions').add({
         ...subscriptionData,
@@ -339,6 +350,10 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
       });
     } catch (createError) {
       console.error('❌ FAILED to create subscription document:', createError);
+      console.error('❌ Error name:', (createError as any)?.name);
+      console.error('❌ Error code:', (createError as any)?.code);
+      console.error('❌ Error message:', (createError as any)?.message);
+      console.error('❌ Error stack:', (createError as any)?.stack);
       throw createError;
     }
   } else {
@@ -350,6 +365,9 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
       console.log('✅ Updated existing subscription record:', existingSubQuery.docs[0].id);
     } catch (updateError) {
       console.error('❌ FAILED to update subscription document:', updateError);
+      console.error('❌ Error name:', (updateError as any)?.name);
+      console.error('❌ Error code:', (updateError as any)?.code);
+      console.error('❌ Error message:', (updateError as any)?.message);
       throw updateError;
     }
   }
