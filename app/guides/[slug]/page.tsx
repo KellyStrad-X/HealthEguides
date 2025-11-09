@@ -288,15 +288,23 @@ function GuideViewerContent({ params }: GuideViewerProps) {
         className="guide-content"
         dangerouslySetInnerHTML={{
           __html: DOMPurify.sanitize(guideHtml, {
-            ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'ul', 'ol', 'li',
-                          'blockquote', 'strong', 'em', 'code', 'pre', 'img', 'div', 'span',
-                          'table', 'thead', 'tbody', 'tr', 'td', 'th', 'br', 'hr', 'section',
-                          'article', 'nav', 'aside', 'header', 'footer', 'figure', 'figcaption'],
-            ALLOWED_ATTR: ['href', 'src', 'alt', 'class', 'id', 'style', 'target', 'rel',
-                          'width', 'height', 'title', 'aria-label', 'role', 'data-*'],
+            // Allow most HTML tags except dangerous ones
+            FORBID_TAGS: ['script', 'iframe', 'object', 'embed', 'form', 'input', 'textarea', 'button', 'link', 'meta', 'base'],
+            // Block event handler attributes
+            FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'onfocus', 'onblur',
+                         'onsubmit', 'onchange', 'oninput', 'onkeydown', 'onkeyup', 'onmouseenter',
+                         'onmouseleave', 'onwheel', 'ondrag', 'ondrop'],
+            // Allow styles and data attributes
             ALLOW_DATA_ATTR: true,
-            FORBID_TAGS: ['script', 'iframe', 'object', 'embed', 'form', 'input', 'textarea'],
-            FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'onfocus', 'onblur']
+            ALLOW_UNKNOWN_PROTOCOLS: false,
+            // Keep content as-is, don't wrap in body
+            WHOLE_DOCUMENT: false,
+            RETURN_DOM: false,
+            RETURN_DOM_FRAGMENT: false,
+            // Allow style tags for embedded CSS
+            ADD_TAGS: ['style'],
+            // Ensure inline styles are preserved
+            SAFE_FOR_TEMPLATES: false
           })
         }}
       />
