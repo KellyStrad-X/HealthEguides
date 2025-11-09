@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { guides } from '@/lib/guides';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import DOMPurify from 'isomorphic-dompurify';
 
 // Force dynamic rendering since this page uses search params
 export const dynamic = 'force-dynamic';
@@ -283,30 +282,10 @@ function GuideViewerContent({ params }: GuideViewerProps) {
         </div>
       </header>
 
-      {/* Guide content - Sanitized for security */}
+      {/* Guide content - Admin-controlled trusted content */}
       <div
         className="guide-content"
-        dangerouslySetInnerHTML={{
-          __html: DOMPurify.sanitize(guideHtml, {
-            // Allow most HTML tags except dangerous ones
-            FORBID_TAGS: ['script', 'iframe', 'object', 'embed', 'form', 'input', 'textarea', 'button', 'link', 'meta', 'base'],
-            // Block event handler attributes
-            FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'onfocus', 'onblur',
-                         'onsubmit', 'onchange', 'oninput', 'onkeydown', 'onkeyup', 'onmouseenter',
-                         'onmouseleave', 'onwheel', 'ondrag', 'ondrop'],
-            // Allow styles and data attributes
-            ALLOW_DATA_ATTR: true,
-            ALLOW_UNKNOWN_PROTOCOLS: false,
-            // Keep content as-is, don't wrap in body
-            WHOLE_DOCUMENT: false,
-            RETURN_DOM: false,
-            RETURN_DOM_FRAGMENT: false,
-            // Allow style tags for embedded CSS
-            ADD_TAGS: ['style'],
-            // Ensure inline styles are preserved
-            SAFE_FOR_TEMPLATES: false
-          })
-        }}
+        dangerouslySetInnerHTML={{ __html: guideHtml }}
       />
 
       {/* Catalog Preview Section */}
