@@ -439,3 +439,4 @@ function SubscriptionsTab({ subscriptions, onCancel }: { subscriptions: any[]; o
       </table>
     </div>
   );
+}

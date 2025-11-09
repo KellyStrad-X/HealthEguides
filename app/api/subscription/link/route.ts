@@ -72,11 +72,6 @@ export async function POST(request: Request) {
     const subscriptionData = subscriptionDoc.data();
 
     // Debug log removed
-      id: subscriptionDoc.id,
-      currentUserId: subscriptionData.userId,
-      email: subscriptionData.email,
-      status: subscriptionData.status
-    });
 
     // Check if subscription already linked to a different userId
     // Allow linking if the userId is currently set to the email (placeholder from checkout)
