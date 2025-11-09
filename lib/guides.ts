@@ -5,7 +5,7 @@ export interface Guide {
   emoji: string;
   gradient: string;
   features: string[];
-  price: number;
+  price?: number; // DEPRECATED: Legacy field for historical purchases only
   slug: string;
   metaDescription: string;
   keywords: string[];

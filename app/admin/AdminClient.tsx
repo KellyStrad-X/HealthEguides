@@ -136,6 +136,8 @@ function AdminDashboard({ onLogout, csrfToken }: { onLogout: () => void; csrfTok
   const [feedback, setFeedback] = useState<any[]>([]);
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [editingGuide, setEditingGuide] = useState<Guide | null>(null);
+  const [showGuideModal, setShowGuideModal] = useState(false);
 
   useEffect(() => {
     if (activeTab === 'requests') {
@@ -204,8 +206,8 @@ function AdminDashboard({ onLogout, csrfToken }: { onLogout: () => void; csrfTok
     }
   };
 
-  const handleCancelSubscription = async (subscriptionId: string) => {
-    if (!confirm('Are you sure you want to cancel this subscription at the end of the billing period?')) {
+  const handleSubscriptionAction = async (subscriptionId: string, action: string, confirmMessage: string) => {
+    if (!confirm(confirmMessage)) {
       return;
     }
 
@@ -217,20 +219,135 @@ function AdminDashboard({ onLogout, csrfToken }: { onLogout: () => void; csrfTok
         },
         body: JSON.stringify({
           subscriptionId,
-          action: 'cancel',
+          action,
         }),
       });
 
       if (response.ok) {
-        alert('Subscription scheduled for cancellation');
+        alert(`Subscription ${action} successful`);
         fetchSubscriptions();
       } else {
         const error = await response.json();
-        alert(`Failed to cancel subscription: ${error.error}`);
+        alert(`Failed to ${action} subscription: ${error.error}`);
       }
     } catch (error) {
     // Error log removed - TODO: Add proper error handling
-      alert('Failed to cancel subscription');
+      alert(`Failed to ${action} subscription`);
+    }
+  };
+
+  const handleCreateGuide = () => {
+    setEditingGuide(null);
+    setShowGuideModal(true);
+  };
+
+  const handleEditGuide = (guide: Guide) => {
+    setEditingGuide(guide);
+    setShowGuideModal(true);
+  };
+
+  const handleDeleteGuide = async (guideId: string) => {
+    if (!confirm('Are you sure you want to delete this guide? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const response = await fetchWithAuth('/api/admin/guides', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ guideId }),
+      });
+
+      if (response.ok) {
+        alert('Guide deleted successfully');
+        window.location.reload();
+      } else {
+        const error = await response.json();
+        alert(`Failed to delete guide: ${error.error}`);
+      }
+    } catch (error) {
+      alert('Failed to delete guide');
+    }
+  };
+
+  const handleSaveGuide = async (guideData: Guide) => {
+    try {
+      const isEditing = editingGuide !== null;
+      const response = await fetchWithAuth('/api/admin/guides', {
+        method: isEditing ? 'PUT' : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(guideData),
+      });
+
+      if (response.ok) {
+        alert(`Guide ${isEditing ? 'updated' : 'created'} successfully`);
+        setShowGuideModal(false);
+        setEditingGuide(null);
+        window.location.reload();
+      } else {
+        const error = await response.json();
+        alert(`Failed to save guide: ${error.error}`);
+      }
+    } catch (error) {
+      alert('Failed to save guide');
+    }
+  };
+
+  const handleUploadHTML = async (guideId: string, file: File) => {
+    const formData = new FormData();
+    formData.append('guideId', guideId);
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('/api/admin/upload-html', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'X-CSRF-Token': csrfToken,
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        alert('HTML guide uploaded successfully');
+        window.location.reload();
+      } else {
+        const error = await response.json();
+        alert(`Failed to upload HTML: ${error.error}`);
+      }
+    } catch (error) {
+      alert('Failed to upload HTML');
+    }
+  };
+
+  const handleUploadPDF = async (guideId: string, file: File) => {
+    const formData = new FormData();
+    formData.append('guideId', guideId);
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('/api/admin/upload-pdf', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'X-CSRF-Token': csrfToken,
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        alert('PDF guide uploaded successfully');
+        window.location.reload();
+      } else {
+        const error = await response.json();
+        alert(`Failed to upload PDF: ${error.error}`);
+      }
+    } catch (error) {
+      alert('Failed to upload PDF');
     }
   };
 
@@ -297,49 +414,144 @@ function AdminDashboard({ onLogout, csrfToken }: { onLogout: () => void; csrfTok
             <div className="text-center py-8 text-gray-600">Loading...</div>
           ) : (
             <>
-              {activeTab === 'guides' && <GuidesTab guides={guides} />}
+              {activeTab === 'guides' && (
+                <GuidesTab
+                  guides={guides}
+                  onCreate={handleCreateGuide}
+                  onEdit={handleEditGuide}
+                  onDelete={handleDeleteGuide}
+                  onUploadHTML={handleUploadHTML}
+                  onUploadPDF={handleUploadPDF}
+                />
+              )}
               {activeTab === 'requests' && <RequestsTab requests={guideRequests} />}
               {activeTab === 'feedback' && <FeedbackTab feedback={feedback} />}
-              {activeTab === 'subscriptions' && <SubscriptionsTab subscriptions={subscriptions} onCancel={handleCancelSubscription} />}
+              {activeTab === 'subscriptions' && <SubscriptionsTab subscriptions={subscriptions} onAction={handleSubscriptionAction} />}
             </>
           )}
         </div>
       </div>
+
+      {showGuideModal && (
+        <GuideModal
+          guide={editingGuide}
+          onClose={() => {
+            setShowGuideModal(false);
+            setEditingGuide(null);
+          }}
+          onSave={handleSaveGuide}
+        />
+      )}
     </div>
   );
 }
 
-function GuidesTab({ guides }: { guides: Guide[] }) {
+function GuidesTab({
+  guides,
+  onCreate,
+  onEdit,
+  onDelete,
+  onUploadHTML,
+  onUploadPDF,
+}: {
+  guides: Guide[];
+  onCreate: () => void;
+  onEdit: (guide: Guide) => void;
+  onDelete: (guideId: string) => void;
+  onUploadHTML: (guideId: string, file: File) => void;
+  onUploadPDF: (guideId: string, file: File) => void;
+}) {
+  const handleFileUpload = (guideId: string, type: 'html' | 'pdf') => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = type === 'html' ? '.html' : '.pdf';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        if (type === 'html') {
+          onUploadHTML(guideId, file);
+        } else {
+          onUploadPDF(guideId, file);
+        }
+      }
+    };
+    input.click();
+  };
+
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {guides.map((guide) => (
-            <tr key={guide.id}>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{guide.title}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{guide.id}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${guide.price}</td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                  guide.comingSoon
-                    ? 'bg-yellow-100 text-yellow-800'
-                    : 'bg-green-100 text-green-800'
-                }`}>
-                  {guide.comingSoon ? 'Coming Soon' : 'Available'}
-                </span>
-              </td>
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h2 className="text-lg font-semibold text-gray-900">Manage Guides</h2>
+        <button
+          onClick={onCreate}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+        >
+          + Create New Guide
+        </button>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Files</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {guides.map((guide) => (
+              <tr key={guide.id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{guide.title}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{guide.id}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                    guide.comingSoon
+                      ? 'bg-yellow-100 text-yellow-800'
+                      : 'bg-green-100 text-green-800'
+                  }`}>
+                    {guide.comingSoon ? 'Coming Soon' : 'Available'}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleFileUpload(guide.id, 'html')}
+                      className="text-blue-600 hover:text-blue-800 text-xs"
+                    >
+                      {guide.hasHtmlGuide ? '✓ HTML' : '+ HTML'}
+                    </button>
+                    <button
+                      onClick={() => handleFileUpload(guide.id, 'pdf')}
+                      className="text-blue-600 hover:text-blue-800 text-xs"
+                    >
+                      + PDF
+                    </button>
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => onEdit(guide)}
+                      className="text-blue-600 hover:text-blue-900"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => onDelete(guide.id)}
+                      className="text-red-600 hover:text-red-900"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
@@ -358,10 +570,10 @@ function RequestsTab({ requests }: { requests: any[] }) {
         <tbody className="bg-white divide-y divide-gray-200">
           {requests.map((request, index) => (
             <tr key={index}>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{request.guideTitle}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{request.email}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{request.topic}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{request.email || 'N/A'}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {new Date(request.createdAt).toLocaleDateString()}
+                {new Date(request.submittedAt).toLocaleDateString()}
               </td>
             </tr>
           ))}
@@ -382,17 +594,18 @@ function FeedbackTab({ feedback }: { feedback: any[] }) {
               <p className="text-sm text-gray-500">{item.email}</p>
             </div>
             <p className="text-sm text-gray-500">
-              {new Date(item.createdAt).toLocaleDateString()}
+              {new Date(item.submittedAt).toLocaleDateString()}
             </p>
           </div>
-          <p className="text-gray-700 mt-2">{item.message}</p>
+          <p className="text-sm font-medium text-gray-700 mb-1">{item.subject}</p>
+          <p className="text-gray-700">{item.message}</p>
         </div>
       ))}
     </div>
   );
 }
 
-function SubscriptionsTab({ subscriptions, onCancel }: { subscriptions: any[]; onCancel: (id: string) => void }) {
+function SubscriptionsTab({ subscriptions, onAction }: { subscriptions: any[]; onAction: (id: string, action: string, message: string) => void }) {
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
@@ -411,32 +624,349 @@ function SubscriptionsTab({ subscriptions, onCancel }: { subscriptions: any[]; o
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{sub.userName}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{sub.userEmail}</td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                  sub.status === 'active' ? 'bg-green-100 text-green-800' :
-                  sub.status === 'trialing' ? 'bg-blue-100 text-blue-800' :
-                  sub.status === 'canceled' ? 'bg-red-100 text-red-800' :
-                  'bg-gray-100 text-gray-800'
-                }`}>
-                  {sub.status}
-                </span>
+                <div className="flex flex-col gap-1">
+                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                    sub.status === 'active' ? 'bg-green-100 text-green-800' :
+                    sub.status === 'trialing' ? 'bg-blue-100 text-blue-800' :
+                    sub.status === 'canceled' ? 'bg-red-100 text-red-800' :
+                    sub.status === 'past_due' ? 'bg-orange-100 text-orange-800' :
+                    'bg-gray-100 text-gray-800'
+                  }`}>
+                    {sub.status}
+                  </span>
+                  {sub.cancelAtPeriodEnd && (
+                    <span className="text-xs text-orange-600">Cancels at period end</span>
+                  )}
+                </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 ${(sub.planAmount / 100).toFixed(2)}/{sub.planInterval}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                {sub.status === 'active' && (
-                  <button
-                    onClick={() => onCancel(sub.id)}
-                    className="text-red-600 hover:text-red-900"
-                  >
-                    Cancel
-                  </button>
-                )}
+                <div className="flex flex-col gap-1">
+                  {(sub.status === 'active' || sub.status === 'trialing') && !sub.cancelAtPeriodEnd && (
+                    <>
+                      <button
+                        onClick={() => onAction(sub.id, 'cancel', 'Cancel this subscription at the end of the billing period?')}
+                        className="text-orange-600 hover:text-orange-900 text-left"
+                      >
+                        Cancel at period end
+                      </button>
+                      <button
+                        onClick={() => onAction(sub.id, 'cancel_immediately', 'Cancel this subscription IMMEDIATELY? User will lose access right away.')}
+                        className="text-red-600 hover:text-red-900 text-left"
+                      >
+                        Cancel immediately
+                      </button>
+                    </>
+                  )}
+                  {(sub.status === 'active' || sub.status === 'trialing') && sub.cancelAtPeriodEnd && (
+                    <button
+                      onClick={() => onAction(sub.id, 'reactivate', 'Reactivate this subscription?')}
+                      className="text-green-600 hover:text-green-900 text-left"
+                    >
+                      Reactivate
+                    </button>
+                  )}
+                  {sub.status === 'past_due' && (
+                    <span className="text-xs text-gray-500">Payment failed - awaiting retry</span>
+                  )}
+                  {sub.status === 'canceled' && (
+                    <span className="text-xs text-gray-500">Canceled</span>
+                  )}
+                </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+    </div>
+  );
+}
+
+function GuideModal({
+  guide,
+  onClose,
+  onSave,
+}: {
+  guide: Guide | null;
+  onClose: () => void;
+  onSave: (guide: Guide) => void;
+}) {
+  const [formData, setFormData] = useState<Guide>(
+    guide || {
+      id: '',
+      title: '',
+      description: '',
+      emoji: '',
+      gradient: '',
+      features: [''],
+      slug: '',
+      metaDescription: '',
+      keywords: [''],
+      category: '',
+      comingSoon: false,
+    }
+  );
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(formData);
+  };
+
+  const updateFeature = (index: number, value: string) => {
+    const newFeatures = [...formData.features];
+    newFeatures[index] = value;
+    setFormData({ ...formData, features: newFeatures });
+  };
+
+  const addFeature = () => {
+    setFormData({ ...formData, features: [...formData.features, ''] });
+  };
+
+  const removeFeature = (index: number) => {
+    setFormData({
+      ...formData,
+      features: formData.features.filter((_, i) => i !== index),
+    });
+  };
+
+  const updateKeyword = (index: number, value: string) => {
+    const newKeywords = [...formData.keywords];
+    newKeywords[index] = value;
+    setFormData({ ...formData, keywords: newKeywords });
+  };
+
+  const addKeyword = () => {
+    setFormData({ ...formData, keywords: [...formData.keywords, ''] });
+  };
+
+  const removeKeyword = (index: number) => {
+    setFormData({
+      ...formData,
+      keywords: formData.keywords.filter((_, i) => i !== index),
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+      <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+          <h2 className="text-2xl font-bold text-gray-800">
+            {guide ? 'Edit Guide' : 'Create New Guide'}
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 text-2xl"
+          >
+            &times;
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                ID <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={formData.id}
+                onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900"
+                required
+                disabled={guide !== null}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Slug <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={formData.slug}
+                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Title <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Description <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900"
+              rows={3}
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Emoji
+              </label>
+              <input
+                type="text"
+                value={formData.emoji}
+                onChange={(e) => setFormData({ ...formData, emoji: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Category
+              </label>
+              <input
+                type="text"
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Gradient (CSS)
+            </label>
+            <input
+              type="text"
+              value={formData.gradient}
+              onChange={(e) => setFormData({ ...formData, gradient: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900"
+              placeholder="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Features
+            </label>
+            {formData.features.map((feature, index) => (
+              <div key={index} className="flex gap-2 mb-2">
+                <input
+                  type="text"
+                  value={feature}
+                  onChange={(e) => updateFeature(index, e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-900"
+                  placeholder="Feature description"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeFeature(index)}
+                  className="px-3 py-2 text-red-600 hover:text-red-800"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addFeature}
+              className="text-blue-600 hover:text-blue-800 text-sm"
+            >
+              + Add Feature
+            </button>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              SEO Keywords
+            </label>
+            {formData.keywords.map((keyword, index) => (
+              <div key={index} className="flex gap-2 mb-2">
+                <input
+                  type="text"
+                  value={keyword}
+                  onChange={(e) => updateKeyword(index, e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-900"
+                  placeholder="keyword"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeKeyword(index)}
+                  className="px-3 py-2 text-red-600 hover:text-red-800"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addKeyword}
+              className="text-blue-600 hover:text-blue-800 text-sm"
+            >
+              + Add Keyword
+            </button>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Meta Description
+            </label>
+            <textarea
+              value={formData.metaDescription}
+              onChange={(e) =>
+                setFormData({ ...formData, metaDescription: e.target.value })
+              }
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900"
+              rows={2}
+              placeholder="SEO meta description"
+            />
+          </div>
+
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="comingSoon"
+              checked={formData.comingSoon || false}
+              onChange={(e) =>
+                setFormData({ ...formData, comingSoon: e.target.checked })
+              }
+              className="mr-2"
+            />
+            <label htmlFor="comingSoon" className="text-sm font-medium text-gray-700">
+              Coming Soon (not available yet)
+            </label>
+          </div>
+
+          <div className="flex gap-3 pt-4 border-t border-gray-200">
+            <button
+              type="submit"
+              className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            >
+              {guide ? 'Update Guide' : 'Create Guide'}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium text-gray-700"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

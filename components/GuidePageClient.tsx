@@ -23,7 +23,7 @@ export default function GuidePageClient({ guide }: GuidePageClientProps) {
 
   // Track ViewContent event when guide page loads
   useEffect(() => {
-    trackViewContent(guide.title, guide.id, guide.price);
+    trackViewContent(guide.title, guide.id, guide.price || 0);
   }, [guide]);
 
   // Show simplified overview for logged-in users

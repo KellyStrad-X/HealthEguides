@@ -22,9 +22,6 @@ export default function GuideCard({ guide, showFavorite = true }: GuideCardProps
   if (!Array.isArray(guide.features)) {
     // Error log removed - TODO: Add proper error handling
   }
-  if (typeof guide.price !== 'number') {
-    // Error log removed - TODO: Add proper error handling
-  }
 
   // Check if guide is favorited
   useEffect(() => {
