@@ -30,7 +30,7 @@ export async function createSession(): Promise<{ token: string; csrfToken: strin
     csrfToken,
   };
 
-  const token = await new SignJWT(sessionData)
+  const token = await new SignJWT(sessionData as Record<string, unknown>)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(`${SESSION_DURATION}s`)
