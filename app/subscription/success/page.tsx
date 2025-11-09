@@ -35,6 +35,28 @@ function SubscriptionSuccessContent() {
       return;
     }
 
+    // Fetch customer email from session
+    const fetchCustomerEmail = async () => {
+      try {
+        const response = await fetch('/api/get-session-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.email) {
+            setEmail(data.email);
+          }
+        }
+      } catch (err) {
+        // Error log removed - silently fail, user can still enter email manually
+      }
+    };
+
+    fetchCustomerEmail();
+
     // Give the webhook a moment to process
     setTimeout(() => {
       setLoading(false);
@@ -235,7 +257,7 @@ function SubscriptionSuccessContent() {
                     id="displayName"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
                     placeholder="Your name"
                     disabled={formLoading}
                   />
@@ -251,13 +273,13 @@ function SubscriptionSuccessContent() {
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
                     placeholder="you@example.com"
                     required
                     disabled={formLoading}
                   />
                   <p className="mt-1 text-sm text-gray-500">
-                    Use the same email you used for your subscription
+                    {email ? 'Email from your subscription' : 'Use the same email you used for your subscription'}
                   </p>
                 </div>
 
