@@ -106,9 +106,9 @@ export async function POST(request: Request) {
 // Cleanup old rate limit entries periodically
 setInterval(() => {
   const now = Date.now();
-  for (const [ip, attempts] of emailCheckAttempts.entries()) {
+  emailCheckAttempts.forEach((attempts, ip) => {
     if (attempts.resetTime < now - 300000) { // Remove entries older than 5 minutes
       emailCheckAttempts.delete(ip);
     }
-  }
+  });
 }, 60000);

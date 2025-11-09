@@ -93,9 +93,9 @@ export function validateAdminAuth(request: NextRequest | Request): true | NextRe
  */
 setInterval(() => {
   const now = Date.now();
-  for (const [ip, attempts] of authAttempts.entries()) {
+  authAttempts.forEach((attempts, ip) => {
     if (attempts.resetTime < now - 300000) { // Remove entries older than 5 minutes
       authAttempts.delete(ip);
     }
-  }
+  });
 }, 60000); // Run every minute
