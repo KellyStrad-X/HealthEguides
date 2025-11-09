@@ -16,17 +16,6 @@ export default function GuideCard({ guide, showFavorite = true }: GuideCardProps
   const [isFavorited, setIsFavorited] = useState(false);
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
 
-    // Debug log removed
-    hasFeatures: !!guide.features,
-    featuresType: typeof guide.features,
-    featuresIsArray: Array.isArray(guide.features),
-    featuresValue: guide.features,
-    hasPrice: !!guide.price,
-    priceType: typeof guide.price,
-    priceValue: guide.price,
-    fullGuide: guide
-  });
-
   // Defensive guards for missing data
   const safeFeatures = Array.isArray(guide.features) ? guide.features : [];
 

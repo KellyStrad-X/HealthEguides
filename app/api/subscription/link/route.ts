@@ -58,16 +58,8 @@ export async function POST(request: Request) {
     // Debug log removed
 
       if (!allSubscriptions.empty) {
-        allSubscriptions.docs.forEach(doc => {
-          const data = doc.data();
-    // Debug log removed
-            id: doc.id,
-            status: data.status,
-            email: data.email,
-            userId: data.userId,
-            createdAt: data.createdAt
-          });
-        });
+        // Subscriptions found but none are active
+        // Debug logging removed
       }
 
       return NextResponse.json(

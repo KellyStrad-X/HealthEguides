@@ -20,19 +20,10 @@ export default function CatalogPage() {
     fetch('/api/guides')
       .then(res => res.json())
       .then(data => {
-    // Debug log removed
+        // Debug log removed
         // Check first guide structure
         if (data.length > 0) {
-    // Debug log removed
-            id: data[0].id,
-            hasFeatures: !!data[0].features,
-            featuresType: typeof data[0].features,
-            featuresIsArray: Array.isArray(data[0].features),
-            featuresValue: data[0].features,
-            hasPrice: !!data[0].price,
-            priceType: typeof data[0].price,
-            priceValue: data[0].price
-          });
+          // Debug logging removed
         }
         setGuides(data);
         setLoading(false);

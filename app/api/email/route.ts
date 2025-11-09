@@ -13,13 +13,7 @@ export async function POST(request: Request) {
     }
 
     // TODO: Integrate with ConvertKit or Mailchimp
-    // For now, just log it (replace with actual API call)
-    // Debug log removed
-      email,
-      guideSlug,
-      guideTitle,
-      timestamp: new Date().toISOString(),
-    });
+    // For now, just store it (replace with actual API call)
 
     // Example ConvertKit integration (uncomment and configure):
     /*
