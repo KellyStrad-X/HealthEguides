@@ -12,7 +12,7 @@ const SESSION_DURATION = 60 * 60 * 24; // 24 hours in seconds
 // Convert secret to key
 const secret = new TextEncoder().encode(SESSION_SECRET);
 
-export interface SessionData {
+export interface SessionData extends Record<string, unknown> {
   isAdmin: boolean;
   createdAt: number;
   csrfToken: string;
@@ -30,7 +30,7 @@ export async function createSession(): Promise<{ token: string; csrfToken: strin
     csrfToken,
   };
 
-  const token = await new SignJWT(sessionData as Record<string, unknown>)
+  const token = await new SignJWT(sessionData)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(`${SESSION_DURATION}s`)
