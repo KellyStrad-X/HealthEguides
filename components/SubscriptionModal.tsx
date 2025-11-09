@@ -105,7 +105,7 @@ export default function SubscriptionModal({ isOpen, onClose, initialEmail, featu
           setEmailCheckMessage('');
         }
       } catch (error) {
-        console.error('Error checking email:', error);
+    // Error log removed - TODO: Add proper error handling
         setEmailExists(false);
         setEmailCheckMessage('');
       } finally {
@@ -163,7 +163,7 @@ export default function SubscriptionModal({ isOpen, onClose, initialEmail, featu
         window.location.href = url;
       }
     } catch (err: any) {
-      console.error('Subscription error:', err);
+    // Error log removed - TODO: Add proper error handling
       setError(err.message || 'Failed to start subscription. Please try again.');
       setLoading(false);
     }

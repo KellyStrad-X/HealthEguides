@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
-  console.log('🧪 WEBHOOK TEST ENDPOINT HIT');
+    // Debug log removed
 
   try {
     const body = await request.text();
     const signature = request.headers.get('stripe-signature');
 
-    console.log('📦 Body length:', body.length);
-    console.log('🔐 Signature present:', !!signature);
-    console.log('🔑 Webhook secret configured:', !!process.env.STRIPE_WEBHOOK_SECRET);
+    // Debug log removed
+    // Debug log removed
+    // Debug log removed
 
     return NextResponse.json({
       message: 'Webhook test endpoint reached',
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       bodyLength: body.length
     });
   } catch (error) {
-    console.error('Webhook test error:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json({ error: 'Test failed' }, { status: 500 });
   }
 }

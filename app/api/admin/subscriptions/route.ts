@@ -1,69 +1,129 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { adminDb, adminAuth } from '@/lib/firebase-admin';
+import { requireAdminSession } from '@/lib/session';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 // GET - Fetch all subscriptions with user data
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     // Verify admin authentication
-    const password = request.headers.get('X-Admin-Password');
-    if (password !== process.env.ADMIN_PASSWORD) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const authResult = await requireAdminSession(request);
+    if (authResult !== true) {
+      return authResult;
     }
 
-    // Fetch all subscriptions from Firestore
-    const subscriptionsSnapshot = await adminDb
+    // Get pagination parameters from query string
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1', 10);
+    const limit = Math.min(parseInt(searchParams.get('limit') || '20', 10), 100); // Max 100 items
+    const offset = (page - 1) * limit;
+
+    // Get total count for pagination metadata
+    const totalSnapshot = await adminDb
+      .collection('subscriptions')
+      .count()
+      .get();
+    const totalItems = totalSnapshot.data().count;
+    const totalPages = Math.ceil(totalItems / limit);
+
+    // Fetch subscriptions with pagination
+    let query = adminDb
       .collection('subscriptions')
       .orderBy('createdAt', 'desc')
-      .get();
+      .limit(limit);
 
-    const subscriptions = await Promise.all(
-      subscriptionsSnapshot.docs.map(async (doc) => {
-        const data = doc.data();
+    // Apply offset if needed
+    if (offset > 0) {
+      const offsetSnapshot = await adminDb
+        .collection('subscriptions')
+        .orderBy('createdAt', 'desc')
+        .limit(offset)
+        .get();
 
-        // Fetch user data from Firebase Auth
-        let userName = 'Unknown';
-        let userEmail = data.email || 'N/A';
+      if (offsetSnapshot.docs.length > 0) {
+        const lastDoc = offsetSnapshot.docs[offsetSnapshot.docs.length - 1];
+        query = query.startAfter(lastDoc);
+      }
+    }
 
-        try {
-          if (data.userId) {
-            const userRecord = await adminAuth.getUser(data.userId);
-            userName = userRecord.displayName || userRecord.email?.split('@')[0] || 'Unknown';
-            userEmail = userRecord.email || userEmail;
-          }
-        } catch (error) {
-          console.error(`Error fetching user ${data.userId}:`, error);
-        }
+    const subscriptionsSnapshot = await query.get();
 
-        return {
-          id: doc.id,
-          userId: data.userId,
-          userName,
-          userEmail,
-          status: data.status,
-          stripeSubscriptionId: data.stripeSubscriptionId,
-          stripeCustomerId: data.stripeCustomerId,
-          stripeMode: data.stripeMode || 'unknown', // 'test', 'live', or 'unknown'
-          planInterval: data.planInterval || 'month', // 'month' or 'year'
-          planAmount: data.planAmount || (data.planInterval === 'year' ? 5000 : 500), // in cents
-          trialStart: data.trialStart?.toDate?.().toISOString() || data.trialStart || null,
-          trialEnd: data.trialEnd?.toDate?.().toISOString() || data.trialEnd || null,
-          currentPeriodStart: data.currentPeriodStart?.toDate?.().toISOString() || data.currentPeriodStart || null,
-          currentPeriodEnd: data.currentPeriodEnd?.toDate?.().toISOString() || data.currentPeriodEnd || null,
-          canceledAt: data.canceledAt?.toDate?.().toISOString() || data.canceledAt || null,
-          cancelAtPeriodEnd: data.cancelAtPeriodEnd || false,
-          createdAt: data.createdAt?.toDate?.().toISOString() || data.createdAt || null,
-          updatedAt: data.updatedAt?.toDate?.().toISOString() || data.updatedAt || null,
-        };
-      })
-    );
+    // Collect all unique user IDs first
+    const userIds = new Set<string>();
+    subscriptionsSnapshot.docs.forEach(doc => {
+      const userId = doc.data().userId;
+      if (userId) userIds.add(userId);
+    });
 
-    return NextResponse.json({ subscriptions });
+    // Batch fetch all users at once
+    const userMap = new Map<string, any>();
+    if (userIds.size > 0) {
+      try {
+        // Firebase Admin SDK supports batch user fetching
+        const userResults = await adminAuth.getUsers(
+          Array.from(userIds).map(uid => ({ uid }))
+        );
+
+        userResults.users.forEach(user => {
+          userMap.set(user.uid, user);
+        });
+      } catch (error) {
+    // Error log removed - TODO: Add proper error handling
+      }
+    }
+
+    // Now map subscriptions with cached user data
+    const subscriptions = subscriptionsSnapshot.docs.map(doc => {
+      const data = doc.data();
+
+      // Get cached user data
+      let userName = 'Unknown';
+      let userEmail = data.email || 'N/A';
+
+      if (data.userId && userMap.has(data.userId)) {
+        const userRecord = userMap.get(data.userId);
+        userName = userRecord.displayName || userRecord.email?.split('@')[0] || 'Unknown';
+        userEmail = userRecord.email || userEmail;
+      }
+
+      return {
+        id: doc.id,
+        userId: data.userId,
+        userName,
+        userEmail,
+        status: data.status,
+        stripeSubscriptionId: data.stripeSubscriptionId,
+        stripeCustomerId: data.stripeCustomerId,
+        stripeMode: data.stripeMode || 'unknown', // 'test', 'live', or 'unknown'
+        planInterval: data.planInterval || 'month', // 'month' or 'year'
+        planAmount: data.planAmount || (data.planInterval === 'year' ? 5000 : 500), // in cents
+        trialStart: data.trialStart?.toDate?.().toISOString() || data.trialStart || null,
+        trialEnd: data.trialEnd?.toDate?.().toISOString() || data.trialEnd || null,
+        currentPeriodStart: data.currentPeriodStart?.toDate?.().toISOString() || data.currentPeriodStart || null,
+        currentPeriodEnd: data.currentPeriodEnd?.toDate?.().toISOString() || data.currentPeriodEnd || null,
+        canceledAt: data.canceledAt?.toDate?.().toISOString() || data.canceledAt || null,
+        cancelAtPeriodEnd: data.cancelAtPeriodEnd || false,
+        createdAt: data.createdAt?.toDate?.().toISOString() || data.createdAt || null,
+        updatedAt: data.updatedAt?.toDate?.().toISOString() || data.updatedAt || null,
+      };
+    });
+
+    return NextResponse.json({
+      subscriptions,
+      pagination: {
+        page,
+        limit,
+        totalItems,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrevious: page > 1,
+      },
+    });
 
   } catch (error) {
-    console.error('Error fetching subscriptions:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to fetch subscriptions' },
       { status: 500 }
@@ -72,12 +132,12 @@ export async function GET(request: Request) {
 }
 
 // PUT - Update subscription (cancel, reactivate, change plan)
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   try {
-    // Verify admin authentication
-    const password = request.headers.get('X-Admin-Password');
-    if (password !== process.env.ADMIN_PASSWORD) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Verify admin authentication with CSRF protection
+    const authResult = await requireAdminSession(request, true);
+    if (authResult !== true) {
+      return authResult;
     }
 
     const { subscriptionId, action, newPlanInterval } = await request.json();
@@ -208,7 +268,7 @@ export async function PUT(request: Request) {
     });
 
   } catch (error) {
-    console.error('Error updating subscription:', error);
+    // Error log removed - TODO: Add proper error handling
 
     // Provide more detailed error information
     let errorMessage = 'Failed to update subscription';

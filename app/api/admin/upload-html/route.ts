@@ -1,10 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
+import { validateAdminAuth } from '@/lib/admin-auth';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
+import path from 'path';
+
+// Maximum file size: 10MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export async function POST(request: NextRequest) {
   try {
+    // Validate admin authentication
+    const authResult = validateAdminAuth(request);
+    if (authResult !== true) {
+      return authResult;
+    }
+
     const formData = await request.formData();
     const html = formData.get('html') as File;
     const guideId = formData.get('guideId') as string;
@@ -16,14 +27,40 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate file size
+    if (html.size > MAX_FILE_SIZE) {
+      return NextResponse.json(
+        { error: `File size exceeds ${MAX_FILE_SIZE / 1024 / 1024}MB limit` },
+        { status: 400 }
+      );
+    }
+
+    // Validate file type (must be HTML)
+    const validTypes = ['text/html', 'application/xhtml+xml'];
+    if (!validTypes.includes(html.type) && !html.name.endsWith('.html')) {
+      return NextResponse.json(
+        { error: 'File must be an HTML file' },
+        { status: 400 }
+      );
+    }
+
+    // Sanitize guide ID to prevent path traversal attacks
+    const sanitizedGuideId = path.basename(guideId).replace(/[^a-zA-Z0-9-_]/g, '');
+    if (!sanitizedGuideId || sanitizedGuideId !== guideId) {
+      return NextResponse.json(
+        { error: 'Invalid guide ID. Use only alphanumeric characters, hyphens, and underscores.' },
+        { status: 400 }
+      );
+    }
+
     // Verify guide exists in Firestore (if configured)
     try {
-      const guideDoc = await adminDb.collection('guides').doc(guideId).get();
+      const guideDoc = await adminDb.collection('guides').doc(sanitizedGuideId).get();
       if (!guideDoc.exists) {
-        console.warn(`Guide ${guideId} not found in Firestore, continuing anyway...`);
+    // Warning log removed
       }
     } catch (err) {
-      console.warn('Firestore not configured, skipping guide verification');
+    // Warning log removed
     }
 
     // Convert File to text
@@ -40,20 +77,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Write HTML file
-    const filePath = join(guidesDir, `${guideId}.html`);
+    const filePath = join(guidesDir, `${sanitizedGuideId}.html`);
     await writeFile(filePath, htmlContent, 'utf-8');
 
     // Update guide record with HTML URL and mark as available (if Firestore is configured)
-    const htmlUrl = `/guides/${guideId}.html`;
+    const htmlUrl = `/guides/${sanitizedGuideId}.html`;
     try {
-      await adminDb.collection('guides').doc(guideId).update({
+      await adminDb.collection('guides').doc(sanitizedGuideId).update({
         htmlUrl,
         hasHtmlGuide: true,
         comingSoon: false, // Mark guide as available now that HTML is uploaded
         updatedAt: new Date().toISOString(),
       });
     } catch (err) {
-      console.warn('Could not update Firestore record (may not be configured)');
+    // Warning log removed
     }
 
     return NextResponse.json({
@@ -62,7 +99,7 @@ export async function POST(request: NextRequest) {
       path: filePath
     });
   } catch (error) {
-    console.error('Error uploading HTML:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to upload HTML guide' },
       { status: 500 }

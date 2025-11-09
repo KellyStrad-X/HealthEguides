@@ -21,7 +21,7 @@ export default function GuidesGrid() {
         setLoading(false);
       })
       .catch(err => {
-        console.error('Failed to fetch guides:', err);
+    // Error log removed - TODO: Add proper error handling
         setLoading(false);
       });
   }, []);

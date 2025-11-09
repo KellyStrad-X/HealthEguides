@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error('Error creating guide request:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to submit guide request' },
       { status: 500 }
@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(requests);
   } catch (error) {
-    console.error('Error fetching guide requests:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to fetch guide requests' },
       { status: 500 }
@@ -104,7 +104,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error updating guide request:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to update guide request' },
       { status: 500 }
@@ -128,7 +128,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting guide request:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to delete guide request' },
       { status: 500 }

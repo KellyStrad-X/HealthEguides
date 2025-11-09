@@ -61,7 +61,7 @@ export default function MyGuidesPage() {
 
         setGuides(favoritedGuides);
       } catch (err) {
-        console.error('Failed to fetch favorited guides:', err);
+    // Error log removed - TODO: Add proper error handling
       } finally {
         setLoading(false);
       }
@@ -90,7 +90,7 @@ export default function MyGuidesPage() {
           setGuideProgress(progressMap);
         }
       } catch (err) {
-        console.error('Failed to fetch guide progress:', err);
+    // Error log removed - TODO: Add proper error handling
       }
     };
 

@@ -75,9 +75,9 @@ Feedback ID: ${docRef.id}
         };
 
         await sgMail.send(msg);
-        console.log('Feedback notification email sent');
+    // Debug log removed
       } catch (emailError) {
-        console.error('Error sending feedback email:', emailError);
+    // Error log removed - TODO: Add proper error handling
         // Don't fail the request if email fails
       }
     }
@@ -91,7 +91,7 @@ Feedback ID: ${docRef.id}
       { status: 201 }
     );
   } catch (error) {
-    console.error('Error submitting feedback:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to submit feedback' },
       { status: 500 }
@@ -102,10 +102,42 @@ Feedback ID: ${docRef.id}
 // GET - Fetch all feedback (for admin panel)
 export async function GET(request: NextRequest) {
   try {
-    const feedbackSnapshot = await adminDb
+    // Get pagination parameters from query string
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1', 10);
+    const limit = Math.min(parseInt(searchParams.get('limit') || '20', 10), 100); // Max 100 items
+    const offset = (page - 1) * limit;
+    const isAdmin = searchParams.get('admin') === 'true';
+
+    // Get total count for pagination metadata
+    const totalSnapshot = await adminDb
+      .collection('feedback')
+      .count()
+      .get();
+    const totalItems = totalSnapshot.data().count;
+    const totalPages = Math.ceil(totalItems / limit);
+
+    // Build query with pagination
+    let query = adminDb
       .collection('feedback')
       .orderBy('submittedAt', 'desc')
-      .get();
+      .limit(limit);
+
+    // Apply offset if needed
+    if (offset > 0) {
+      const offsetSnapshot = await adminDb
+        .collection('feedback')
+        .orderBy('submittedAt', 'desc')
+        .limit(offset)
+        .get();
+
+      if (offsetSnapshot.docs.length > 0) {
+        const lastDoc = offsetSnapshot.docs[offsetSnapshot.docs.length - 1];
+        query = query.startAfter(lastDoc);
+      }
+    }
+
+    const feedbackSnapshot = await query.get();
 
     const feedback: Feedback[] = [];
 
@@ -113,9 +145,25 @@ export async function GET(request: NextRequest) {
       feedback.push({ id: doc.id, ...doc.data() } as Feedback);
     });
 
+    // Return with pagination metadata if admin request
+    if (isAdmin) {
+      return NextResponse.json({
+        feedback,
+        pagination: {
+          page,
+          limit,
+          totalItems,
+          totalPages,
+          hasNext: page < totalPages,
+          hasPrevious: page > 1,
+        },
+      });
+    }
+
+    // Legacy response for backward compatibility
     return NextResponse.json(feedback);
   } catch (error) {
-    console.error('Error fetching feedback:', error);
+    // Error handling: TODO - Add proper error logging
     return NextResponse.json(
       { error: 'Failed to fetch feedback' },
       { status: 500 }
@@ -151,7 +199,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error updating feedback:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to update feedback' },
       { status: 500 }
@@ -175,7 +223,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting feedback:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to delete feedback' },
       { status: 500 }

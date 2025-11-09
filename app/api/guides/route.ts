@@ -16,7 +16,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error('Error fetching guides:', error);
+    // Error log removed - TODO: Add proper error handling
     // Return hardcoded guides as fallback
     return NextResponse.json(hardcodedGuides, {
       headers: {

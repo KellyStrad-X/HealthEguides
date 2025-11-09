@@ -67,14 +67,14 @@ export async function POST(request: Request) {
 
     try {
       const html = await fs.readFile(guideHtmlPath, 'utf-8');
-      console.log('✅ Guide content loaded for subscriber:', guideId);
+    // Debug log removed
 
       return NextResponse.json({
         html,
         placeholder: false,
       });
     } catch (fileError) {
-      console.log('⚠️ Guide HTML not found:', guideId);
+    // Debug log removed
 
       // Return placeholder response
       return NextResponse.json({
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
       });
     }
   } catch (error) {
-    console.error('Error loading guide content:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to load guide content' },
       { status: 500 }

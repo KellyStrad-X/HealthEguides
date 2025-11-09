@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { guides } from '@/lib/guides';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
+import DOMPurify from 'isomorphic-dompurify';
 
 // Force dynamic rendering since this page uses search params
 export const dynamic = 'force-dynamic';
@@ -42,7 +43,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
         const foundGuide = allGuides.find((g: any) => g.slug === params.slug);
         setGuide(foundGuide || null);
       } catch (err) {
-        console.error('Error fetching guide:', err);
+    // Error handling: TODO - Add proper error logging
         // Fallback to hardcoded guides if API fails
         const hardcodedGuide = guides.find(g => g.slug === params.slug);
         setGuide(hardcodedGuide || null);
@@ -89,7 +90,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
         const data = await res.json();
 
         if (data.hasAccess) {
-          console.log('✅ Access granted via subscription');
+    // Debug log removed
           setAccessGranted(true);
           await loadGuideContentForSubscriber();
           setLoading(false);
@@ -101,7 +102,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
           return;
         }
       } catch (err) {
-        console.error('Subscription validation error:', err);
+    // Error log removed - TODO: Add proper error handling
         setError('Unable to validate subscription. Please try again.');
         setLoading(false);
         return;
@@ -186,7 +187,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
         setGuideHtml(data.html);
       }
     } catch (err) {
-      console.error('Error loading guide:', err);
+    // Error log removed - TODO: Add proper error handling
       setGuideHtml(`
         <div style="max-width: 800px; margin: 0 auto; padding: 40px 20px;">
           <h1>${guide?.emoji} ${guide?.title}</h1>
@@ -282,10 +283,22 @@ function GuideViewerContent({ params }: GuideViewerProps) {
         </div>
       </header>
 
-      {/* Guide content */}
+      {/* Guide content - Sanitized for security */}
       <div
         className="guide-content"
-        dangerouslySetInnerHTML={{ __html: guideHtml }}
+        dangerouslySetInnerHTML={{
+          __html: DOMPurify.sanitize(guideHtml, {
+            ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'ul', 'ol', 'li',
+                          'blockquote', 'strong', 'em', 'code', 'pre', 'img', 'div', 'span',
+                          'table', 'thead', 'tbody', 'tr', 'td', 'th', 'br', 'hr', 'section',
+                          'article', 'nav', 'aside', 'header', 'footer', 'figure', 'figcaption'],
+            ALLOWED_ATTR: ['href', 'src', 'alt', 'class', 'id', 'style', 'target', 'rel',
+                          'width', 'height', 'title', 'aria-label', 'role', 'data-*'],
+            ALLOW_DATA_ATTR: true,
+            FORBID_TAGS: ['script', 'iframe', 'object', 'embed', 'form', 'input', 'textarea'],
+            FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'onfocus', 'onblur']
+          })
+        }}
       />
 
       {/* Catalog Preview Section */}

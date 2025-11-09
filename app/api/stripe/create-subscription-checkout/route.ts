@@ -4,15 +4,15 @@ import Stripe from 'stripe';
 export async function POST(request: Request) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-  console.log('🔍 Subscription Checkout API called');
+    // Debug log removed
 
   try {
     const body = await request.json();
     const { plan, email, userId } = body;
 
-    console.log('📧 Email:', email);
-    console.log('👤 User ID:', userId);
-    console.log('📋 Plan:', plan);
+    // Debug log removed
+    // Debug log removed
+    // Debug log removed
 
     // Validate inputs
     if (!plan || !['monthly', 'annual'].includes(plan)) {
@@ -35,14 +35,14 @@ export async function POST(request: Request) {
       : process.env.STRIPE_ANNUAL_PRICE_ID;
 
     if (!priceId) {
-      console.error('❌ Price ID not configured for plan:', plan);
+    // Error log removed - TODO: Add proper error handling
       return NextResponse.json(
         { error: 'Subscription plan not configured' },
         { status: 500 }
       );
     }
 
-    console.log('💰 Using Price ID:', priceId);
+    // Debug log removed
 
     // Prepare metadata
     const metadata: Record<string, string> = {
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
       metadata.userId = userId;
     }
 
-    console.log('💳 Creating Stripe subscription checkout session...');
+    // Debug log removed
 
     // Get base URL with fallback
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ||
@@ -64,9 +64,9 @@ export async function POST(request: Request) {
     const successUrl = `${baseUrl}/subscription/success?session_id={CHECKOUT_SESSION_ID}`;
     const cancelUrl = `${baseUrl}/catalog`;
 
-    console.log('🌐 Base URL:', baseUrl);
-    console.log('✅ Success URL:', successUrl);
-    console.log('❌ Cancel URL:', cancelUrl);
+    // Debug log removed
+    // Debug log removed
+    // Debug log removed
 
     // Create Stripe Checkout session for subscription
     const session = await stripe.checkout.sessions.create({
@@ -98,9 +98,9 @@ export async function POST(request: Request) {
       billing_address_collection: 'auto',
     });
 
-    console.log('✅ Subscription session created:', session.id);
-    console.log('🔗 Checkout URL:', session.url);
-    console.log('⏰ Trial days:', 7);
+    // Debug log removed
+    // Debug log removed
+    // Debug log removed
 
     return NextResponse.json({
       sessionId: session.id,
@@ -108,7 +108,7 @@ export async function POST(request: Request) {
     });
 
   } catch (error) {
-    console.error('❌ Stripe subscription checkout error:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       {
         error: error instanceof Error ? error.message : 'Failed to create subscription checkout session'

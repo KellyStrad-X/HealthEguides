@@ -27,7 +27,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(progress);
   } catch (error) {
-    console.error('Error fetching guide progress:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to fetch guide progress' },
       { status: 500 }
@@ -78,7 +78,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error updating guide progress:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to update guide progress' },
       { status: 500 }

@@ -25,7 +25,7 @@ if (typeof window !== 'undefined') {
     app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
     auth = getAuth(app);
   } else {
-    console.warn('Firebase configuration missing. Authentication features will be disabled.');
+    // Warning log removed
   }
 }
 

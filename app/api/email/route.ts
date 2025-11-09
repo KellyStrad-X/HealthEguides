@@ -14,7 +14,7 @@ export async function POST(request: Request) {
 
     // TODO: Integrate with ConvertKit or Mailchimp
     // For now, just log it (replace with actual API call)
-    console.log('Email captured:', {
+    // Debug log removed
       email,
       guideSlug,
       guideTitle,
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Email capture error:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to process email' },
       { status: 500 }

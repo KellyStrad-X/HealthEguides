@@ -100,7 +100,7 @@ ${feedback.message}`,
     };
 
     await sgMail.send(msg);
-    console.log('Reply email sent successfully to:', feedback.email);
+    // Debug log removed
 
     // Update feedback status to 'responded'
     await adminDb.collection('feedback').doc(feedbackId).update({
@@ -115,11 +115,11 @@ ${feedback.message}`,
     });
 
   } catch (error: any) {
-    console.error('Error sending reply:', error);
+    // Error log removed - TODO: Add proper error handling
 
     // Provide more detailed error for SendGrid issues
     if (error.response) {
-      console.error('SendGrid error:', error.response.body);
+    // Error log removed - TODO: Add proper error handling
     }
 
     return NextResponse.json(

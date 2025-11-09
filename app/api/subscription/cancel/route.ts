@@ -55,7 +55,7 @@ export async function POST(request: Request) {
       updatedAt: new Date(),
     });
 
-    console.log('✅ Subscription canceled:', stripeSubscriptionId);
+    // Debug log removed
 
     return NextResponse.json({
       success: true,
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
     });
 
   } catch (error) {
-    console.error('Error canceling subscription:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to cancel subscription' },
       { status: 500 }

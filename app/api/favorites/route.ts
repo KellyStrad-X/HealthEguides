@@ -11,13 +11,35 @@ export async function GET(request: Request) {
     }
 
     const token = authHeader.split('Bearer ')[1];
-    const decodedToken = await adminAuth.verifyIdToken(token);
+    let decodedToken;
+    try {
+      decodedToken = await adminAuth.verifyIdToken(token);
+    } catch (error) {
+      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+    }
     const userId = decodedToken.uid;
 
-    // Get all favorites for this user
+    // Get pagination parameters from query string
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1', 10);
+    const limit = Math.min(parseInt(searchParams.get('limit') || '20', 10), 100); // Max 100 items
+
+    // Get total count for pagination metadata
+    const totalSnapshot = await adminDb
+      .collection('favorites')
+      .where('userId', '==', userId)
+      .count()
+      .get();
+    const totalItems = totalSnapshot.data().count;
+    const totalPages = Math.ceil(totalItems / limit);
+
+    // Get favorites with pagination
     const favoritesSnapshot = await adminDb
       .collection('favorites')
       .where('userId', '==', userId)
+      .orderBy('createdAt', 'desc')
+      .limit(limit)
+      .offset((page - 1) * limit)
       .get();
 
     const favorites = favoritesSnapshot.docs.map(doc => ({
@@ -26,9 +48,19 @@ export async function GET(request: Request) {
       createdAt: doc.data().createdAt,
     }));
 
-    return NextResponse.json({ favorites });
+    return NextResponse.json({
+      favorites,
+      pagination: {
+        page,
+        limit,
+        totalItems,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrevious: page > 1,
+      },
+    });
   } catch (error) {
-    console.error('Error fetching favorites:', error);
+    // Error handling: TODO - Add proper error logging
     return NextResponse.json(
       { error: 'Failed to fetch favorites' },
       { status: 500 }
@@ -75,7 +107,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error adding favorite:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to add favorite' },
       { status: 500 }
@@ -117,7 +149,7 @@ export async function DELETE(request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error removing favorite:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to remove favorite' },
       { status: 500 }

@@ -48,7 +48,7 @@ export default function SubscriptionPage() {
       const data = await response.json();
       setSubscription(data.subscription);
     } catch (err) {
-      console.error('Error fetching subscription:', err);
+    // Error log removed - TODO: Add proper error handling
       setError('Failed to load subscription details');
     } finally {
       setLoading(false);
@@ -79,7 +79,7 @@ export default function SubscriptionPage() {
       await fetchSubscription(); // Refresh data
       alert('Subscription canceled successfully. You will retain access until the end of your billing period.');
     } catch (err) {
-      console.error('Error canceling subscription:', err);
+    // Error log removed - TODO: Add proper error handling
       setError('Failed to cancel subscription. Please try again or contact support.');
     } finally {
       setCanceling(false);

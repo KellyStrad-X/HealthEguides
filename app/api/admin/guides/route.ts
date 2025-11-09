@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
+import { validateAdminAuth } from '@/lib/admin-auth';
 import type { Guide } from '@/lib/guides';
 
 // GET all guides from Firestore
 export async function GET(request: NextRequest) {
   try {
+    // Validate admin authentication
+    const authResult = validateAdminAuth(request);
+    if (authResult !== true) {
+      return authResult;
+    }
+
     const guidesSnapshot = await adminDb.collection('guides').get();
     const guides: Guide[] = [];
 
@@ -14,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(guides);
   } catch (error) {
-    console.error('Error fetching guides:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to fetch guides' },
       { status: 500 }
@@ -25,6 +32,12 @@ export async function GET(request: NextRequest) {
 // POST - Create new guide
 export async function POST(request: NextRequest) {
   try {
+    // Validate admin authentication
+    const authResult = validateAdminAuth(request);
+    if (authResult !== true) {
+      return authResult;
+    }
+
     const guideData: Guide = await request.json();
 
     // Validate required fields
@@ -56,7 +69,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(guideWithTimestamps, { status: 201 });
   } catch (error) {
-    console.error('Error creating guide:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to create guide' },
       { status: 500 }
@@ -67,6 +80,12 @@ export async function POST(request: NextRequest) {
 // PUT - Update existing guide
 export async function PUT(request: NextRequest) {
   try {
+    // Validate admin authentication
+    const authResult = validateAdminAuth(request);
+    if (authResult !== true) {
+      return authResult;
+    }
+
     const guideData: Guide = await request.json();
 
     if (!guideData.id) {
@@ -97,7 +116,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(updatedGuide);
   } catch (error) {
-    console.error('Error updating guide:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to update guide' },
       { status: 500 }
@@ -108,6 +127,12 @@ export async function PUT(request: NextRequest) {
 // DELETE - Delete guide
 export async function DELETE(request: NextRequest) {
   try {
+    // Validate admin authentication
+    const authResult = validateAdminAuth(request);
+    if (authResult !== true) {
+      return authResult;
+    }
+
     const { guideId } = await request.json();
 
     if (!guideId) {
@@ -122,7 +147,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting guide:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to delete guide' },
       { status: 500 }

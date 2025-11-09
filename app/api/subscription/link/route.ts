@@ -4,12 +4,12 @@ import { Timestamp } from 'firebase-admin/firestore';
 
 export async function POST(request: Request) {
   try {
-    console.log('🔗 Subscription link API called');
+    // Debug log removed
 
     // Get auth token from header
     const authHeader = request.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      console.log('❌ No authorization header');
+    // Debug log removed
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -23,10 +23,10 @@ export async function POST(request: Request) {
     const userId = decodedToken.uid;
     const email = decodedToken.email;
 
-    console.log('✅ Token verified:', { userId, email });
+    // Debug log removed
 
     if (!email) {
-      console.log('❌ No email in token');
+    // Debug log removed
       return NextResponse.json(
         { error: 'Email not found in token' },
         { status: 400 }
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     }
 
     // Find subscription by email (where userId might be empty or different)
-    console.log('🔍 Searching for subscription with email:', email);
+    // Debug log removed
 
     const subscriptionsSnapshot = await adminDb
       .collection('subscriptions')
@@ -44,10 +44,10 @@ export async function POST(request: Request) {
       .limit(1)
       .get();
 
-    console.log('📊 Found subscriptions:', subscriptionsSnapshot.size);
+    // Debug log removed
 
     if (subscriptionsSnapshot.empty) {
-      console.log('❌ No active subscription found for email:', email);
+    // Debug log removed
 
       // Debug: Check if there's any subscription with this email regardless of status
       const allSubscriptions = await adminDb
@@ -55,12 +55,12 @@ export async function POST(request: Request) {
         .where('email', '==', email)
         .get();
 
-      console.log('📊 Total subscriptions for this email (any status):', allSubscriptions.size);
+    // Debug log removed
 
       if (!allSubscriptions.empty) {
         allSubscriptions.docs.forEach(doc => {
           const data = doc.data();
-          console.log('Found subscription:', {
+    // Debug log removed
             id: doc.id,
             status: data.status,
             email: data.email,
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
     const subscriptionDoc = subscriptionsSnapshot.docs[0];
     const subscriptionData = subscriptionDoc.data();
 
-    console.log('✅ Found subscription:', {
+    // Debug log removed
       id: subscriptionDoc.id,
       currentUserId: subscriptionData.userId,
       email: subscriptionData.email,
@@ -91,7 +91,7 @@ export async function POST(request: Request) {
     if (subscriptionData.userId &&
         subscriptionData.userId !== userId &&
         subscriptionData.userId !== email) {
-      console.log('❌ Subscription already linked to different user:', subscriptionData.userId);
+    // Debug log removed
       return NextResponse.json(
         { error: 'This subscription is already linked to another account' },
         { status: 409 }
@@ -100,14 +100,14 @@ export async function POST(request: Request) {
 
     // Update subscription with userId if not already set
     if (!subscriptionData.userId || subscriptionData.userId === email) {
-      console.log('🔄 Updating subscription with userId:', userId);
+    // Debug log removed
       await subscriptionDoc.ref.update({
         userId,
         updatedAt: Timestamp.now(),
       });
-      console.log('✅ Subscription updated successfully');
+    // Debug log removed
     } else {
-      console.log('ℹ️ Subscription already has correct userId');
+    // Debug log removed
     }
 
     return NextResponse.json({
@@ -117,7 +117,7 @@ export async function POST(request: Request) {
     });
 
   } catch (error) {
-    console.error('❌ Error linking subscription:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to link subscription', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

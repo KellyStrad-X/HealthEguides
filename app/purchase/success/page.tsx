@@ -39,7 +39,7 @@ function PurchaseSuccessContent() {
 
       for (let attempt = 1; attempt <= maxAttempts; attempt++) {
         try {
-          console.log(`🔍 Attempt ${attempt}/${maxAttempts}: Fetching purchase...`);
+    // Debug log removed
 
           if (attempt > 2) {
             setLoadingMessage('This is taking a bit longer than expected...');
@@ -54,7 +54,7 @@ function PurchaseSuccessContent() {
           const data = await res.json();
 
           if (data.purchases && data.purchases.length > 0) {
-            console.log('✅ Purchase found!');
+    // Debug log removed
             setPurchases(data.purchases);
 
             // Track Purchase event (Meta Pixel)
@@ -72,11 +72,11 @@ function PurchaseSuccessContent() {
 
           // Not found yet, wait before retry
           if (attempt < maxAttempts) {
-            console.log(`⏳ Purchase not ready yet, waiting ${delayMs}ms...`);
+    // Debug log removed
             await new Promise(resolve => setTimeout(resolve, delayMs));
           }
         } catch (err) {
-          console.error(`❌ Attempt ${attempt} error:`, err);
+    // Error log removed - TODO: Add proper error handling
           if (attempt === maxAttempts) {
             setError('Unable to retrieve purchase details. Please check your email for access links.');
           } else {

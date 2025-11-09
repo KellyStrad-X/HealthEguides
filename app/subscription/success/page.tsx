@@ -59,7 +59,7 @@ function SubscriptionSuccessContent() {
             setAccountCreated(true);
           }
         } catch (err) {
-          console.error('Error linking subscription:', err);
+    // Error log removed - TODO: Add proper error handling
         } finally {
           setLinkingSubscription(false);
         }
@@ -74,7 +74,7 @@ function SubscriptionSuccessContent() {
     setFormError('');
     setFormLoading(true);
 
-    console.log('🚀 Starting account creation process');
+    // Debug log removed
 
     try {
       // Validate password match
@@ -90,15 +90,15 @@ function SubscriptionSuccessContent() {
         return;
       }
 
-      console.log('📧 Creating account for:', email);
+    // Debug log removed
 
       // Create Firebase Auth account
       const newUser = await signUp(email, password, displayName || undefined);
 
-      console.log('✅ Firebase account created:', newUser.uid);
+    // Debug log removed
 
       // Link subscription to userId
-      console.log('🔗 Linking subscription to userId...');
+    // Debug log removed
       const token = await newUser.getIdToken();
       const response = await fetch('/api/subscription/link', {
         method: 'POST',
@@ -107,21 +107,21 @@ function SubscriptionSuccessContent() {
         },
       });
 
-      console.log('📡 Link response status:', response.status);
+    // Debug log removed
 
       if (!response.ok) {
         const data = await response.json();
-        console.error('❌ Failed to link subscription:', data);
+    // Error log removed - TODO: Add proper error handling
         throw new Error(data.error || 'Failed to link subscription');
       }
 
       const linkData = await response.json();
-      console.log('✅ Subscription linked successfully:', linkData);
+    // Debug log removed
 
       setAccountCreated(true);
       setFormLoading(false);
     } catch (err: any) {
-      console.error('❌ Account creation error:', err);
+    // Error log removed - TODO: Add proper error handling
       setFormLoading(false);
 
       // User-friendly error messages

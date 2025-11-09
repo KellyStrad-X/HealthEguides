@@ -31,7 +31,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ isFavorited: !favoriteSnapshot.empty });
   } catch (error) {
-    console.error('Error checking favorite:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { error: 'Failed to check favorite status' },
       { status: 500 }

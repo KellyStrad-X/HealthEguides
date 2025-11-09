@@ -16,7 +16,7 @@ export default function GuideCard({ guide, showFavorite = true }: GuideCardProps
   const [isFavorited, setIsFavorited] = useState(false);
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
 
-  console.log('[GuideCard] Rendering guide:', guide.id, {
+    // Debug log removed
     hasFeatures: !!guide.features,
     featuresType: typeof guide.features,
     featuresIsArray: Array.isArray(guide.features),
@@ -31,10 +31,10 @@ export default function GuideCard({ guide, showFavorite = true }: GuideCardProps
   const safeFeatures = Array.isArray(guide.features) ? guide.features : [];
 
   if (!Array.isArray(guide.features)) {
-    console.error('[GuideCard] ERROR: features is not an array for guide:', guide.id, guide.features);
+    // Error log removed - TODO: Add proper error handling
   }
   if (typeof guide.price !== 'number') {
-    console.error('[GuideCard] ERROR: price is not a number for guide:', guide.id, guide.price);
+    // Error log removed - TODO: Add proper error handling
   }
 
   // Check if guide is favorited
@@ -53,7 +53,7 @@ export default function GuideCard({ guide, showFavorite = true }: GuideCardProps
           setIsFavorited(data.isFavorited);
         }
       } catch (err) {
-        console.error('Failed to check favorite status:', err);
+    // Error log removed - TODO: Add proper error handling
       }
     };
 
@@ -86,7 +86,7 @@ export default function GuideCard({ guide, showFavorite = true }: GuideCardProps
         setIsFavorited(!isFavorited);
       }
     } catch (err) {
-      console.error('Failed to toggle favorite:', err);
+    // Error log removed - TODO: Add proper error handling
     } finally {
       setIsTogglingFavorite(false);
     }

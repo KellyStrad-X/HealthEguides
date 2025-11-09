@@ -78,7 +78,7 @@ export async function POST(request: Request) {
       chargeStatus: charge.status,
     });
   } catch (error: any) {
-    console.error('Check refund status error:', error);
+    // Error log removed - TODO: Add proper error handling
 
     // Handle specific Stripe errors
     if (error.type === 'StripeInvalidRequestError') {

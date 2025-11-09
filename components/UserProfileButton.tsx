@@ -30,7 +30,7 @@ export default function UserProfileButton() {
       setIsOpen(false);
       router.push('/');
     } catch (error) {
-      console.error('Logout error:', error);
+    // Error log removed - TODO: Add proper error handling
     }
   };
 

@@ -5,7 +5,7 @@ export async function POST(request: Request) {
   try {
     const { userId, email, guideId } = await request.json();
 
-    console.log('🔍 Validating subscription access:', { userId, email, guideId });
+    // Debug log removed
 
     // Need at least userId or email
     if (!userId && !email) {
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
         const userRecord = await adminAuth.getUser(userId);
         userEmail = userRecord.email || '';
       } catch (error) {
-        console.error('Error fetching user:', error);
+    // Error log removed - TODO: Add proper error handling
       }
     }
 
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
       const now = new Date();
 
       if (currentPeriodEnd > now) {
-        console.log('✅ Access granted via active subscription');
+    // Debug log removed
         return NextResponse.json({
           hasAccess: true,
           accessType: 'subscription',
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
         .get();
 
       if (!purchasesSnapshot.empty) {
-        console.log('✅ Access granted via legacy purchase');
+    // Debug log removed
         return NextResponse.json({
           hasAccess: true,
           accessType: 'legacy_purchase',
@@ -78,14 +78,14 @@ export async function POST(request: Request) {
       }
     }
 
-    console.log('❌ No valid subscription or purchase found');
+    // Debug log removed
     return NextResponse.json({
       hasAccess: false,
       reason: 'No active subscription found',
     });
 
   } catch (error) {
-    console.error('Access validation error:', error);
+    // Error log removed - TODO: Add proper error handling
     return NextResponse.json(
       { hasAccess: false, reason: 'Validation failed', error: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

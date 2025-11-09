@@ -46,7 +46,7 @@ export default function GuideRequestForm({ onClose, isModal = false }: GuideRequ
         setSubmitStatus('error');
       }
     } catch (error) {
-      console.error('Error submitting guide request:', error);
+    // Error log removed - TODO: Add proper error handling
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);

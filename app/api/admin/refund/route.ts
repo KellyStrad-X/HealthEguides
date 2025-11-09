@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       reason: reason || 'requested_by_customer',
     });
 
-    console.log('Refund created:', refund.id);
+    // Debug log removed
 
     // The webhook will automatically update the purchase status
     // when it receives the charge.refunded event
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       status: refund.status,
     });
   } catch (error: any) {
-    console.error('Refund error:', error);
+    // Error log removed - TODO: Add proper error handling
 
     // Handle specific Stripe errors
     if (error.type === 'StripeCardError' || error.type === 'StripeInvalidRequestError') {

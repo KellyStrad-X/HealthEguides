@@ -47,7 +47,7 @@ export default function FeedbackForm({ onClose, isModal = false }: FeedbackFormP
         setSubmitStatus('error');
       }
     } catch (error) {
-      console.error('Error submitting feedback:', error);
+    // Error log removed - TODO: Add proper error handling
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);

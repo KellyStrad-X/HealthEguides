@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       keywords: guide.keywords?.join(', ') || '',
     };
   } catch (error) {
-    console.error('Error generating metadata:', error);
+    // Error log removed - TODO: Add proper error handling
     return {
       title: 'Health E-Guides',
     };
@@ -64,7 +64,7 @@ export default async function GuidePage({ params }: PageProps) {
       </HeaderProvider>
     );
   } catch (error) {
-    console.error('Error loading guide page:', error);
+    // Error log removed - TODO: Add proper error handling
     notFound();
   }
 }

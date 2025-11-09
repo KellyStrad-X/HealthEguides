@@ -54,7 +54,7 @@ export async function getAllGuides(): Promise<Guide[]> {
       });
 
     } catch (err) {
-      console.warn('Firestore not configured or error fetching guides:', err);
+    // Warning log removed
 
       // Fallback: Just check if HTML files exist locally
       guidesData = guidesData.map((guide) => {
@@ -87,7 +87,7 @@ export async function getAllGuides(): Promise<Guide[]> {
 
     return normalizedGuides;
   } catch (error) {
-    console.error('Error fetching guides:', error);
+    // Error log removed - TODO: Add proper error handling
     // Normalize hardcoded guides before returning as fallback
     return hardcodedGuides.map(guide => ({
       ...guide,

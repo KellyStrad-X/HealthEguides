@@ -16,7 +16,7 @@ export default function AccountPage() {
       await logout();
       router.push('/');
     } catch (error) {
-      console.error('Logout error:', error);
+    // Error log removed - TODO: Add proper error handling
     }
   };
 
