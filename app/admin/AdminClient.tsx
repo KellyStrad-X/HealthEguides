@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import type { Guide } from '@/lib/guides';
 
+// Admin dashboard - fetches guides from Firestore API for accurate status display
 export default function AdminClient() {
   const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
