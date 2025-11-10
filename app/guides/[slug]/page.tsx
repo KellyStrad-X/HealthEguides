@@ -27,6 +27,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [guide, setGuide] = useState<any>(null);
   const [guideLoaded, setGuideLoaded] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Fetch guide data (supports both hardcoded and Firebase guides)
   useEffect(() => {
@@ -78,8 +79,9 @@ function GuideViewerContent({ params }: GuideViewerProps) {
           const adminData = await adminCheck.json();
           if (adminData.authenticated) {
             // Admin access - bypass subscription check
+            setIsAdmin(true);
             setAccessGranted(true);
-            await loadGuideContentForSubscriber();
+            await loadGuideContentForAdmin();
             setLoading(false);
             return;
           }
@@ -171,6 +173,32 @@ function GuideViewerContent({ params }: GuideViewerProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
+  async function loadGuideContentForAdmin() {
+    try {
+      // For admin, directly load the HTML file
+      const response = await fetch(`/guides/${guide?.id}.html`);
+
+      if (!response.ok) {
+        throw new Error('Failed to load guide content');
+      }
+
+      const html = await response.text();
+      setGuideHtml(html);
+    } catch (err) {
+      // Error log removed - TODO: Add proper error handling
+      setGuideHtml(`
+        <div style="max-width: 800px; margin: 0 auto; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #333;">
+          <h1 style="color: #4ECDC4; margin-bottom: 20px;">${guide?.emoji} ${guide?.title}</h1>
+          <div style="background: #fff3cd; padding: 30px; border-radius: 12px; border-left: 4px solid #ffc107; color: #856404;">
+            <h2 style="margin-top: 0; color: #856404;">Guide Content Not Found</h2>
+            <p>The HTML file for this guide hasn't been uploaded yet.</p>
+            <p>Upload it from the admin dashboard to view the content.</p>
+          </div>
+        </div>
+      `);
+    }
+  }
+
   async function loadGuideContentForSubscriber() {
     try {
       // Fetch guide content for subscriber (no token needed)
@@ -209,9 +237,9 @@ function GuideViewerContent({ params }: GuideViewerProps) {
     } catch (err) {
     // Error log removed - TODO: Add proper error handling
       setGuideHtml(`
-        <div style="max-width: 800px; margin: 0 auto; padding: 40px 20px;">
-          <h1>${guide?.emoji} ${guide?.title}</h1>
-          <p>Error loading guide content. Please refresh the page or contact support.</p>
+        <div style="max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333;">
+          <h1 style="color: #4ECDC4;">${guide?.emoji} ${guide?.title}</h1>
+          <p style="color: #333;">Error loading guide content. Please refresh the page or contact support.</p>
         </div>
       `);
     }
