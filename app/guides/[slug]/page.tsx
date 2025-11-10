@@ -175,15 +175,27 @@ function GuideViewerContent({ params }: GuideViewerProps) {
 
   async function loadGuideContentForAdmin() {
     try {
-      // For admin, directly load the HTML file
-      const response = await fetch(`/guides/${guide?.id}.html`);
+      // For admin, use admin API to load HTML from private directory
+      const response = await fetch('/api/admin/get-guide-content', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ guideId: guide?.id }),
+      });
 
       if (!response.ok) {
         throw new Error('Failed to load guide content');
       }
 
-      const html = await response.text();
-      setGuideHtml(html);
+      const data = await response.json();
+
+      if (data.success && data.html) {
+        setGuideHtml(data.html);
+      } else {
+        throw new Error('HTML content not available');
+      }
     } catch (err) {
       // Error log removed - TODO: Add proper error handling
       setGuideHtml(`
@@ -192,6 +204,7 @@ function GuideViewerContent({ params }: GuideViewerProps) {
           <div style="background: #fff3cd; padding: 30px; border-radius: 12px; border-left: 4px solid #ffc107; color: #856404;">
             <h2 style="margin-top: 0; color: #856404;">Guide Content Not Found</h2>
             <p>The HTML file for this guide hasn't been uploaded yet.</p>
+            <p>Expected file: <code>private/guides/${guide?.id}.html</code></p>
             <p>Upload it from the admin dashboard to view the content.</p>
           </div>
         </div>
