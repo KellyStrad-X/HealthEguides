@@ -534,13 +534,23 @@ function GuidesTab({
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     <button
                       onClick={() => handleFileUpload(guide.id, 'html')}
                       className="text-blue-600 hover:text-blue-800 text-xs"
                     >
                       {guide.hasHtmlGuide ? '✓ HTML' : '+ HTML'}
                     </button>
+                    {guide.hasHtmlGuide && (
+                      <a
+                        href={`/guides/${guide.id}.html`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-green-600 hover:text-green-800 text-xs"
+                      >
+                        👁️ View
+                      </a>
+                    )}
                     <button
                       onClick={() => handleFileUpload(guide.id, 'pdf')}
                       className="text-blue-600 hover:text-blue-800 text-xs"
