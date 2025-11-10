@@ -12,22 +12,34 @@ const path = require('path');
 const fs = require('fs');
 
 // Load environment variables from .env.local
+const envPath = path.join(__dirname, '..', '.env.local');
+console.log('📂 Looking for .env.local at:', envPath);
+
+if (!fs.existsSync(envPath)) {
+  console.error('❌ .env.local file not found!');
+  process.exit(1);
+}
+
 try {
-  require('dotenv').config({ path: path.join(__dirname, '..', '.env.local') });
-} catch (err) {
-  const envPath = path.join(__dirname, '..', '.env.local');
-  if (fs.existsSync(envPath)) {
-    const envContent = fs.readFileSync(envPath, 'utf-8');
-    envContent.split('\n').forEach(line => {
-      if (line && !line.startsWith('#') && line.includes('=')) {
-        const [key, ...valueParts] = line.split('=');
-        if (key && valueParts.length) {
-          const value = valueParts.join('=').trim();
-          process.env[key.trim()] = value.replace(/^["']|["']$/g, '');
-        }
-      }
-    });
+  const result = require('dotenv').config({ path: envPath });
+  if (result.error) {
+    console.error('❌ Error loading .env.local:', result.error.message);
+    process.exit(1);
   }
+  console.log('✅ Loaded .env.local with dotenv');
+} catch (err) {
+  console.log('⚠️  dotenv failed, using manual parsing');
+  const envContent = fs.readFileSync(envPath, 'utf-8');
+  envContent.split('\n').forEach(line => {
+    if (line && !line.startsWith('#') && line.includes('=')) {
+      const [key, ...valueParts] = line.split('=');
+      if (key && valueParts.length) {
+        const value = valueParts.join('=').trim();
+        process.env[key.trim()] = value.replace(/^["']|["']$/g, '');
+      }
+    }
+  });
+  console.log('✅ Loaded .env.local manually');
 }
 
 // Initialize Firebase Admin
@@ -36,6 +48,11 @@ function initializeFirebase() {
     if (admin.apps.length > 0) {
       return admin.app();
     }
+
+    console.log('\n🔍 Checking Firebase credentials:');
+    console.log('  FIREBASE_PROJECT_ID:', process.env.FIREBASE_PROJECT_ID ? '✅' : '❌');
+    console.log('  FIREBASE_CLIENT_EMAIL:', process.env.FIREBASE_CLIENT_EMAIL ? '✅' : '❌');
+    console.log('  FIREBASE_PRIVATE_KEY:', process.env.FIREBASE_PRIVATE_KEY ? '✅' : '❌');
 
     const hasIndividualFields = process.env.FIREBASE_PROJECT_ID &&
                                 process.env.FIREBASE_CLIENT_EMAIL &&
@@ -52,7 +69,7 @@ function initializeFirebase() {
       });
       console.log('✅ Firebase initialized\n');
     } else {
-      console.error('❌ Missing Firebase credentials');
+      console.error('\n❌ Missing Firebase credentials - check your .env.local file');
       process.exit(1);
     }
 

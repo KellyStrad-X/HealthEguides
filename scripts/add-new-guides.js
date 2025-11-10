@@ -12,26 +12,34 @@ const path = require('path');
 const fs = require('fs');
 
 // Load environment variables from .env.local
+const envPath = path.join(__dirname, '..', '.env.local');
+console.log('📂 Looking for .env.local at:', envPath);
+
+if (!fs.existsSync(envPath)) {
+  console.error('❌ .env.local file not found!');
+  process.exit(1);
+}
+
 try {
-  require('dotenv').config({ path: path.join(__dirname, '..', '.env.local') });
-  console.log('📄 Loaded .env.local with dotenv');
-} catch (err) {
-  console.log('📄 Loading .env.local manually (dotenv not available)');
-  const envPath = path.join(__dirname, '..', '.env.local');
-  if (fs.existsSync(envPath)) {
-    const envContent = fs.readFileSync(envPath, 'utf-8');
-    envContent.split('\n').forEach(line => {
-      if (line && !line.startsWith('#') && line.includes('=')) {
-        const [key, ...valueParts] = line.split('=');
-        if (key && valueParts.length) {
-          const value = valueParts.join('=').trim();
-          process.env[key.trim()] = value.replace(/^["']|["']$/g, '');
-        }
-      }
-    });
-  } else {
-    console.warn('⚠️  .env.local file not found at:', envPath);
+  const result = require('dotenv').config({ path: envPath });
+  if (result.error) {
+    console.error('❌ Error loading .env.local:', result.error.message);
+    process.exit(1);
   }
+  console.log('✅ Loaded .env.local with dotenv');
+} catch (err) {
+  console.log('⚠️  dotenv failed, using manual parsing');
+  const envContent = fs.readFileSync(envPath, 'utf-8');
+  envContent.split('\n').forEach(line => {
+    if (line && !line.startsWith('#') && line.includes('=')) {
+      const [key, ...valueParts] = line.split('=');
+      if (key && valueParts.length) {
+        const value = valueParts.join('=').trim();
+        process.env[key.trim()] = value.replace(/^["']|["']$/g, '');
+      }
+    }
+  });
+  console.log('✅ Loaded .env.local manually');
 }
 
 // Initialize Firebase Admin
