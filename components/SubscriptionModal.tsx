@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { loadStripe } from '@stripe/stripe-js';
+import { track } from '@vercel/analytics';
 
 interface SubscriptionModalProps {
   isOpen: boolean;
@@ -13,11 +14,12 @@ interface SubscriptionModalProps {
     title: string;
     description: string;
   }>;
+  source?: string; // Track where the modal was opened from
 }
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-export default function SubscriptionModal({ isOpen, onClose, initialEmail, featuredGuides }: SubscriptionModalProps) {
+export default function SubscriptionModal({ isOpen, onClose, initialEmail, featuredGuides, source = 'unknown' }: SubscriptionModalProps) {
   const { user } = useAuth();
   const [email, setEmail] = useState(initialEmail || user?.email || '');
   const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'annual'>('monthly');
@@ -53,13 +55,20 @@ export default function SubscriptionModal({ isOpen, onClose, initialEmail, featu
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+
+      // Track modal opened
+      track('subscription_modal_opened', {
+        source,
+        email_prefilled: !!initialEmail,
+        is_logged_in: !!user,
+      });
     } else {
       document.body.style.overflow = '';
     }
     return () => {
       document.body.style.overflow = '';
     };
-  }, [isOpen]);
+  }, [isOpen, source, initialEmail, user]);
 
   // Update email when initialEmail prop changes
   useEffect(() => {
@@ -136,6 +145,13 @@ export default function SubscriptionModal({ isOpen, onClose, initialEmail, featu
 
     setLoading(true);
     setError('');
+
+    // Track checkout started
+    track('subscription_checkout_started', {
+      plan: selectedPlan,
+      email_prefilled: !!initialEmail || !!user,
+      is_logged_in: !!user,
+    });
 
     try {
       // Create checkout session - API will determine price ID based on plan
@@ -250,7 +266,14 @@ export default function SubscriptionModal({ isOpen, onClose, initialEmail, featu
             <h3 className="font-semibold text-gray-900 mb-3">Choose Your Plan</h3>
             <div className="grid grid-cols-2 gap-4">
               <button
-                onClick={() => setSelectedPlan('monthly')}
+                onClick={() => {
+                  setSelectedPlan('monthly');
+                  track('subscription_plan_selected', {
+                    plan: 'monthly',
+                    price: 5,
+                    interval: 'month',
+                  });
+                }}
                 className={`p-5 rounded-xl border-2 transition-all shadow-sm ${
                   selectedPlan === 'monthly'
                     ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-indigo-50 shadow-md'
@@ -271,7 +294,15 @@ export default function SubscriptionModal({ isOpen, onClose, initialEmail, featu
               </button>
 
               <button
-                onClick={() => setSelectedPlan('annual')}
+                onClick={() => {
+                  setSelectedPlan('annual');
+                  track('subscription_plan_selected', {
+                    plan: 'annual',
+                    price: 50,
+                    interval: 'year',
+                    savings: 10,
+                  });
+                }}
                 className={`p-5 rounded-xl border-2 transition-all relative shadow-sm ${
                   selectedPlan === 'annual'
                     ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-indigo-50 shadow-md'

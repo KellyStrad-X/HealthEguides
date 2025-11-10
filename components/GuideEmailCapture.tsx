@@ -190,6 +190,7 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
         isOpen={showSubscriptionModal}
         onClose={() => setShowSubscriptionModal(false)}
         initialEmail={email}
+        source="guide_email_capture"
       />
     </section>
   );

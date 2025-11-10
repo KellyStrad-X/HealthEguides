@@ -7,6 +7,7 @@ import { HeaderProvider } from '@/lib/headerContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Subscription } from '@/lib/types/subscription';
+import { track } from '@vercel/analytics';
 
 export default function SubscriptionPage() {
   const { user, loading: authLoading } = useAuth();
@@ -75,6 +76,18 @@ export default function SubscriptionPage() {
       if (!response.ok) {
         throw new Error('Failed to cancel subscription');
       }
+
+      // Calculate days active (approximate based on current period end)
+      const daysActive = subscription ?
+        Math.floor((new Date(subscription.currentPeriodEnd).getTime() - Date.now()) / (1000 * 60 * 60 * 24)) :
+        0;
+
+      // Track subscription canceled
+      track('subscription_canceled', {
+        plan: subscription?.interval || 'unknown',
+        days_active: daysActive,
+        subscription_status: subscription?.status || 'unknown',
+      });
 
       await fetchSubscription(); // Refresh data
       alert('Subscription canceled successfully. You will retain access until the end of your billing period.');

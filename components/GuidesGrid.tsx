@@ -89,6 +89,7 @@ export default function GuidesGrid() {
     <SubscriptionModal
       isOpen={showSubscriptionModal}
       onClose={() => setShowSubscriptionModal(false)}
+      source="catalog"
     />
   </>
   );

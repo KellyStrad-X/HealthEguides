@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import { auth } from '@/lib/firebase-client';
+import { track } from '@vercel/analytics';
 
 function SubscriptionSuccessContent() {
   const searchParams = useSearchParams();
@@ -60,8 +61,14 @@ function SubscriptionSuccessContent() {
     // Give the webhook a moment to process
     setTimeout(() => {
       setLoading(false);
+
+      // Track subscription completed
+      track('subscription_completed', {
+        session_id: sessionId,
+        user_type: user ? 'existing' : 'new',
+      });
     }, 2000);
-  }, [searchParams]);
+  }, [searchParams, user]);
 
   // Auto-link subscription if user is already logged in
   useEffect(() => {
@@ -142,6 +149,12 @@ function SubscriptionSuccessContent() {
 
       setAccountCreated(true);
       setFormLoading(false);
+
+      // Track account created
+      track('subscription_account_created', {
+        has_display_name: !!displayName,
+        email_domain: email.split('@')[1],
+      });
     } catch (err: any) {
     // Error log removed - TODO: Add proper error handling
       setFormLoading(false);

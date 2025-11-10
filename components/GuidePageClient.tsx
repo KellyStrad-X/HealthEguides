@@ -48,6 +48,7 @@ export default function GuidePageClient({ guide }: GuidePageClientProps) {
       <SubscriptionModal
         isOpen={showSubscriptionModal}
         onClose={() => setShowSubscriptionModal(false)}
+        source="guide_page"
       />
     </>
   );

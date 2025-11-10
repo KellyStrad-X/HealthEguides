@@ -117,6 +117,7 @@ export default function BundleOffer() {
       <SubscriptionModal
         isOpen={showSubscriptionModal}
         onClose={() => setShowSubscriptionModal(false)}
+        source="homepage_cta"
       />
     </>
   );
