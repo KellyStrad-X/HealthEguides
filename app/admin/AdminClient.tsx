@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { guides } from '@/lib/guides';
 import type { Guide } from '@/lib/guides';
 
 export default function AdminClient() {
@@ -132,6 +131,7 @@ export default function AdminClient() {
 
 function AdminDashboard({ onLogout, csrfToken }: { onLogout: () => void; csrfToken: string }) {
   const [activeTab, setActiveTab] = useState<'guides' | 'requests' | 'feedback' | 'subscriptions'>('guides');
+  const [guides, setGuides] = useState<Guide[]>([]);
   const [guideRequests, setGuideRequests] = useState<any[]>([]);
   const [feedback, setFeedback] = useState<any[]>([]);
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
@@ -140,7 +140,9 @@ function AdminDashboard({ onLogout, csrfToken }: { onLogout: () => void; csrfTok
   const [showGuideModal, setShowGuideModal] = useState(false);
 
   useEffect(() => {
-    if (activeTab === 'requests') {
+    if (activeTab === 'guides') {
+      fetchGuides();
+    } else if (activeTab === 'requests') {
       fetchGuideRequests();
     } else if (activeTab === 'feedback') {
       fetchFeedback();
@@ -158,6 +160,21 @@ function AdminDashboard({ onLogout, csrfToken }: { onLogout: () => void; csrfTok
         'X-CSRF-Token': csrfToken,
       },
     });
+  };
+
+  const fetchGuides = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/guides');
+      if (response.ok) {
+        const data = await response.json();
+        setGuides(data);
+      }
+    } catch (error) {
+    // Error log removed - TODO: Add proper error handling
+    } finally {
+      setLoading(false);
+    }
   };
 
   const fetchGuideRequests = async () => {
@@ -262,7 +279,7 @@ function AdminDashboard({ onLogout, csrfToken }: { onLogout: () => void; csrfTok
 
       if (response.ok) {
         alert('Guide deleted successfully');
-        window.location.reload();
+        fetchGuides();
       } else {
         const error = await response.json();
         alert(`Failed to delete guide: ${error.error}`);
@@ -287,7 +304,7 @@ function AdminDashboard({ onLogout, csrfToken }: { onLogout: () => void; csrfTok
         alert(`Guide ${isEditing ? 'updated' : 'created'} successfully`);
         setShowGuideModal(false);
         setEditingGuide(null);
-        window.location.reload();
+        fetchGuides();
       } else {
         const error = await response.json();
         alert(`Failed to save guide: ${error.error}`);
@@ -314,7 +331,7 @@ function AdminDashboard({ onLogout, csrfToken }: { onLogout: () => void; csrfTok
 
       if (response.ok) {
         alert('HTML guide uploaded successfully');
-        window.location.reload();
+        fetchGuides();
       } else {
         const error = await response.json();
         alert(`Failed to upload HTML: ${error.error}`);
@@ -341,7 +358,7 @@ function AdminDashboard({ onLogout, csrfToken }: { onLogout: () => void; csrfTok
 
       if (response.ok) {
         alert('PDF guide uploaded successfully');
-        window.location.reload();
+        fetchGuides();
       } else {
         const error = await response.json();
         alert(`Failed to upload PDF: ${error.error}`);
