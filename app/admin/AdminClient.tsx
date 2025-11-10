@@ -543,7 +543,7 @@ function GuidesTab({
                     </button>
                     {guide.hasHtmlGuide && (
                       <a
-                        href={`/guides/${guide.id}.html`}
+                        href={`/guides/${guide.slug}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-green-600 hover:text-green-800 text-xs"
