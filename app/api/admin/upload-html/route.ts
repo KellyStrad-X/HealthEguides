@@ -99,9 +99,12 @@ export async function POST(request: NextRequest) {
       path: filePath
     });
   } catch (error) {
-    // Error log removed - TODO: Add proper error handling
+    console.error('HTML upload error:', error);
     return NextResponse.json(
-      { error: 'Failed to upload HTML guide' },
+      {
+        error: 'Failed to upload HTML guide',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }

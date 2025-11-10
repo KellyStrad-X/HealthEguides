@@ -335,10 +335,11 @@ function AdminDashboard({ onLogout, csrfToken }: { onLogout: () => void; csrfTok
         fetchGuides();
       } else {
         const error = await response.json();
-        alert(`Failed to upload HTML: ${error.error}`);
+        const details = error.details ? `\n\nDetails: ${error.details}` : '';
+        alert(`Failed to upload HTML: ${error.error}${details}`);
       }
     } catch (error) {
-      alert('Failed to upload HTML');
+      alert(`Failed to upload HTML: ${error instanceof Error ? error.message : 'Network error'}`);
     }
   };
 
@@ -362,10 +363,11 @@ function AdminDashboard({ onLogout, csrfToken }: { onLogout: () => void; csrfTok
         fetchGuides();
       } else {
         const error = await response.json();
-        alert(`Failed to upload PDF: ${error.error}`);
+        const details = error.details ? `\n\nDetails: ${error.details}` : '';
+        alert(`Failed to upload PDF: ${error.error}${details}`);
       }
     } catch (error) {
-      alert('Failed to upload PDF');
+      alert(`Failed to upload PDF: ${error instanceof Error ? error.message : 'Network error'}`);
     }
   };
 
