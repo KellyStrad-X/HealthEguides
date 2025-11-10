@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=375, initial-scale=1.0">
+    <title>The Health Wearables Guide for Women - HealthEGuides</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Health Wearables Color Palette - Tech Forward Wellness */
+            --electric-teal: #00D9C0;
+            --deep-purple: #6B46C1;
+            --coral-pink: #FF6B93;
+            --mint-green: #A7F3D0;
+            --cool-silver: #A0AEC0;
+            --tech-blue: #4A90E2;
+
+            /* Text Colors */
+            --text-dark: #1a202c;
+            --text-medium: #4a5568;
+            --text-light: #718096;
+
+            /* Background Colors */
+            --bg-light: #f7fafc;
+            --bg-white: #ffffff;
+            --bg-gray: #edf2f7;
+
+            /* Gradients - Modern Tech Theme */
+            --gradient-tech: linear-gradient(135deg, #00D9C0 0%, #4A90E2 100%);
+            --gradient-purple: linear-gradient(135deg, #9F7AEA 0%, #6B46C1 100%);
+            --gradient-coral: linear-gradient(135deg, #FFB8D1 0%, #FF6B93 100%);
+            --gradient-mint: linear-gradient(135deg, #E6F8F1 0%, #C6F6D5 100%);
+            --gradient-light-purple: linear-gradient(135deg, #FAF5FF 0%, #E9D8FD 100%);
+            --gradient-light-teal: linear-gradient(135deg, #E6FFFA 0%, #B2F5EA 100%);
+
+            /* Design System */
+            --border-radius: 12px;
+            --box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-white);
+            width: 375px;
+            margin: 0 auto;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .page {
+            width: 375px;
+            min-height: 600px;
+            padding: 24px 20px;
+            page-break-after: always;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page:last-child {
+            page-break-after: auto;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--deep-purple);
+            margin-top: 24px;
+        }
+
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-top: 20px;
+        }
+
+        h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-top: 16px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        /* Hero/Cover Page */
+        .hero {
+            background: var(--gradient-tech);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: rgba(107, 70, 193, 0.15);
+            border-radius: 50%;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            color: white;
+            margin-bottom: 16px;
+            line-height: 1.2;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-emoji {
+            font-size: 56px;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            line-height: 1.5;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.95);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 40px;
+            width: 100%;
+            padding-top: 40px;
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            display: block;
+            margin-bottom: 4px;
+            color: white;
+        }
+
+        .hero-stat-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Section Backgrounds */
+        .section-mint {
+            background: var(--gradient-mint);
+        }
+
+        .section-light-purple {
+            background: var(--gradient-light-purple);
+        }
+
+        .section-light-teal {
+            background: var(--gradient-light-teal);
+        }
+
+        .section-gray {
+            background: var(--bg-gray);
+        }
+
+        .section-tech-gradient {
+            background: var(--gradient-tech);
+            color: white;
+            position: relative;
+        }
+
+        .section-tech-gradient h2,
+        .section-tech-gradient h3,
+        .section-tech-gradient h4 {
+            color: white;
+        }
+
+        .section-tech-gradient p,
+        .section-tech-gradient li {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .section-purple-gradient {
+            background: var(--gradient-purple);
+            color: white;
+            position: relative;
+        }
+
+        .section-purple-gradient h2,
+        .section-purple-gradient h3,
+        .section-purple-gradient h4 {
+            color: white;
+        }
+
+        .section-purple-gradient p,
+        .section-purple-gradient li {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Section Icons */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .section-icon {
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        /* Device Cards */
+        .device-card {
+            background: white;
+            border-left: 5px solid var(--electric-teal);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin: 20px 0;
+            box-shadow: var(--box-shadow);
+        }
+
+        .device-name {
+            font-size: 22px;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            color: var(--electric-teal);
+            margin-bottom: 8px;
+        }
+
+        .device-tagline {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-medium);
+            font-style: italic;
+            margin-bottom: 16px;
+        }
+
+        .device-card-purple {
+            border-left-color: var(--deep-purple);
+        }
+
+        .device-card-purple .device-name {
+            color: var(--deep-purple);
+        }
+
+        .device-card-coral {
+            border-left-color: var(--coral-pink);
+        }
+
+        .device-card-coral .device-name {
+            color: var(--coral-pink);
+        }
+
+        .device-section {
+            margin: 16px 0;
+        }
+
+        .device-section-title {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .device-section-content {
+            font-size: 15px;
+            color: var(--text-medium);
+            line-height: 1.5;
+        }
+
+        /* Regular Cards */
+        .card {
+            background: white;
+            border-left: 5px solid var(--electric-teal);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin: 16px 0;
+            box-shadow: var(--box-shadow);
+        }
+
+        .card h4 {
+            color: var(--electric-teal);
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .card p:last-child {
+            margin-bottom: 0;
+        }
+
+        .card-purple {
+            border-left-color: var(--deep-purple);
+        }
+
+        .card-purple h4 {
+            color: var(--deep-purple);
+        }
+
+        .card-coral {
+            border-left-color: var(--coral-pink);
+        }
+
+        .card-coral h4 {
+            color: var(--coral-pink);
+        }
+
+        /* Callout Boxes */
+        .tip-box {
+            background: rgba(0, 217, 192, 0.08);
+            border-left: 6px solid var(--electric-teal);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .warning-box {
+            background: rgba(255, 107, 147, 0.08);
+            border-left: 6px solid var(--coral-pink);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .info-box {
+            background: rgba(107, 70, 193, 0.08);
+            border-left: 6px solid var(--deep-purple);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .stat-box {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            color: var(--electric-teal);
+            display: block;
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: var(--text-medium);
+        }
+
+        /* Cost Comparison */
+        .cost-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 16px 0;
+            box-shadow: var(--box-shadow);
+            border-left: 5px solid var(--tech-blue);
+        }
+
+        .cost-device-name {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--tech-blue);
+            margin-bottom: 12px;
+        }
+
+        .cost-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .cost-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .cost-label {
+            font-size: 15px;
+        }
+
+        .cost-value {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        /* Goal-Based Selection */
+        .goal-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin: 20px 0;
+            box-shadow: var(--box-shadow);
+            border-left: 5px solid var(--coral-pink);
+        }
+
+        .goal-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .goal-icon {
+            font-size: 32px;
+        }
+
+        .goal-title {
+            font-size: 20px;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            color: var(--coral-pink);
+        }
+
+        .goal-winner {
+            background: rgba(255, 107, 147, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+        }
+
+        .goal-winner-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--coral-pink);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .goal-winner-device {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        strong {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .section-tech-gradient strong,
+        .section-purple-gradient strong {
+            color: white;
+        }
+
+        /* Pull Quote */
+        .pull-quote {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--electric-teal);
+            font-style: italic;
+            margin: 24px 0;
+            padding-left: 20px;
+            border-left: 4px solid var(--electric-teal);
+            line-height: 1.4;
+        }
+
+        .section-tech-gradient .pull-quote,
+        .section-purple-gradient .pull-quote {
+            color: white;
+            border-left-color: white;
+        }
+
+        /* Checklist */
+        .checklist {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 24px 0;
+            box-shadow: var(--box-shadow);
+        }
+
+        .checklist-item {
+            padding: 10px 0;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .checkbox {
+            font-size: 18px;
+            color: var(--electric-teal);
+            line-height: 1.6;
+        }
+
+        /* Chapter Divider */
+        .chapter-divider {
+            text-align: center;
+            padding: 40px 20px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chapter-emoji {
+            font-size: 56px;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        .chapter-title {
+            font-size: 28px;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 16px;
+        }
+
+        .chapter-description {
+            font-size: 16px;
+            max-width: 300px;
+        }
+
+        /* Footer/Disclaimer */
+        .footer {
+            background: #f7fafc;
+            padding: 24px 20px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--text-medium);
+        }
+
+        .footer p {
+            margin-bottom: 12px;
+        }
+
+        .footer strong {
+            color: var(--text-dark);
+        }
+
+        @media print {
+            @page {
+                size: letter;
+                margin: 0;
+            }
+
+            body {
+                width: 375px;
+            }
+
+            .page {
+                page-break-after: always;
+            }
+
+            .page:last-child {
+                page-break-after: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="page hero">
+    <div class="hero-emoji">⌚</div>
+    <h1>The Health Wearables Guide for Women</h1>
+    <p class="hero-subtitle">Cut through the hype—honest comparisons, women-specific features, and data interpretation for fertility tracking, sleep optimization, perimenopause management, and more</p>
+
+    <div class="hero-stats">
+        <div class="hero-stat">
+            <span class="hero-stat-number">70%</span>
+            <span class="hero-stat-label">Of Wearable Users Are Women</span>
+        </div>
+        <div class="hero-stat">
+            <span class="hero-stat-number">Goal-Based</span>
+            <span class="hero-stat-label">Choose by YOUR Health Goals, Not Marketing</span>
+        </div>
+        <div class="hero-stat">
+            <span class="hero-stat-number">Evidence-Based</span>
+            <span class="hero-stat-label">Backed by Validation Studies</span>
+        </div>
+    </div>
+
+    <p class="copyright">© 2025 HealthEGuides. All rights reserved.</p>
+</div>
+
+<!-- SECTION 1: Why Use a Health Wearable? -->
+<div class="page section-mint">
+    <div class="section-header">
+        <span class="section-icon">💡</span>
+        <h2>Why Use a Health Wearable?</h2>
+    </div>
+
+    <p>You're ready to invest in your health. You know wearables can help. But which one? Oura? Apple Watch? Whoop? And is it worth $300-$700?</p>
+
+    <p>You've spent hours reading reviews. One article says Oura Ring is best. Another swears by Apple Watch. Reddit argues for Whoop. <strong>The more you research, the more confused you feel.</strong></p>
+
+    <p>This guide cuts through the noise. We'll help you choose based on YOUR health goals—not marketing hype or tech reviewer opinions.</p>
+
+    <div class="stat-box">
+        <span class="stat-number">70%</span>
+        <p class="stat-label">Of wearable users are women</p>
+    </div>
+
+    <h3>What Wearables CAN Do</h3>
+
+    <ul>
+        <li><strong>Track patterns:</strong> Sleep quality, cycle changes, stress response over time</li>
+        <li><strong>Provide insights:</strong> Data you can share with doctors for informed conversations</li>
+        <li><strong>Empower decisions:</strong> Understand YOUR body's patterns and needs</li>
+        <li><strong>Women-specific benefits:</strong> Fertility tracking, cycle prediction, perimenopause symptom monitoring</li>
+    </ul>
+
+    <h3>What Wearables CAN'T Do</h3>
+
+    <ul>
+        <li>❌ Diagnose medical conditions</li>
+        <li>❌ Replace medical care or doctor visits</li>
+        <li>❌ Provide perfect accuracy (even best devices have 5-10% error margin)</li>
+        <li>❌ Solve health problems on their own</li>
+    </ul>
+
+    <p><strong>Wearables are tools, not magic solutions.</strong> But used correctly, they're powerful tools for understanding your body.</p>
+</div>
+
+<!-- Section 1 Continued -->
+<div class="page section-mint">
+    <h3>Why Women Are Leading Adoption</h3>
+
+    <p>Women are 70% of wearable users for good reasons:</p>
+
+    <ul>
+        <li><strong>Fertility tracking:</strong> 300% increase since 2018—women want data-driven insights for conception</li>
+        <li><strong>Cycle patterns:</strong> Understanding how hormones affect energy, mood, sleep</li>
+        <li><strong>Perimenopause management:</strong> Tracking hot flashes, sleep disruption, stress patterns</li>
+        <li><strong>Sleep optimization:</strong> Women experience more sleep issues—tracking helps identify causes</li>
+    </ul>
+
+    <p>Traditional healthcare often dismisses these concerns as "normal" without investigation. Wearables give women data to advocate for themselves.</p>
+
+    <h3>The Decision Paralysis Problem</h3>
+
+    <p>Too many options. Conflicting reviews. Marketing hype everywhere. Subscriptions vs. upfront costs. Women-specific features buried in reviews written for men.</p>
+
+    <p><strong>This guide solves that.</strong></p>
+
+    <div class="tip-box">
+        <p><strong>💡 What This Guide Will Help You Decide</strong></p>
+        <ul style="margin: 8px 0;">
+            <li>Which device matches YOUR specific health goal</li>
+            <li>Total cost of ownership (including subscriptions)</li>
+            <li>Which devices are most accurate for women-specific tracking</li>
+            <li>How to interpret your data without overwhelm</li>
+        </ul>
+    </div>
+
+    <p style="text-align: center; margin-top: 24px; font-style: italic;">Your confusion is normal. Let's bring clarity.</p>
+</div>
+
+<!-- CHAPTER DIVIDER: Understanding Key Metrics -->
+<div class="page section-tech-gradient chapter-divider">
+    <div class="chapter-emoji">📊</div>
+    <h2 class="chapter-title">Understanding Key Metrics</h2>
+    <p class="chapter-description">Before comparing devices, let's understand what these numbers actually mean—and which ones matter for YOUR goals</p>
+</div>
+
+<!-- SECTION 2: Key Metrics - HRV & RHR -->
+<div class="page section-light-purple">
+    <h2>Key Metric #1: Heart Rate Variability (HRV)</h2>
+
+    <div class="card card-purple">
+        <h4>What It Measures</h4>
+        <p>The variation in time between each heartbeat. Higher HRV generally indicates better nervous system health and recovery.</p>
+    </div>
+
+    <div class="card card-purple">
+        <h4>Why It Matters</h4>
+        <p>HRV reflects how well your nervous system recovers from stress. Rising HRV = good recovery. Dropping HRV = stress, illness coming, or need for rest.</p>
+    </div>
+
+    <div class="card card-purple">
+        <h4>Your Baseline Matters Most</h4>
+        <p><strong>Important:</strong> YOUR HRV might be 45 or 140—both can be healthy. Compare against your own baseline, NOT population averages or your friend's numbers.</p>
+    </div>
+
+    <div class="card card-purple">
+        <h4>Women-Specific Note</h4>
+        <p>HRV naturally fluctuates with your menstrual cycle—typically higher in follicular phase, lower in luteal phase. This is normal.</p>
+    </div>
+
+    <h2>Key Metric #2: Resting Heart Rate (RHR)</h2>
+
+    <div class="card">
+        <h4>What It Measures</h4>
+        <p>Your heart rate at rest (typically measured during sleep). Average for women: 60-80 bpm.</p>
+    </div>
+
+    <div class="card">
+        <h4>Why It Matters</h4>
+        <p>Baseline indicator of cardiovascular health. Elevated RHR can signal stress, illness, overtraining, or hormonal changes. Trends matter more than single readings.</p>
+    </div>
+
+    <div class="card">
+        <h4>What Changes Mean</h4>
+        <p>RHR elevated for 2+ days: possible illness coming, stress response, or hormonal shift. RHR decreasing over months: improving fitness.</p>
+    </div>
+</div>
+
+<!-- Section 2 Continued - More Metrics -->
+<div class="page section-light-purple">
+    <h2>Key Metric #3: Sleep Stages</h2>
+
+    <div class="card card-purple">
+        <h4>What It Measures</h4>
+        <p>Light sleep, deep sleep, REM sleep, and awake time throughout the night.</p>
+    </div>
+
+    <div class="card card-purple">
+        <h4>Why It Matters</h4>
+        <p><strong>Deep sleep:</strong> Physical recovery, immune function, tissue repair</p>
+        <p><strong>REM sleep:</strong> Memory consolidation, emotional processing, learning</p>
+        <p><strong>Light sleep:</strong> Transitions between stages, still restful</p>
+    </div>
+
+    <div class="card card-purple">
+        <h4>Accuracy Note</h4>
+        <p><strong>Reality check:</strong> Even the best wearables have 10-15% error margin for sleep stages. Look for trends over weeks, not individual nights.</p>
+    </div>
+
+    <h2>Key Metric #4: Temperature Tracking</h2>
+
+    <div class="card">
+        <h4>What It Measures</h4>
+        <p>Basal body temperature (your lowest resting temperature) throughout the night.</p>
+    </div>
+
+    <div class="card">
+        <h4>Why It Matters (Women-Specific)</h4>
+        <p><strong>Fertility tracking:</strong> Temperature rises after ovulation—key for identifying fertile window</p>
+        <p><strong>Cycle prediction:</strong> Helps predict period and ovulation timing</p>
+        <p><strong>Perimenopause:</strong> Can track hot flash patterns, hormonal fluctuations</p>
+    </div>
+
+    <div class="card">
+        <h4>Which Devices Excel</h4>
+        <p><strong>Oura Ring:</strong> Most accurate continuous temperature tracking for fertility</p>
+        <p><strong>Apple Watch:</strong> Temperature sensing for retrospective ovulation estimates</p>
+    </div>
+
+    <div class="warning-box">
+        <p><strong>⚠️ Myth: More Data = Better Health</strong></p>
+        <p><strong>Truth:</strong> Tracking everything creates overwhelm and data anxiety. Focus on 3-5 metrics aligned with YOUR health goals. Ignore the rest.</p>
+    </div>
+</div>
+
+<!-- Section 2 Continued - Activity & Readiness -->
+<div class="page section-light-teal">
+    <h2>Key Metric #5: Activity & Movement</h2>
+
+    <div class="card">
+        <h4>What It Measures</h4>
+        <p>Steps, active minutes, calories burned, workout intensity.</p>
+    </div>
+
+    <div class="card">
+        <h4>Why It Matters</h4>
+        <p>Movement affects mood, sleep, stress. Research shows 150+ minutes moderate activity weekly reduces health risks—not an arbitrary 10,000 steps.</p>
+    </div>
+
+    <div class="card">
+        <h4>What's "Normal"</h4>
+        <p>Forget "10,000 steps"—that was a marketing campaign, not science. Focus on: consistent movement most days, gradual increases, what's sustainable for YOU.</p>
+    </div>
+
+    <h2>Key Metric #6: Readiness/Recovery Scores</h2>
+
+    <div class="card card-purple">
+        <h4>What They Are</h4>
+        <p>Composite scores combining sleep, HRV, RHR, activity, and sometimes body temperature. Tells you if your body is ready for exertion or needs rest.</p>
+    </div>
+
+    <div class="card card-purple">
+        <h4>Why They're Useful</h4>
+        <p>Helps you decide: "Should I push hard in my workout today or take it easy?" Prevents overtraining and burnout.</p>
+    </div>
+
+    <div class="card card-purple">
+        <h4>Limitations</h4>
+        <p>Algorithms are proprietary—each device calculates differently. Use as guide, not absolute truth. Listen to your body too.</p>
+    </div>
+
+    <div class="pull-quote">
+        "Focus on YOUR patterns over time, not single-day scores or comparison to 'optimal' numbers"
+    </div>
+
+    <p style="text-align: center; margin-top: 24px; font-style: italic;">Now that you understand the metrics, let's compare devices.</p>
+</div>
+
+<!-- CHAPTER DIVIDER: The Big Three Comparison -->
+<div class="page section-purple-gradient chapter-divider">
+    <div class="chapter-emoji">⚖️</div>
+    <h2 class="chapter-title">The Big Three Comparison</h2>
+    <p class="chapter-description">Oura Ring, Apple Watch, and Whoop—here's what each excels at (and where they fall short)</p>
+</div>
+
+<!-- SECTION 3: Oura Ring -->
+<div class="page section-light-purple">
+    <div class="device-card">
+        <h3 class="device-name">Oura Ring (Gen 4)</h3>
+        <p class="device-tagline">Best for: Sleep tracking, temperature-based fertility tracking, discrete 24/7 wear, recovery insights</p>
+
+        <div class="device-section">
+            <p class="device-section-title">✨ Women-Specific Features</p>
+            <p class="device-section-content"><strong>Temperature tracking:</strong> Most accurate for cycle prediction and fertility awareness. Continuous tracking identifies fertile window. Period predictions improve after 2-3 months. <strong>Pregnancy insights</strong> feature tracks temperature changes during pregnancy.</p>
+        </div>
+
+        <div class="device-section">
+            <p class="device-section-title">📊 Accuracy</p>
+            <p class="device-section-content"><strong>Excellent</strong> for sleep, HRV, RHR (validated in 2025 Physiological Reports study). Temperature tracking validated for fertility awareness methods. Sleep stage detection best-in-class (though no device is perfect).</p>
+        </div>
+
+        <div class="device-section">
+            <p class="device-section-title">✅ Pros</p>
+            <ul style="margin: 8px 0; font-size: 15px;">
+                <li>No daily charging (4-7 days battery life)</li>
+                <li>Discrete—wear all day, no screen distractions</li>
+                <li>Excellent sleep insights and recovery scoring</li>
+                <li>Strong for fertility/cycle tracking</li>
+            </ul>
+        </div>
+
+        <div class="device-section">
+            <p class="device-section-title">❌ Cons</p>
+            <ul style="margin: 8px 0; font-size: 15px;">
+                <li>No screen—phone-dependent for data</li>
+                <li>Limited activity tracking (no GPS, basic workout detection)</li>
+                <li>Requires sizing kit before purchase</li>
+                <li>Subscription: $5.99/month or $69.99/year</li>
+            </ul>
+        </div>
+
+        <div class="device-section">
+            <p class="device-section-title">💰 Total Cost</p>
+            <p class="device-section-content"><strong>Year 1:</strong> $349 device + $70 subscription = $419<br><strong>Year 3:</strong> $559 total</p>
+        </div>
+
+        <div class="device-section">
+            <p class="device-section-title">🎯 Who It's For</p>
+            <p class="device-section-content">Women prioritizing sleep and/or fertility tracking. Don't need smartwatch features. Want discrete 24/7 wear without screen addiction. Trying to conceive or tracking cycle patterns.</p>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 3: Apple Watch -->
+<div class="page section-light-teal">
+    <div class="device-card device-card-purple">
+        <h3 class="device-name">Apple Watch (Series 10 / Ultra 2)</h3>
+        <p class="device-tagline">Best for: Comprehensive health + smartwatch functionality, fitness tracking, ECG/heart health, strong ecosystem integration</p>
+
+        <div class="device-section">
+            <p class="device-section-title">✨ Women-Specific Features</p>
+            <p class="device-section-content"><strong>Advanced cycle tracking:</strong> Period predictions, fertile window estimates. <strong>Temperature sensing</strong> (wrist-based) for retrospective ovulation estimates—less precise than Oura but still useful. <strong>Pregnancy tracking</strong> in Health app.</p>
+        </div>
+
+        <div class="device-section">
+            <p class="device-section-title">📊 Accuracy</p>
+            <p class="device-section-content"><strong>Very good</strong> for fitness/activity and heart rate zones. <strong>Good</strong> for sleep (improved significantly but not quite Oura-level). <strong>Clinical-grade ECG</strong> for heart health monitoring. FDA-cleared features (ECG, fall detection, crash detection).</p>
+        </div>
+
+        <div class="device-section">
+            <p class="device-section-title">✅ Pros</p>
+            <ul style="margin: 8px 0; font-size: 15px;">
+                <li>Does everything: health + communication + apps + music</li>
+                <li>Strong cycle tracking and women's health features</li>
+                <li>Large screen for easy viewing</li>
+                <li><strong>No subscription</strong> for health features</li>
+                <li>Medical-grade capabilities (ECG, fall detection)</li>
+                <li>GPS for outdoor workouts</li>
+            </ul>
+        </div>
+
+        <div class="device-section">
+            <p class="device-section-title">❌ Cons</p>
+            <ul style="margin: 8px 0; font-size: 15px;">
+                <li>Daily charging required (18-36 hour battery)</li>
+                <li>Expensive upfront ($399-$799)</li>
+                <li>Bulky for some women (especially during sleep)</li>
+                <li>Overwhelming features if you just want health tracking</li>
+            </ul>
+        </div>
+
+        <div class="device-section">
+            <p class="device-section-title">💰 Total Cost</p>
+            <p class="device-section-content"><strong>Year 1:</strong> $399-$799 (no subscription)<br><strong>Year 3:</strong> Same—no ongoing costs</p>
+        </div>
+
+        <div class="device-section">
+            <p class="device-section-title">🎯 Who It's For</p>
+            <p class="device-section-content">Women wanting all-in-one device (health + everyday functionality). Already in Apple ecosystem. Prioritizing fitness alongside health tracking. Want comprehensive features without subscription.</p>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 3: Whoop -->
+<div class="page section-mint">
+    <div class="device-card device-card-coral">
+        <h3 class="device-name">Whoop 4.0</h3>
+        <p class="device-tagline">Best for: Recovery optimization, athletes, understanding strain/stress response, chronic health condition management</p>
+
+        <div class="device-section">
+            <p class="device-section-title">✨ Women-Specific Features</p>
+            <p class="device-section-content"><strong>Cycle tracking:</strong> Log period and symptoms. <strong>Strain/recovery insights</strong> across cycle phases—see how hormones affect performance and recovery. Useful for athletes managing training around cycle.</p>
+        </div>
+
+        <div class="device-section">
+            <p class="device-section-title">📊 Accuracy</p>
+            <p class="device-section-content"><strong>Excellent</strong> for HRV and recovery metrics. <strong>Moderate</strong> for RHR (per validation studies). Focus is strain (exertion) + recovery balance. No sleep stage detail—focuses on sleep performance score.</p>
+        </div>
+
+        <div class="device-section">
+            <p class="device-section-title">✅ Pros</p>
+            <ul style="margin: 8px 0; font-size: 15px;">
+                <li>Detailed recovery insights (HRV, strain, sleep performance)</li>
+                <li>No screen—reduces device addiction</li>
+                <li>Battery pack system for continuous wear (charges while wearing)</li>
+                <li>Strong for athletes optimizing training load</li>
+            </ul>
+        </div>
+
+        <div class="device-section">
+            <p class="device-section-title">❌ Cons</p>
+            <ul style="margin: 8px 0; font-size: 15px;">
+                <li><strong>Subscription required:</strong> $239/year—no device purchase option</li>
+                <li>No screen—phone-dependent for all data</li>
+                <li>Not ideal for casual users (best for serious optimization)</li>
+                <li>Limited women-specific fertility features compared to Oura</li>
+            </ul>
+        </div>
+
+        <div class="device-section">
+            <p class="device-section-title">💰 Total Cost</p>
+            <p class="device-section-content"><strong>Year 1:</strong> $239 subscription<br><strong>Year 3:</strong> $717 total</p>
+        </div>
+
+        <div class="device-section">
+            <p class="device-section-title">🎯 Who It's For</p>
+            <p class="device-section-content">Serious athletes. Women managing chronic health conditions who need detailed strain/recovery data. Recovery optimization focus. Willing to invest in ongoing subscription for detailed insights.</p>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 4: Honorable Mentions -->
+<div class="page section-gray">
+    <div class="section-header">
+        <span class="section-icon">✨</span>
+        <h2>Honorable Mentions: Other Devices to Consider</h2>
+    </div>
+
+    <p>The Big Three dominate the market, but here are other viable options for specific use cases:</p>
+
+    <div class="card">
+        <h4>Fitbit Charge 6 / Sense 2</h4>
+        <p><strong>Best for:</strong> Budget-friendly option ($159-$229), basic tracking, Google ecosystem</p>
+        <p><strong>Women-specific:</strong> Cycle tracking, menstrual health insights</p>
+        <p><strong>Consider if:</strong> You want good-enough tracking without $400+ investment or subscriptions</p>
+    </div>
+
+    <div class="card">
+        <h4>Samsung Galaxy Ring</h4>
+        <p><strong>Best for:</strong> Samsung ecosystem users, Oura Ring alternative (2025 release)</p>
+        <p><strong>Women-specific:</strong> Similar features to Oura (temperature, cycle tracking)</p>
+        <p><strong>Consider if:</strong> You're in Samsung ecosystem and want ring form factor</p>
+    </div>
+
+    <div class="card">
+        <h4>Garmin (Forerunner, Fenix series)</h4>
+        <p><strong>Best for:</strong> Serious runners/outdoor athletes, detailed sports metrics, long battery life</p>
+        <p><strong>Women-specific:</strong> Pregnancy tracking, cycle tracking (less comprehensive than Oura)</p>
+        <p><strong>Consider if:</strong> You prioritize running/outdoor sports over sleep/recovery tracking</p>
+    </div>
+
+    <div class="card">
+        <h4>Femometer / Belle Smart Ring</h4>
+        <p><strong>Best for:</strong> Fertility-specific tracking only</p>
+        <p><strong>Women-specific:</strong> Temperature-focused for ovulation detection</p>
+        <p><strong>Consider if:</strong> You ONLY need fertility tracking (not comprehensive health monitoring)</p>
+    </div>
+
+    <div class="tip-box">
+        <p><strong>💡 Budget Option Reality Check</strong></p>
+        <p>If you can't afford $300-$700, a $50-$100 basic tracker (Fitbit Inspire, Amazfit Band) provides decent step/sleep tracking. You'll sacrifice accuracy and advanced features, but it's better than nothing for building awareness.</p>
+    </div>
+</div>
+
+<!-- CHAPTER DIVIDER: Goal-Based Selection -->
+<div class="page section-tech-gradient chapter-divider">
+    <div class="chapter-emoji">🎯</div>
+    <h2 class="chapter-title">Goal-Based Selection Guide</h2>
+    <p class="chapter-description">Your health goal determines the best device—not which is "objectively best." Here's what to choose for YOUR priorities.</p>
+</div>
+
+<!-- SECTION 5: Goal #1 - Fertility -->
+<div class="page section-light-purple">
+    <div class="goal-card">
+        <div class="goal-header">
+            <span class="goal-icon">👶</span>
+            <h3 class="goal-title">Best for Fertility Tracking & TTC</h3>
+        </div>
+
+        <div class="goal-winner">
+            <p class="goal-winner-label">Winner</p>
+            <p class="goal-winner-device">Oura Ring (Gen 4)</p>
+        </div>
+
+        <p><strong>Why:</strong> Temperature-based cycle tracking is most accurate for ovulation detection. Oura provides <strong>continuous basal body temperature</strong> tracking throughout the night—essential for identifying fertile window. Validated for fertility awareness methods.</p>
+
+        <div class="device-section">
+            <p class="device-section-title">Runner-Up</p>
+            <p class="device-section-content"><strong>Apple Watch:</strong> Cycle tracking is strong, but temperature sensing is wrist-based (less accurate than finger) and retrospective (estimates ovulation after it happened, not predictive).</p>
+        </div>
+
+        <p><strong>Key features to prioritize:</strong></p>
+        <ul style="font-size: 15px;">
+            <li>Continuous temperature tracking</li>
+            <li>Cycle prediction accuracy (improves after 2-3 months)</li>
+            <li>Basal body temp logging</li>
+        </ul>
+
+        <p><strong>What to track:</strong> Temperature trends, cycle length consistency, fertile window predictions. Combine with LH testing for confirmation.</p>
+
+        <div class="tip-box">
+            <p><strong>💡 Data Interpretation for TTC</strong></p>
+            <p>Track 2-3 months to establish YOUR baseline cycle. Temperature rises ~0.5°F after ovulation. Use data to time intercourse during fertile window (typically 5 days before ovulation + ovulation day).</p>
+        </div>
+    </div>
+
+    <div class="warning-box">
+        <p><strong>⚠️ Important: Not FDA-Approved Contraception</strong></p>
+        <p>Fertility tracking wearables (Oura, Apple Watch) are NOT FDA-approved contraceptives. They're awareness tools for trying to conceive—NOT reliable for preventing pregnancy.</p>
+    </div>
+</div>
+
+<!-- Section 5: Goal #2 - Sleep -->
+<div class="page section-light-teal">
+    <div class="goal-card card-purple">
+        <div class="goal-header">
+            <span class="goal-icon">🌙</span>
+            <h3 class="goal-title" style="color: var(--deep-purple);">Best for Sleep Optimization</h3>
+        </div>
+
+        <div class="goal-winner" style="background: rgba(107, 70, 193, 0.1);">
+            <p class="goal-winner-label" style="color: var(--deep-purple);">Winner</p>
+            <p class="goal-winner-device">Oura Ring (Gen 4)</p>
+        </div>
+
+        <p><strong>Why:</strong> Most accurate sleep stage detection among consumer wearables (validated studies). Detailed sleep insights: latency, efficiency, REM/deep sleep breakdown, HRV during sleep. <strong>Doesn't disturb sleep</strong>—no screen, no daily charging, discrete.</p>
+
+        <div class="device-section">
+            <p class="device-section-title">Runner-Up</p>
+            <p class="device-section-content"><strong>Whoop 4.0:</strong> Excellent recovery insights tied to sleep performance. Focus on sleep's impact on readiness rather than detailed stage breakdown.</p>
+        </div>
+
+        <p><strong>Key features to prioritize:</strong></p>
+        <ul style="font-size: 15px;">
+            <li>Sleep stage accuracy (Oura excels here)</li>
+            <li>Sleep latency (how long to fall asleep)</li>
+            <li>HRV during sleep (recovery indicator)</li>
+            <li>Readiness score (combines sleep + recovery)</li>
+        </ul>
+
+        <p><strong>What to track:</strong> Sleep trends over weeks (not individual nights). HRV recovery during sleep. Bedtime consistency. 85+ sleep score is generally good—relative to YOUR baseline.</p>
+
+        <div class="tip-box">
+            <p><strong>💡 Sleep Data Tips</strong></p>
+            <p>Focus on <strong>trends</strong>, not individual nights. One bad sleep score doesn't matter—week-long pattern does. Notice what affects YOUR sleep: alcohol, caffeine timing, stress, exercise timing. Experiment and track.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Section 5: Goal #3 - Perimenopause -->
+<div class="page section-mint">
+    <div class="goal-card">
+        <div class="goal-header">
+            <span class="goal-icon">🌸</span>
+            <h3 class="goal-title">Best for Perimenopause / Menopause</h3>
+        </div>
+
+        <div class="goal-winner">
+            <p class="goal-winner-label">Winner</p>
+            <p class="goal-winner-device">Oura Ring (Gen 4)</p>
+        </div>
+
+        <p><strong>Why:</strong> Temperature tracking for hot flash patterns. Sleep tracking (common perimenopause issue—disrupted sleep from night sweats). HRV for stress monitoring (anxiety often increases during perimenopause). <strong>"Perimenopause Check-In" feature</strong> added in 2025.</p>
+
+        <div class="device-section">
+            <p class="device-section-title">Runner-Up</p>
+            <p class="device-section-content"><strong>Apple Watch:</strong> Broader health monitoring (heart health, fall detection as you age). Symptom tracking apps available. Comprehensive but less perimenopause-specific than Oura.</p>
+        </div>
+
+        <p><strong>Key features to prioritize:</strong></p>
+        <ul style="font-size: 15px;">
+            <li>Temperature logging (hot flash pattern tracking)</li>
+            <li>Sleep tracking (night sweats disrupt sleep)</li>
+            <li>HRV/stress monitoring</li>
+            <li>Cycle pattern changes (irregular cycles during perimenopause)</li>
+        </ul>
+
+        <p><strong>What to track:</strong> Sleep disruption patterns, temperature spikes correlating with hot flashes, HRV trends (stress indicator). <strong>Share data with doctor</strong> for hormone therapy decisions.</p>
+
+        <div class="info-box">
+            <p><strong>📊 Share Data with Your Doctor</strong></p>
+            <p>Export temperature trends, sleep disruption data, and symptom logs. This data helps doctors determine if hormone therapy is appropriate and track its effectiveness.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Section 5: Goal #4 - Fitness -->
+<div class="page section-light-purple">
+    <div class="goal-card card-purple">
+        <div class="goal-header">
+            <span class="goal-icon">🏃‍♀️</span>
+            <h3 class="goal-title" style="color: var(--deep-purple);">Best for Fitness & Active Lifestyle</h3>
+        </div>
+
+        <div class="goal-winner" style="background: rgba(107, 70, 193, 0.1);">
+            <p class="goal-winner-label" style="color: var(--deep-purple);">Winner</p>
+            <p class="goal-winner-device">Apple Watch (Series 10 / Ultra 2)</p>
+        </div>
+
+        <p><strong>Why:</strong> GPS for outdoor workouts (running, cycling, hiking). Comprehensive activity tracking across workout types. Heart rate zones during exercise. Workout detection (auto-starts tracking). Fitness app ecosystem. Activity rings for motivation.</p>
+
+        <div class="device-section">
+            <p class="device-section-title">Runner-Up</p>
+            <p class="device-section-content"><strong>Garmin:</strong> If you're a serious runner or outdoor athlete, Garmin's detailed sports metrics and multi-day battery life may outweigh Apple Watch advantages.</p>
+        </div>
+
+        <p><strong>Key features to prioritize:</strong></p>
+        <ul style="font-size: 15px;">
+            <li>GPS accuracy for outdoor workouts</li>
+            <li>Heart rate zones during exercise</li>
+            <li>Workout variety (strength, yoga, running, cycling, swimming)</li>
+            <li>Activity rings/motivation features</li>
+        </ul>
+
+        <p><strong>What to track:</strong> Workout intensity, active minutes (aim for 150+ moderate minutes weekly), heart rate zones, recovery time between hard workouts.</p>
+
+        <div class="tip-box">
+            <p><strong>💡 Don't Obsess Over Closing Rings</strong></p>
+            <p>Closing your activity rings daily is NOT required for health. Aim for consistency over perfection. Rest days matter. Listen to your body, not just the algorithm.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Section 5: Goal #5 - Comprehensive -->
+<div class="page section-light-teal">
+    <div class="goal-card">
+        <div class="goal-header">
+            <span class="goal-icon">💚</span>
+            <h3 class="goal-title">Best for Comprehensive Health Tracking</h3>
+        </div>
+
+        <div class="goal-winner">
+            <p class="goal-winner-label">Winner</p>
+            <p class="goal-winner-device">Apple Watch (Most Versatile)</p>
+        </div>
+
+        <p><strong>Why:</strong> Tracks sleep, activity, cycle, heart health (ECG), blood oxygen, fall detection, crash detection—does it all. Medical-grade features. Integrates with Apple Health app for centralized data. No subscription required for health features.</p>
+
+        <div class="device-section">
+            <p class="device-section-title">Runner-Up</p>
+            <p class="device-section-content"><strong>Oura Ring:</strong> Excellent sleep/recovery tracking, but less activity detail and no smartwatch features. Choose based on priorities.</p>
+        </div>
+
+        <p><strong>Key features to prioritize:</strong></p>
+        <ul style="font-size: 15px;">
+            <li>Breadth of metrics (sleep, activity, cycle, heart, oxygen)</li>
+            <li>Medical-grade features (ECG for heart health)</li>
+            <li>Integration with Health app (centralized data)</li>
+            <li>No subscription for core features</li>
+        </ul>
+
+        <p><strong>What to track:</strong> Depends on YOUR priorities. <strong>Don't track everything</strong>—pick 3-5 key metrics tied to your specific health goals. More data doesn't mean better health.</p>
+
+        <div class="warning-box">
+            <p><strong>⚠️ Avoid Data Overload</strong></p>
+            <p>Tracking everything creates overwhelm and data anxiety. Choose metrics that align with YOUR goals: fertility tracking? Focus on temperature + cycle. Sleep issues? Focus on sleep stages + HRV. Ignore the rest.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Section 5: Goal #6 - Budget -->
+<div class="page section-mint">
+    <div class="goal-card card-coral">
+        <div class="goal-header">
+            <span class="goal-icon">💰</span>
+            <h3 class="goal-title">Best for Budget-Conscious Buyers</h3>
+        </div>
+
+        <div class="goal-winner">
+            <p class="goal-winner-label">Winner</p>
+            <p class="goal-winner-device">Apple Watch SE 2 ($249) or Fitbit Charge 6 ($159)</p>
+        </div>
+
+        <p><strong>Why:</strong> Good accuracy for basic tracking without premium price. No subscriptions required (for health features). Solid entry point to wearables without $400-$700 investment.</p>
+
+        <p><strong>What you sacrifice:</strong></p>
+        <ul style="font-size: 15px;">
+            <li>Advanced metrics (detailed HRV, recovery scores)</li>
+            <li>Premium materials (aluminum vs. titanium)</li>
+            <li>Some accuracy (budget devices have larger error margins)</li>
+            <li>Temperature tracking for fertility (not included in SE)</li>
+        </ul>
+
+        <p><strong>Who this is for:</strong> New to wearables and want to try before investing more. Basic tracking (steps, sleep, heart rate) is sufficient for your goals. Can't afford $400+ device right now.</p>
+
+        <div class="tip-box">
+            <p><strong>💡 Budget Option Strategy</strong></p>
+            <p>Start with budget device ($150-$250) to build awareness of your patterns. If you find it valuable and want more features, upgrade in 1-2 years. Better than analysis paralysis preventing you from starting.</p>
+        </div>
+    </div>
+
+    <div class="pull-quote">
+        "Your health goal determines the best device—not which is 'objectively best.' Choose based on YOUR priorities."
+    </div>
+</div>
+
+<!-- SECTION 6: Total Cost Breakdown -->
+<div class="page section-gray">
+    <div class="section-header">
+        <span class="section-icon">💵</span>
+        <h2>Total Cost Breakdown: The Real Numbers</h2>
+    </div>
+
+    <p>Upfront price is only part of the story. Here's what you'll actually spend over time, including subscriptions.</p>
+
+    <div class="cost-card">
+        <p class="cost-device-name">Oura Ring (Gen 4)</p>
+        <div class="cost-row">
+            <span class="cost-label">Device</span>
+            <span class="cost-value">$349</span>
+        </div>
+        <div class="cost-row">
+            <span class="cost-label">Year 1 Subscription</span>
+            <span class="cost-value">$70</span>
+        </div>
+        <div class="cost-row">
+            <span class="cost-label">Year 1 Total</span>
+            <span class="cost-value">$419</span>
+        </div>
+        <div class="cost-row">
+            <span class="cost-label">Year 3 Total</span>
+            <span class="cost-value">$559</span>
+        </div>
+    </div>
+
+    <div class="cost-card">
+        <p class="cost-device-name">Apple Watch (Series 10)</p>
+        <div class="cost-row">
+            <span class="cost-label">Device</span>
+            <span class="cost-value">$399-$799</span>
+        </div>
+        <div class="cost-row">
+            <span class="cost-label">Subscription</span>
+            <span class="cost-value">$0</span>
+        </div>
+        <div class="cost-row">
+            <span class="cost-label">Year 1 Total</span>
+            <span class="cost-value">$399-$799</span>
+        </div>
+        <div class="cost-row">
+            <span class="cost-label">Year 3 Total</span>
+            <span class="cost-value">Same</span>
+        </div>
+    </div>
+
+    <div class="cost-card">
+        <p class="cost-device-name">Whoop 4.0</p>
+        <div class="cost-row">
+            <span class="cost-label">Device</span>
+            <span class="cost-value">$0 (subscription only)</span>
+        </div>
+        <div class="cost-row">
+            <span class="cost-label">Year 1 Subscription</span>
+            <span class="cost-value">$239</span>
+        </div>
+        <div class="cost-row">
+            <span class="cost-label">Year 1 Total</span>
+            <span class="cost-value">$239</span>
+        </div>
+        <div class="cost-row">
+            <span class="cost-label">Year 3 Total</span>
+            <span class="cost-value">$717</span>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <p><strong>📊 Key Takeaway</strong></p>
+        <p><strong>Most expensive upfront ≠ most expensive long-term.</strong> Whoop looks cheapest Year 1 but costs more than Oura by Year 3. Apple Watch has highest upfront cost but NO ongoing subscription.</p>
+    </div>
+
+    <h3>Hidden Costs to Consider</h3>
+
+    <ul style="font-size: 15px;">
+        <li><strong>Replacement bands:</strong> $49-$99 for Apple Watch, $30-$50 for Whoop</li>
+        <li><strong>Cellular plans:</strong> +$10/month if you want Apple Watch with cellular (optional)</li>
+        <li><strong>Device lifespan:</strong> Typical 3-5 years before battery degradation or upgrade</li>
+    </ul>
+
+    <p style="margin-top: 24px; text-align: center; font-weight: 600;">Calculate 3-year total cost before deciding—subscription models add up.</p>
+</div>
+
+<!-- SECTION 7: Interpreting Your Data -->
+<div class="page section-light-purple">
+    <div class="section-header">
+        <span class="section-icon">📈</span>
+        <h2>Interpreting Your Data (Post-Purchase)</h2>
+    </div>
+
+    <p>You bought a device. Now what? Here's how to use your data effectively without overwhelm.</p>
+
+    <h3>1. Your Baseline Matters Most</h3>
+
+    <p>Track 2-4 weeks to establish <strong>YOUR personal baseline.</strong> Your HRV might be 45 or 140—both can be healthy. Compare against yourself, NOT population averages or your friend's numbers.</p>
+
+    <p><strong>Example:</strong> If YOUR normal HRV is 50, and it drops to 35 for multiple days, that's significant. But if your friend's HRV is 35 and that's her normal, she's fine.</p>
+
+    <h3>2. Focus on Trends, Not Daily Scores</h3>
+
+    <p>One bad sleep score? Doesn't matter. Week-long downward sleep trend? Worth investigating.</p>
+
+    <p><strong>What to look for:</strong> Patterns over 7-14 days. Persistent changes. Correlations (does alcohol the night before always tank your sleep? Does exercise timing affect HRV?)</p>
+
+    <h3>3. HRV Interpretation</h3>
+
+    <div class="card card-purple">
+        <h4>What YOUR HRV Trend Means</h4>
+        <p><strong>HRV rising over weeks:</strong> Good recovery, nervous system health improving</p>
+        <p><strong>HRV dropping for 2+ days:</strong> Stress response, illness coming, overtraining—body needs rest</p>
+        <p><strong>HRV fluctuates with cycle:</strong> Normal for women—typically higher follicular phase, lower luteal</p>
+    </div>
+
+    <div class="tip-box">
+        <p><strong>💡 Your HRV vs. "Optimal"</strong></p>
+        <p>Ignore articles claiming "optimal HRV is 60-100." YOUR normal might be 35 or 150. Age, fitness, genetics all affect baseline. What matters: YOUR trends, not arbitrary numbers.</p>
+    </div>
+</div>
+
+<!-- Section 7 Continued -->
+<div class="page section-light-purple">
+    <h3>4. Sleep Score Reality Check</h3>
+
+    <p><strong>85+ is generally good</strong>—but relative to YOUR baseline. Don't obsess over perfect 100 scores. Consistency matters more than perfection.</p>
+
+    <p><strong>What affects sleep:</strong> Alcohol, caffeine (even 8 hours before bed), stress, exercise timing, room temperature, screen time before bed.</p>
+
+    <p><strong>Use data to experiment:</strong> Try cutting caffeine after 2pm for a week. Track if sleep improves. Personalize based on YOUR data.</p>
+
+    <h3>5. Avoiding Data Overload</h3>
+
+    <p>Pick <strong>3-5 metrics</strong> to track based on your goals. Ignore the rest. Checking multiple times daily increases anxiety without providing useful information.</p>
+
+    <p><strong>Healthy relationship with data:</strong> Check once daily (morning). Notice trends weekly. Adjust habits based on patterns. Don't obsess.</p>
+
+    <div class="warning-box">
+        <p><strong>⚠️ Data Anxiety Warning Signs</strong></p>
+        <ul style="margin: 8px 0; font-size: 15px;">
+            <li>Checking device obsessively (5+ times daily)</li>
+            <li>Stress INCREASES when you see data</li>
+            <li>Fixation on perfect scores</li>
+            <li>Comparing yourself to others' metrics</li>
+        </ul>
+        <p><strong>If this is you:</strong> Take a break from tracking. Wearables are tools, not judges. Your worth isn't determined by HRV or sleep score.</p>
+    </div>
+
+    <h3>6. When to Be Concerned (Talk to Doctor)</h3>
+
+    <p><strong>Discuss with doctor if:</strong></p>
+    <ul style="font-size: 15px;">
+        <li>HRV dropping for 2+ weeks without obvious cause</li>
+        <li>RHR elevated for multiple days (could indicate illness, stress, or thyroid issue)</li>
+        <li>Sleep consistently poor despite good sleep hygiene</li>
+        <li>Cycle irregularities worsening (could indicate hormonal issue)</li>
+    </ul>
+
+    <p><strong>How to share data:</strong> Export trends (not individual scores). Show patterns over weeks. "My HRV has been consistently declining for 3 weeks" is more useful than "My HRV was 42 yesterday."</p>
+
+    <div class="pull-quote">
+        "Focus on YOUR trends over time, not single-day scores or comparison to 'optimal' numbers"
+    </div>
+</div>
+
+<!-- SECTION 8: Common Pitfalls -->
+<div class="page section-light-teal">
+    <div class="section-header">
+        <span class="section-icon">⚠️</span>
+        <h2>Common Pitfalls & How to Avoid Them</h2>
+    </div>
+
+    <p>Learn from others' mistakes. Here are the most common wearable pitfalls and how to avoid them:</p>
+
+    <div class="card card-coral">
+        <h4>1. Buying the Wrong Device for Your Goals</h4>
+        <p><strong>Pitfall:</strong> Bought what your friend has or what's "best" overall—without considering YOUR specific goals.</p>
+        <p><strong>Avoid it:</strong> Use goal-based selection (earlier in this guide). Prioritize YOUR primary health goal.</p>
+    </div>
+
+    <div class="card card-coral">
+        <h4>2. Data Overload</h4>
+        <p><strong>Pitfall:</strong> Tracking everything, checking constantly, feeling overwhelmed by metrics.</p>
+        <p><strong>Avoid it:</strong> Pick 3-5 key metrics tied to YOUR goals. Check once daily max. Ignore the rest.</p>
+    </div>
+
+    <div class="card card-coral">
+        <h4>3. Expecting Perfect Accuracy</h4>
+        <p><strong>Pitfall:</strong> Frustrated when device shows 6.8 hours sleep but you "know" it was 7 hours.</p>
+        <p><strong>Avoid it:</strong> Even best devices have 5-10% error margin. Look for trends, not perfect precision.</p>
+    </div>
+
+    <div class="card card-coral">
+        <h4>4. Comparing Yourself to Others</h4>
+        <p><strong>Pitfall:</strong> "My HRV is 45 but my friend's is 110—something's wrong with me!"</p>
+        <p><strong>Avoid it:</strong> Different baselines are normal. YOUR baseline matters. Compare to yourself only.</p>
+    </div>
+
+    <div class="card card-coral">
+        <h4>5. Subscription Surprise</h4>
+        <p><strong>Pitfall:</strong> Bought device, then realized features require ongoing subscription you didn't budget for.</p>
+        <p><strong>Avoid it:</strong> Calculate 3-year total cost BEFORE buying (use Section 6 in this guide).</p>
+    </div>
+
+    <div class="card card-coral">
+        <h4>6. Not Giving It Time</h4>
+        <p><strong>Pitfall:</strong> Expected immediate insights after 3 days of tracking.</p>
+        <p><strong>Avoid it:</strong> Takes 2-4 weeks to establish baseline. Cycle predictions need 2-3 months of data. Be patient.</p>
+    </div>
+</div>
+
+<!-- SECTION 9: Your Decision Framework -->
+<div class="page section-mint">
+    <div class="section-header">
+        <span class="section-icon">✅</span>
+        <h2>Your Decision Framework</h2>
+    </div>
+
+    <p style="text-align: center; font-size: 18px; font-weight: 600; margin-bottom: 24px;">Use this framework to reach YOUR decision</p>
+
+    <div class="checklist">
+        <p style="font-weight: 700; margin-bottom: 16px; font-size: 17px;">Step 1: What's Your PRIMARY Health Goal?</p>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Fertility tracking / trying to conceive → <strong>Oura Ring</strong></span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Sleep optimization → <strong>Oura Ring</strong></span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Perimenopause/menopause management → <strong>Oura Ring</strong></span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Fitness & active lifestyle → <strong>Apple Watch</strong></span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Comprehensive health tracking → <strong>Apple Watch</strong></span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Budget-conscious (<$250) → <strong>Apple Watch SE</strong> or <strong>Fitbit</strong></span>
+        </div>
+    </div>
+
+    <div class="checklist">
+        <p style="font-weight: 700; margin-bottom: 16px; font-size: 17px;">Step 2: What's Your Budget?</p>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Calculate 3-year total cost (device + subscriptions)</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Can you afford ongoing subscription? (Oura, Whoop)</span>
+        </div>
+    </div>
+
+    <div class="checklist">
+        <p style="font-weight: 700; margin-bottom: 16px; font-size: 17px;">Step 3: Smartwatch Features or Health-Only?</p>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Want communication/apps/music → <strong>Apple Watch</strong></span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Just health tracking, no distractions → <strong>Oura</strong> or <strong>Whoop</strong></span>
+        </div>
+    </div>
+
+    <div class="checklist">
+        <p style="font-weight: 700; margin-bottom: 16px; font-size: 17px;">Step 4: Are You in Apple/Samsung Ecosystem?</p>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>iPhone user → Apple Watch integrates seamlessly</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Samsung user → Consider Galaxy Ring (2025) or Galaxy Watch</span>
+        </div>
+    </div>
+
+    <div class="tip-box">
+        <p><strong>💡 Still Unsure? Try This</strong></p>
+        <p>Most devices offer <strong>30-day return policies.</strong> Buy your top choice, wear it for 2-3 weeks. If it's not working for you, return it and try your runner-up. You can't know for sure until you try.</p>
+    </div>
+
+    <p style="margin-top: 24px; text-align: center; font-weight: 600;">No device is perfect. Choose based on YOUR priorities and what you'll actually use.</p>
+</div>
+
+<!-- SECTION 10: Resources & Next Steps -->
+<div class="page section-light-purple">
+    <div class="section-header">
+        <span class="section-icon">📚</span>
+        <h2>Resources & Next Steps</h2>
+    </div>
+
+    <p>You're ready to decide. Here's where to buy, what to read, and how to get support.</p>
+
+    <h3>Where to Buy</h3>
+
+    <div class="card">
+        <h4>Official Websites vs. Amazon</h4>
+        <p><strong>Official websites:</strong> Best return policies (30 days, easy process). Latest models guaranteed.</p>
+        <p><strong>Amazon:</strong> Sometimes cheaper, but check return policy carefully. Ensure you're buying from official brand store, not third-party.</p>
+    </div>
+
+    <div class="tip-box">
+        <p><strong>💡 Use Trial Periods</strong></p>
+        <p>Most offer 30-day returns risk-free. Wear it for 2-3 weeks before deciding. You need time to establish baseline and see if it fits your lifestyle.</p>
+    </div>
+
+    <h3>Communities for Support</h3>
+
+    <div class="card">
+        <h4>Reddit Communities</h4>
+        <p><strong>r/ouraring:</strong> Oura Ring users sharing tips, troubleshooting, data interpretation</p>
+        <p><strong>r/AppleWatch:</strong> Apple Watch community for tips, apps, features</p>
+        <p><strong>r/whoop:</strong> Whoop users focused on recovery optimization</p>
+    </div>
+
+    <h3>Further Reading: Validation Studies</h3>
+
+    <div class="card">
+        <h4>Device Accuracy Research</h4>
+        <p><strong>Physiological Reports (2025):</strong> Oura/Whoop/Polar validation study for HRV and RHR accuracy</p>
+        <p><strong>JMIR (2024):</strong> Wearable reproductive health technology systematic review</p>
+        <p><strong>MDPI Sensors:</strong> Multi-device validation comparing sleep stage accuracy</p>
+    </div>
+
+    <h3>Apps to Pair with Your Wearable</h3>
+
+    <ul style="font-size: 15px;">
+        <li><strong>Fertility Friend:</strong> Combines wearable temp data with symptoms for TTC</li>
+        <li><strong>Flo or Clue:</strong> Cycle tracking apps that integrate with wearables</li>
+        <li><strong>Apple Health:</strong> Centralizes data from multiple sources (iPhone users)</li>
+    </ul>
+
+    <div class="pull-quote">
+        "The best device is the one YOU'LL actually wear and use consistently—not the one with the most features"
+    </div>
+
+    <p style="margin-top: 32px; text-align: center; font-weight: 600;">You have the information. Now make YOUR decision with confidence.</p>
+</div>
+
+<!-- LEGAL DISCLAIMER PAGE -->
+<div class="page footer">
+    <h3 style="color: var(--text-dark); font-family: 'Inter', sans-serif; font-size: 16px; margin-bottom: 16px;">Medical Disclaimer & Important Disclosures</h3>
+
+    <p><strong>Medical Disclaimer:</strong> This guide is for educational and informational purposes only and does not constitute medical advice. Always consult with qualified healthcare providers regarding medical conditions, diagnosis, and treatment. Do not disregard professional medical advice or delay seeking it because of information in this guide.</p>
+
+    <p><strong>No Doctor-Patient Relationship:</strong> Reading this guide does not create a doctor-patient or healthcare provider relationship.</p>
+
+    <p><strong>Device Accuracy:</strong> Wearable devices vary in accuracy and are not medical diagnostic tools. Even the best consumer wearables have 5-10% error margins. Always consult healthcare providers for medical decisions based on wearable data.</p>
+
+    <p><strong>Fertility Tracking:</strong> Wearable fertility tracking devices (Oura Ring, Apple Watch, etc.) are NOT FDA-approved contraceptives and should not be relied upon for birth control. They are awareness tools for trying to conceive, not pregnancy prevention.</p>
+
+    <p><strong>Product Comparisons:</strong> Device comparisons are based on publicly available specifications, validation studies, and user reports as of 2025. Features and accuracy may change with software updates. Always verify current specifications before purchase.</p>
+
+    <p><strong>Affiliate Disclosure:</strong> This guide may contain affiliate links to products. We may earn a commission if you make a purchase through these links at no additional cost to you. We only recommend products we genuinely believe are valuable based on evidence and research. All opinions and comparisons are independent and not influenced by affiliate partnerships.</p>
+
+    <p style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #cbd5e0;"><strong>© 2025 HealthEGuides. All rights reserved.</strong></p>
+
+    <p style="margin-bottom: 0;">Evidence-Based Women's Health Information</p>
+</div>
+
+</body>
+</html>

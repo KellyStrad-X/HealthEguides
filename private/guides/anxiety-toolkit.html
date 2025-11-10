@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=375, initial-scale=1.0">
+    <title>The Anxiety Toolkit for Women - HealthEGuides</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Anxiety Toolkit Color Palette - Calming Sanctuary */
+            --sage-green: #8BA888;
+            --lavender: #B4A7D6;
+            --calm-teal: #4ECDC4;
+            --periwinkle: #9FA8DA;
+            --warm-coral: #FF6B6B;
+            --soft-blue: #A8DADC;
+
+            /* Text Colors */
+            --text-dark: #2c3e50;
+            --text-medium: #5a6c7d;
+            --text-light: #7f8c8d;
+
+            /* Background Colors */
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --bg-cream: #FAF9F6;
+
+            /* Gradients - Calming Theme */
+            --gradient-sage: linear-gradient(135deg, #c9e4ca 0%, #b5d8b6 100%);
+            --gradient-lavender: linear-gradient(135deg, #e8e0f5 0%, #d4c5eb 100%);
+            --gradient-teal: linear-gradient(135deg, #d4f4f1 0%, #b8ebe6 100%);
+            --gradient-periwinkle: linear-gradient(135deg, #e8ebf9 0%, #d4d9f2 100%);
+            --gradient-calm: linear-gradient(135deg, #8BA888 0%, #4ECDC4 100%);
+
+            /* Design System */
+            --border-radius: 12px;
+            --box-shadow: 0 2px 15px rgba(0,0,0,0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-white);
+            width: 375px;
+            margin: 0 auto;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .page {
+            width: 375px;
+            min-height: 600px;
+            padding: 24px 20px;
+            page-break-after: always;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page:last-child {
+            page-break-after: auto;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--sage-green);
+            margin-top: 24px;
+        }
+
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-top: 20px;
+        }
+
+        h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-top: 16px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        /* Hero/Cover Page */
+        .hero {
+            background: var(--gradient-calm);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: rgba(180, 167, 214, 0.15);
+            border-radius: 50%;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            color: white;
+            margin-bottom: 16px;
+            line-height: 1.2;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-emoji {
+            font-size: 56px;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            line-height: 1.5;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.95);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 40px;
+            width: 100%;
+            padding-top: 40px;
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            display: block;
+            margin-bottom: 4px;
+            color: white;
+        }
+
+        .hero-stat-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .copyright {
+            margin-top: 30px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Section Backgrounds */
+        .section-sage {
+            background: var(--gradient-sage);
+        }
+
+        .section-lavender {
+            background: var(--gradient-lavender);
+        }
+
+        .section-teal {
+            background: var(--gradient-teal);
+        }
+
+        .section-periwinkle {
+            background: var(--gradient-periwinkle);
+        }
+
+        .section-calm-gradient {
+            background: var(--gradient-calm);
+            color: white;
+            position: relative;
+        }
+
+        .section-calm-gradient h2,
+        .section-calm-gradient h3,
+        .section-calm-gradient h4 {
+            color: white;
+        }
+
+        .section-calm-gradient p,
+        .section-calm-gradient li {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Section Icons */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .section-icon {
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-left: 5px solid var(--sage-green);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin: 16px 0;
+            box-shadow: var(--box-shadow);
+        }
+
+        .card h4 {
+            color: var(--sage-green);
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .card p:last-child {
+            margin-bottom: 0;
+        }
+
+        .card-lavender {
+            border-left-color: var(--lavender);
+        }
+
+        .card-lavender h4 {
+            color: var(--lavender);
+        }
+
+        .card-teal {
+            border-left-color: var(--calm-teal);
+        }
+
+        .card-teal h4 {
+            color: var(--calm-teal);
+        }
+
+        .card-periwinkle {
+            border-left-color: var(--periwinkle);
+        }
+
+        .card-periwinkle h4 {
+            color: var(--periwinkle);
+        }
+
+        /* Technique Cards */
+        .technique {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin: 20px 0;
+            box-shadow: var(--box-shadow);
+            border-left: 5px solid var(--calm-teal);
+        }
+
+        .technique-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .technique-icon {
+            font-size: 32px;
+        }
+
+        .technique-name {
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--calm-teal);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .technique-when {
+            font-size: 14px;
+            color: var(--text-medium);
+            font-style: italic;
+            margin-bottom: 12px;
+        }
+
+        .technique-steps {
+            margin: 16px 0;
+        }
+
+        .technique-steps ol {
+            margin: 0;
+            padding-left: 24px;
+        }
+
+        .technique-steps li {
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .technique-why {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e8e8e8;
+            font-size: 14px;
+            color: var(--text-medium);
+        }
+
+        /* Callout Boxes */
+        .tip-box {
+            background: rgba(139, 168, 136, 0.1);
+            border-left: 6px solid var(--sage-green);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .warning-box {
+            background: rgba(255, 107, 107, 0.08);
+            border-left: 6px solid var(--warm-coral);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .calm-box {
+            background: rgba(78, 205, 196, 0.1);
+            border-left: 6px solid var(--calm-teal);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .stat-box {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            color: var(--sage-green);
+            display: block;
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: var(--text-medium);
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        strong {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .section-calm-gradient strong {
+            color: white;
+        }
+
+        /* Pull Quote */
+        .pull-quote {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--sage-green);
+            font-style: italic;
+            margin: 24px 0;
+            padding-left: 20px;
+            border-left: 4px solid var(--sage-green);
+            line-height: 1.4;
+        }
+
+        .section-calm-gradient .pull-quote {
+            color: white;
+            border-left-color: white;
+        }
+
+        /* Quick Reference */
+        .quick-ref {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 16px 0;
+            box-shadow: var(--box-shadow);
+            border-left: 5px solid var(--warm-coral);
+        }
+
+        .quick-ref-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--warm-coral);
+            margin-bottom: 12px;
+        }
+
+        .quick-ref-arrow {
+            color: var(--warm-coral);
+            font-weight: 700;
+            margin: 0 8px;
+        }
+
+        .quick-ref-solution {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Checklist */
+        .checklist {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 24px 0;
+            box-shadow: var(--box-shadow);
+        }
+
+        .checklist-item {
+            padding: 10px 0;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .checkbox {
+            font-size: 18px;
+            color: var(--sage-green);
+            line-height: 1.6;
+        }
+
+        /* Chapter Divider */
+        .chapter-divider {
+            text-align: center;
+            padding: 40px 20px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chapter-emoji {
+            font-size: 56px;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        .chapter-title {
+            font-size: 28px;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 16px;
+        }
+
+        .chapter-description {
+            font-size: 16px;
+            max-width: 300px;
+        }
+
+        /* Footer/Disclaimer */
+        .footer {
+            background: #f8f9fa;
+            padding: 24px 20px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--text-medium);
+        }
+
+        .footer p {
+            margin-bottom: 12px;
+        }
+
+        .footer strong {
+            color: var(--text-dark);
+        }
+
+        @media print {
+            @page {
+                size: letter;
+                margin: 0;
+            }
+
+            body {
+                width: 375px;
+            }
+
+            .page {
+                page-break-after: always;
+            }
+
+            .page:last-child {
+                page-break-after: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="page hero">
+    <div class="hero-emoji">🌿</div>
+    <h1>The Anxiety Toolkit for Women</h1>
+    <p class="hero-subtitle">Evidence-based tools for panic attacks, racing thoughts, social anxiety, hormonal anxiety, and more—the right strategy for every situation</p>
+
+    <div class="hero-stats">
+        <div class="hero-stat">
+            <span class="hero-stat-number">23.4%</span>
+            <span class="hero-stat-label">Of U.S. Women Had Anxiety Disorder (Past Year)</span>
+        </div>
+        <div class="hero-stat">
+            <span class="hero-stat-number">Manageable</span>
+            <span class="hero-stat-label">With the Right Tools and Strategies</span>
+        </div>
+        <div class="hero-stat">
+            <span class="hero-stat-number">Evidence-Based</span>
+            <span class="hero-stat-label">Techniques Backed by Research</span>
+        </div>
+    </div>
+
+    <p class="copyright">© 2025 HealthEGuides. All rights reserved.</p>
+</div>
+
+<!-- SECTION 1: Your Anxiety Is Real -->
+<div class="page section-sage">
+    <div class="section-header">
+        <span class="section-icon">💚</span>
+        <h2>Your Anxiety Is Real (And Manageable)</h2>
+    </div>
+
+    <p>2 AM. Your brain won't shut off. Thoughts racing. Heart pounding. Tomorrow you have that important meeting, which makes you more anxious, which makes sleep even harder. The spiral continues.</p>
+
+    <p><strong>Sound familiar?</strong></p>
+
+    <p>If you're reading this, you know what anxiety feels like. Maybe you have racing thoughts that won't stop. Maybe you've had panic attacks with overwhelming physical symptoms. Maybe your anxiety worsens at certain times in your cycle. Maybe you look successful on the outside while struggling internally.</p>
+
+    <div class="stat-box">
+        <span class="stat-number">23.4%</span>
+        <p class="stat-label">Of U.S. women experienced anxiety disorder in past year (NIMH)</p>
+    </div>
+
+    <p>Nearly 1 in 4 women experienced anxiety disorder in the past year. <strong>You're not broken, and you're not alone.</strong></p>
+
+    <h3>What This Toolkit Provides</h3>
+
+    <p>This isn't a psychology textbook. It's a practical toolkit you can use immediately—whether you're spiraling at 2 AM, having a panic attack at work, or managing hormonal anxiety.</p>
+
+    <p>You'll learn:</p>
+    <ul>
+        <li>Foundation techniques that work for most anxiety situations</li>
+        <li>Situation-specific strategies (panic, sleep, social, hormonal)</li>
+        <li>How to understand what's happening in your body</li>
+        <li>When to seek professional help</li>
+    </ul>
+</div>
+
+<!-- Section 1 Continued -->
+<div class="page section-sage">
+    <h3>Anxiety Isn't... vs. Anxiety Is...</h3>
+
+    <div class="card">
+        <h4>❌ Anxiety Isn't:</h4>
+        <ul style="margin: 8px 0; font-size: 15px;">
+            <li>A character flaw or weakness</li>
+            <li>Something you can "just relax" away</li>
+            <li>"All in your head" (physical symptoms are REAL)</li>
+            <li>Something that will disappear completely</li>
+        </ul>
+    </div>
+
+    <div class="card card-teal">
+        <h4>✓ Anxiety Is:</h4>
+        <ul style="margin: 8px 0; font-size: 15px;">
+            <li>A physiological response (brain chemistry, hormones, nervous system)</li>
+            <li>Extremely common—especially in women</li>
+            <li>Manageable with the right tools</li>
+            <li>Something you can reduce in frequency and intensity</li>
+        </ul>
+    </div>
+
+    <h3>High-Functioning Anxiety Is Real</h3>
+
+    <p>You can appear successful, capable, and "fine" externally while struggling internally. If you:</p>
+
+    <ul>
+        <li>Achieve your goals but never feel "good enough"</li>
+        <li>Perfectionism drives you (and exhausts you)</li>
+        <li>Constantly worry despite external success</li>
+        <li>Overthink every decision and interaction</li>
+    </ul>
+
+    <p><strong>That's high-functioning anxiety</strong>—and it's just as real as visible anxiety.</p>
+
+    <div class="pull-quote">
+        "Your anxiety is real—it's a physiological response, not a character flaw"
+    </div>
+
+    <p style="text-align: center; margin-top: 24px; font-style: italic;">The goal isn't to eliminate anxiety completely—it's to reduce frequency and intensity. Let's give you the tools to do that.</p>
+</div>
+
+<!-- SECTION 2: Understanding Your Anxiety Response -->
+<div class="page section-lavender">
+    <div class="section-header">
+        <span class="section-icon">🧠</span>
+        <h2>Understanding Your Anxiety Response</h2>
+    </div>
+
+    <p>Before we dive into techniques, let's briefly understand <strong>why</strong> anxiety feels so intense—and why these tools work.</p>
+
+    <h3>What Happens in Your Body During Anxiety</h3>
+
+    <p>Anxiety triggers your <strong>fight-or-flight response</strong>—your nervous system's alarm system designed to protect you from danger.</p>
+
+    <p><strong>What happens:</strong></p>
+    <ul>
+        <li>Heart rate increases (pumps blood to muscles for "fight or flight")</li>
+        <li>Breathing quickens (more oxygen for emergency response)</li>
+        <li>Cortisol spikes (stress hormone mobilizes energy)</li>
+        <li>Digestion slows (non-essential functions shut down)</li>
+        <li>Muscles tense (prepare for action)</li>
+    </ul>
+
+    <p><strong>The problem:</strong> Your nervous system can't tell the difference between a real threat (lion chasing you) and a perceived threat (work presentation, social event, intrusive thought).</p>
+
+    <p>So your body launches the same intense physiological response for non-life-threatening situations.</p>
+
+    <div class="calm-box">
+        <p><strong>💙 Why These Physical Symptoms Are REAL</strong></p>
+        <p>Your racing heart, sweating, shaking, difficulty breathing—these aren't "all in your head." They're your nervous system activating survival mode. Understanding this helps you respond effectively rather than panicking about panicking.</p>
+    </div>
+
+    <h3>How Tools Interrupt the Response</h3>
+
+    <p>The techniques in this toolkit work by <strong>regulating your nervous system physiologically.</strong> They're not just distractions—they actually change what's happening in your body.</p>
+
+    <p><strong>Breathing techniques:</strong> Activate parasympathetic nervous system (rest and digest), slow heart rate</p>
+
+    <p><strong>Grounding techniques:</strong> Bring you into present moment, interrupt rumination spiral</p>
+
+    <p><strong>Progressive muscle relaxation:</strong> Releases physical tension, signals safety to brain</p>
+
+    <p style="margin-top: 24px; text-align: center; font-style: italic;">Now that you understand the "why," let's learn the "what to do."</p>
+</div>
+
+<!-- CHAPTER DIVIDER: Foundation Tools -->
+<div class="page section-calm-gradient chapter-divider">
+    <div class="chapter-emoji">🛠️</div>
+    <h2 class="chapter-title">Foundation Tools</h2>
+    <p class="chapter-description">Master these 4 core techniques—they work for most anxiety situations and form the foundation of your toolkit</p>
+</div>
+
+<!-- SECTION 3: Foundation Tools - Box Breathing -->
+<div class="page section-teal">
+    <h2>Foundation Tool #1: Box Breathing</h2>
+    <p style="font-style: italic; color: var(--text-medium); margin-bottom: 24px;">⭐ Start here—this is your most versatile tool</p>
+
+    <div class="technique">
+        <div class="technique-header">
+            <span class="technique-icon">💨</span>
+            <h3 class="technique-name">Box Breathing (4-4-4-4)</h3>
+        </div>
+
+        <p class="technique-when">When to use: Anytime, anywhere. During panic attacks, before stressful situations, when lying awake at night, feeling overwhelmed at work.</p>
+
+        <div class="technique-steps">
+            <p><strong>How to do it:</strong></p>
+            <ol>
+                <li><strong>Inhale</strong> through your nose for 4 counts</li>
+                <li><strong>Hold</strong> your breath for 4 counts</li>
+                <li><strong>Exhale</strong> through your mouth for 4 counts</li>
+                <li><strong>Hold</strong> empty lungs for 4 counts</li>
+                <li><strong>Repeat</strong> for 4-5 cycles (about 2 minutes)</li>
+            </ol>
+        </div>
+
+        <p class="technique-why"><strong>Why it works:</strong> Slows heart rate, activates parasympathetic nervous system (rest and digest), gives your brain something to focus on besides anxious thoughts.</p>
+    </div>
+
+    <div class="tip-box">
+        <p><strong>💡 Pro Tip: Practice When Calm</strong></p>
+        <p>Practice box breathing when you're NOT anxious so it's automatic when you ARE. Try it right now. Your anxiety brain will remember this tool when it's needed.</p>
+    </div>
+
+    <h2>Foundation Tool #2: 5-4-3-2-1 Grounding</h2>
+
+    <div class="technique">
+        <div class="technique-header">
+            <span class="technique-icon">🖐️</span>
+            <h3 class="technique-name">5-4-3-2-1 Sensory Grounding</h3>
+        </div>
+
+        <p class="technique-when">When to use: During panic attacks, dissociation, when spiraling in anxious thoughts, feeling disconnected from reality.</p>
+
+        <div class="technique-steps">
+            <p><strong>How to do it:</strong></p>
+            <ol>
+                <li><strong>Name 5 things you can see</strong> around you</li>
+                <li><strong>Name 4 things you can touch</strong> (feel the texture)</li>
+                <li><strong>Name 3 things you can hear</strong> right now</li>
+                <li><strong>Name 2 things you can smell</strong> (or like to smell)</li>
+                <li><strong>Name 1 thing you can taste</strong> (or favorite taste)</li>
+            </ol>
+        </div>
+
+        <p class="technique-why"><strong>Why it works:</strong> Brings you into the present moment through your five senses. Interrupts anxious rumination spiral by engaging your brain in observation instead of worry.</p>
+    </div>
+</div>
+
+<!-- Section 3 Continued - More Foundation Tools -->
+<div class="page section-teal">
+    <h2>Foundation Tool #3: Progressive Muscle Relaxation</h2>
+
+    <div class="technique">
+        <div class="technique-header">
+            <span class="technique-icon">💪</span>
+            <h3 class="technique-name">Progressive Muscle Relaxation (PMR)</h3>
+        </div>
+
+        <p class="technique-when">When to use: Bedtime anxiety, physical tension from stress, when you can't "turn off," before sleep.</p>
+
+        <div class="technique-steps">
+            <p><strong>How to do it:</strong></p>
+            <ol>
+                <li><strong>Start with your toes</strong> — Tense them for 5 seconds, then release</li>
+                <li><strong>Move to your calves</strong> — Tense, hold, release</li>
+                <li><strong>Thighs</strong> — Tense, hold, release</li>
+                <li><strong>Continue upward</strong>: stomach, chest, hands, arms, shoulders, neck, face</li>
+                <li><strong>Notice the difference</strong> between tension and relaxation</li>
+            </ol>
+        </div>
+
+        <p class="technique-why"><strong>Why it works:</strong> Releases physical tension stored in muscles. The contrast between tension and relaxation helps you recognize where you're holding stress. Signals safety to your nervous system.</p>
+    </div>
+
+    <h2>Foundation Tool #4: Thought-Stopping</h2>
+
+    <div class="technique">
+        <div class="technique-header">
+            <span class="technique-icon">🛑</span>
+            <h3 class="technique-name">Thought-Stopping Technique</h3>
+        </div>
+
+        <p class="technique-when">When to use: Racing thoughts, rumination spirals, catastrophic thinking, can't stop worrying about something.</p>
+
+        <div class="technique-steps">
+            <p><strong>How to do it:</strong></p>
+            <ol>
+                <li><strong>Notice</strong> when you're caught in anxious thought loop</li>
+                <li><strong>Say "STOP"</strong> (out loud or in your head) firmly</li>
+                <li><strong>Visualize</strong> a stop sign or imagine pushing pause</li>
+                <li><strong>Redirect</strong> to present moment (grounding) or neutral thought</li>
+                <li><strong>If thought returns</strong>, repeat process without judgment</li>
+            </ol>
+        </div>
+
+        <p class="technique-why"><strong>Why it works:</strong> Interrupts rumination pattern. Your brain needs a "pattern interrupt" to break out of anxiety loops. This creates that interrupt.</p>
+    </div>
+
+    <div class="pull-quote">
+        "You now have 4 foundation tools. Practice them when calm so they're available when you're anxious."
+    </div>
+</div>
+
+<!-- SECTION 4: Situation-Specific - Panic Attacks -->
+<div class="page section-periwinkle">
+    <div class="section-header">
+        <span class="section-icon">🚨</span>
+        <h2>Situation-Specific: Panic Attacks</h2>
+    </div>
+
+    <p>Panic attacks are terrifying—but they will pass. Here's what to do in the moment and after.</p>
+
+    <h3>What's Happening in Your Body</h3>
+
+    <p>Panic attacks are your fight-or-flight response at maximum intensity—triggered even though there's no real danger. Symptoms peak at around <strong>10 minutes</strong> and then subside.</p>
+
+    <p><strong>Common symptoms:</strong> Racing heart, chest tightness, difficulty breathing, sweating, shaking, feeling like you're dying or going crazy, derealization (feeling unreal).</p>
+
+    <h3>Immediate Response During Panic Attack</h3>
+
+    <div class="card card-teal">
+        <h4>Step 1: Box Breathing</h4>
+        <p>Start box breathing immediately. Focus entirely on the counts: 4 in, 4 hold, 4 out, 4 hold. This is your anchor.</p>
+    </div>
+
+    <div class="card card-teal">
+        <h4>Step 2: Ground Yourself</h4>
+        <p>5-4-3-2-1 grounding technique. Name what you see, touch, hear. This brings you back to present moment and reminds your brain you're safe.</p>
+    </div>
+
+    <div class="card card-teal">
+        <h4>Step 3: Ride the Wave</h4>
+        <p>Remind yourself: <strong>"This will peak at 10 minutes and pass. It always does. I am not in danger."</strong> Fighting it makes it worse. Let it move through you.</p>
+    </div>
+
+    <h3>What NOT to Do</h3>
+
+    <ul>
+        <li>❌ Don't fight the panic (creates more tension)</li>
+        <li>❌ Don't catastrophize ("I'm dying" makes it worse)</li>
+        <li>❌ Don't avoid the situation forever (avoidance strengthens fear)</li>
+    </ul>
+
+    <h3>After-Care: Once Panic Subsides</h3>
+
+    <p>After a panic attack, you'll feel exhausted. That's normal—your body just went through intense physiological activation.</p>
+
+    <ul>
+        <li>Rest if possible</li>
+        <li>Drink water (you likely sweated)</li>
+        <li>Be gentle with yourself—no self-criticism</li>
+        <li>Note what triggered it (if identifiable) for future awareness</li>
+    </ul>
+
+    <div class="calm-box">
+        <p><strong>💙 Remember: Panic Attacks Feel Awful But Aren't Dangerous</strong></p>
+        <p>It feels like you're dying, but you're not. It feels like it will last forever, but it won't. Peak intensity is about 10 minutes. You WILL get through this.</p>
+    </div>
+</div>
+
+<!-- Section 4 Continued - Racing Thoughts at Night -->
+<div class="page section-periwinkle">
+    <div class="section-header">
+        <span class="section-icon">🌙</span>
+        <h2>Situation-Specific: Racing Thoughts at Night</h2>
+    </div>
+
+    <p>2 AM. Your brain won't shut off. Every worry feels urgent. Tomorrow you'll be exhausted, which makes you more anxious about not sleeping... the cycle continues.</p>
+
+    <h3>Why Anxiety Spikes at Bedtime</h3>
+
+    <p>Without daytime distractions, your mind has space to worry. Plus, cortisol patterns can spike in some people at night. It's not your fault—it's biology.</p>
+
+    <h3>Techniques for Bedtime Anxiety</h3>
+
+    <div class="card card-lavender">
+        <h4>Progressive Muscle Relaxation</h4>
+        <p>Start at your toes, work up to your head. Tense each muscle group for 5 seconds, then release. The physical relaxation signals to your brain that it's safe to sleep.</p>
+    </div>
+
+    <div class="card card-lavender">
+        <h4>Thought Download Before Bed</h4>
+        <p><strong>Do this 30 minutes before sleep:</strong> Write down everything on your mind—worries, to-dos, random thoughts. This "downloads" them from your brain so you stop rehearsing them mentally.</p>
+    </div>
+
+    <div class="card card-lavender">
+        <h4>4-7-8 Breathing for Sleep</h4>
+        <p><strong>How:</strong> Inhale for 4 counts, hold for 7, exhale for 8. Repeat 4 times. The long exhale activates relaxation response and makes you drowsy.</p>
+    </div>
+
+    <h3>When to Get Up vs. Stay in Bed</h3>
+
+    <p><strong>If you've been awake 20+ minutes:</strong> Get up. Go to a different room. Do something calming and boring (not screens). Return when genuinely sleepy—not just tired.</p>
+
+    <p><strong>Why:</strong> Your bed should be associated with sleep, not with lying awake anxious. This breaks the negative association.</p>
+
+    <div class="tip-box">
+        <p><strong>💡 Scheduled Worry Time</strong></p>
+        <p>Set aside 15 minutes earlier in the day (not before bed) to worry intentionally. When nighttime worries arise, remind yourself: "I'll think about this during worry time tomorrow." This trains your brain that bedtime isn't for problem-solving.</p>
+    </div>
+</div>
+
+<!-- Section 4 Continued - Social Anxiety -->
+<div class="page section-sage">
+    <div class="section-header">
+        <span class="section-icon">👥</span>
+        <h2>Situation-Specific: Social Anxiety</h2>
+    </div>
+
+    <p>Before, during, and after social events—here's how to manage the anxiety that shows up at each stage.</p>
+
+    <h3>Before the Event: Preparation</h3>
+
+    <div class="card">
+        <h4>Set Realistic Expectations</h4>
+        <p>You don't need to be "on" the whole time. You don't need to be the most interesting person there. You just need to show up and be yourself. Lower the bar.</p>
+    </div>
+
+    <div class="card">
+        <h4>Box Breathing for 2 Minutes</h4>
+        <p>Before leaving home or in the car. Calms your nervous system before you enter the situation.</p>
+    </div>
+
+    <h3>During the Event: Grounding Yourself</h3>
+
+    <div class="card card-teal">
+        <h4>Tactile Anchor</h4>
+        <p>Carry something you can touch discreetly (smooth stone, piece of jewelry, fabric in your pocket). When overwhelmed, focus on the texture. This grounds you.</p>
+    </div>
+
+    <div class="card card-teal">
+        <h4>Conversation Technique: Ask Questions</h4>
+        <p>Anxious about what to say? Ask questions. People love talking about themselves. "How do you know the host?" "What are you working on lately?" Takes pressure off you.</p>
+    </div>
+
+    <div class="card card-teal">
+        <h4>Permission to Leave Early</h4>
+        <p>You don't have to stay the entire time. Give yourself permission to leave when your social battery is depleted. Quality over quantity.</p>
+    </div>
+
+    <h3>After the Event: Managing Post-Event Rumination</h3>
+
+    <p>Replaying every conversation? Cringing at what you said? This is <strong>extremely common</strong> with social anxiety.</p>
+
+    <div class="card card-lavender">
+        <h4>Thought-Stopping</h4>
+        <p>When you catch yourself replaying: "STOP. That conversation is over. I can't change it." Then redirect to present moment.</p>
+    </div>
+
+    <div class="card card-lavender">
+        <h4>Self-Compassion</h4>
+        <p>What would you say to a friend who was ruminating? "You were fine. No one is analyzing your every word. You're being harder on yourself than anyone else is." Say this to yourself.</p>
+    </div>
+
+    <h3>Gradual Exposure Builds Tolerance</h3>
+
+    <p>Each time you face a social situation (even if it's anxious), you're building tolerance. It gets easier with practice. Start small and build up.</p>
+</div>
+
+<!-- Section 4 Continued - High-Functioning Anxiety -->
+<div class="page section-sage">
+    <div class="section-header">
+        <span class="section-icon">⚡</span>
+        <h2>Situation-Specific: High-Functioning Anxiety</h2>
+    </div>
+
+    <p>You achieve your goals. You look successful externally. But internally? Constant worry, perfectionism, never feeling "good enough." That's high-functioning anxiety—and it's exhausting.</p>
+
+    <h3>Recognizing the Signs</h3>
+
+    <ul>
+        <li>Perfectionism drives you (and burns you out)</li>
+        <li>"What if" thoughts dominate your planning</li>
+        <li>You overprepare for everything</li>
+        <li>You can't turn off your brain—always thinking ahead</li>
+        <li>You achieve goals but never feel satisfied</li>
+    </ul>
+
+    <h3>Strategies for High-Functioning Anxiety</h3>
+
+    <div class="card card-periwinkle">
+        <h4>Challenge "What If" Thoughts</h4>
+        <p><strong>Anxious brain:</strong> "What if I fail? What if they judge me?"</p>
+        <p><strong>Response:</strong> "What if it goes well? What if they don't care? What evidence do I have for these fears?"</p>
+        <p>Most "what ifs" never happen. Challenge them with reality.</p>
+    </div>
+
+    <div class="card card-periwinkle">
+        <h4>Set Boundaries to Reduce Overwhelm</h4>
+        <p>You don't have to say yes to everything. You don't have to overdeliver constantly. Practice: "I need to check my capacity before committing." Protect your energy.</p>
+    </div>
+
+    <div class="card card-periwinkle">
+        <h4>Scheduled Worry Time</h4>
+        <p>Set 15 minutes daily for intentional worrying. When anxious thoughts arise outside that window: "I'll think about this during worry time at 3pm." This contains the worry instead of letting it spread all day.</p>
+    </div>
+
+    <div class="card card-periwinkle">
+        <h4>Embrace "Good Enough"</h4>
+        <p>Perfectionism is exhausting and impossible. Practice identifying when something is "good enough" instead of striving for perfect. 80% effort for most things is sufficient.</p>
+    </div>
+
+    <div class="pull-quote">
+        "High-functioning anxiety looks like success externally but feels like drowning internally—you're allowed to prioritize rest over achievement"
+    </div>
+</div>
+
+<!-- Section 4 Continued - Anticipatory Anxiety -->
+<div class="page section-lavender">
+    <div class="section-header">
+        <span class="section-icon">⏰</span>
+        <h2>Situation-Specific: Anticipatory Anxiety</h2>
+    </div>
+
+    <p>Worrying about future events—presentations, medical appointments, difficult conversations. The anxiety about the thing feels worse than the thing itself.</p>
+
+    <h3>Productive vs. Unproductive Worry</h3>
+
+    <p><strong>Productive worry:</strong> Leads to action (preparing for presentation, making a plan, solving a problem)</p>
+
+    <p><strong>Unproductive worry:</strong> Spinning in circles about things you can't control, catastrophizing, mental rehearsal without action</p>
+
+    <p><strong>Ask yourself:</strong> "Is this worry leading to action, or just mental spinning?" If it's spinning, use thought-stopping.</p>
+
+    <h3>Techniques for Anticipatory Anxiety</h3>
+
+    <div class="card">
+        <h4>"Will This Matter in 5 Years?"</h4>
+        <p>Perspective technique. Most things that feel huge right now won't matter in 5 years. This helps differentiate real concerns from anxious exaggeration.</p>
+    </div>
+
+    <div class="card">
+        <h4>Turn Worry Into Action Plan</h4>
+        <p>If you can DO something about the worry—do it. Make a list of actionable steps. Take one step. This transforms passive worry into active problem-solving.</p>
+    </div>
+
+    <div class="card">
+        <h4>Acceptance for Things Outside Your Control</h4>
+        <p>Some things you genuinely can't control (other people's reactions, outcomes, future events). Practice: "I've done what I can. The rest is outside my control." Then let it go.</p>
+    </div>
+
+    <div class="calm-box">
+        <p><strong>💙 The Worst-Case Scenario Exercise</strong></p>
+        <p>Ask yourself: "What's the worst that could realistically happen? Could I handle it?" Usually the answer is: yes, it would be hard, but you'd manage. This takes power away from catastrophic thinking.</p>
+    </div>
+</div>
+
+<!-- CHAPTER DIVIDER: Hormonal Anxiety -->
+<div class="page section-calm-gradient chapter-divider">
+    <div class="chapter-emoji">🌸</div>
+    <h2 class="chapter-title">Hormonal Anxiety</h2>
+    <p class="chapter-description">The woman-specific factor that affects millions—understanding cycle-related and perimenopause anxiety</p>
+</div>
+
+<!-- SECTION 5: Hormonal Anxiety -->
+<div class="page section-periwinkle">
+    <h2>Hormonal Anxiety: The Pattern You're Not Imagining</h2>
+
+    <p>If your anxiety worsens at certain times of your cycle—or if you're in perimenopause and suddenly struggling with anxiety you never had before—<strong>you're not imagining it.</strong> Hormones directly affect anxiety.</p>
+
+    <h3>Why Hormones Matter</h3>
+
+    <p>Estrogen and progesterone affect neurotransmitters in your brain—specifically <strong>serotonin</strong> (mood regulation) and <strong>GABA</strong> (calming neurotransmitter). When hormones fluctuate, so does your anxiety.</p>
+
+    <h3>Cycle-Related Anxiety</h3>
+
+    <p><strong>When anxiety typically spikes:</strong></p>
+    <ul>
+        <li><strong>Luteal phase</strong> (week before period): Progesterone drops, anxiety often increases</li>
+        <li><strong>Ovulation</strong>: Some women experience anxiety spike mid-cycle</li>
+        <li><strong>First days of period</strong>: Hormone fluctuations can trigger anxiety</li>
+    </ul>
+
+    <p><strong>Follicular phase</strong> (first half of cycle after period) tends to have lower anxiety for most women—estrogen is rising and stable.</p>
+
+    <h3>Perimenopause Anxiety</h3>
+
+    <p>For women in their 40s and early 50s, perimenopause commonly triggers anxiety—even if you've never struggled with it before. Many perimenopausal women report experiencing new or worsening anxiety symptoms. Why?</p>
+
+    <ul>
+        <li>Wildly fluctuating estrogen and progesterone</li>
+        <li>Sleep disruption from hot flashes (sleep deprivation worsens anxiety)</li>
+        <li>Brain chemistry changes as hormones shift</li>
+    </ul>
+
+    <p><strong>It's often dismissed:</strong> "You're just stressed." But hormonal anxiety is physiologically different and real.</p>
+</div>
+
+<!-- Section 5 Continued -->
+<div class="page section-periwinkle">
+    <h3>Track Your Patterns</h3>
+
+    <p>Track anxiety levels + cycle phase for 2-3 months. You'll likely see a pattern. Knowing when to expect anxiety windows helps you prepare with extra self-care.</p>
+
+    <div class="tip-box">
+        <p><strong>💡 Cycle Tracking Apps</strong></p>
+        <p>Use Flo, Clue, or Apple Health to track cycle + mood. Note anxiety intensity each day. After 2-3 cycles, patterns become clear.</p>
+    </div>
+
+    <h3>Targeted Strategies for Hormonal Anxiety</h3>
+
+    <div class="card">
+        <h4>Magnesium Supplementation</h4>
+        <p><strong>Evidence:</strong> Magnesium (especially glycinate form) helps with anxiety and PMS symptoms. Dose: 200-400mg daily, or increase during luteal phase. Talk to doctor first.</p>
+    </div>
+
+    <div class="card">
+        <h4>Exercise Timing</h4>
+        <p>Gentle movement (yoga, walking) during high-anxiety windows. Intense exercise can spike cortisol—save hard workouts for follicular phase when you feel better.</p>
+    </div>
+
+    <div class="card">
+        <h4>Extra Sleep During High-Anxiety Windows</h4>
+        <p>If you know anxiety worsens the week before your period, prioritize sleep that week. Earlier bedtime, sleep hygiene focus. Sleep deprivation amplifies hormonal anxiety.</p>
+    </div>
+
+    <div class="card">
+        <h4>Reduce Caffeine and Alcohol</h4>
+        <p>Both worsen anxiety—especially during luteal phase. Consider cutting back or eliminating during your high-anxiety window.</p>
+    </div>
+
+    <h3>When to Seek Medical Help</h3>
+
+    <p><strong>Talk to your doctor if:</strong></p>
+    <ul>
+        <li>Anxiety severely interferes with daily life during certain cycle phases</li>
+        <li>You're in perimenopause with new-onset anxiety</li>
+        <li>Self-management strategies aren't enough</li>
+    </ul>
+
+    <p><strong>Medical options:</strong> Hormone therapy, thyroid testing (thyroid issues cause anxiety), SSRIs taken during luteal phase only (for PMDD)</p>
+
+    <div class="warning-box">
+        <p><strong>⚠️ Hormonal Anxiety May Need Medical Intervention</strong></p>
+        <p>Sometimes hormonal anxiety is severe enough that self-management isn't sufficient. This isn't failure—it's biology. Talk to a doctor who takes hormonal anxiety seriously. You may need hormone therapy, medication, or thyroid evaluation.</p>
+    </div>
+
+    <div class="pull-quote">
+        "Hormonal anxiety is REAL—you're not imagining the pattern. Track it, prepare for it, and seek medical help if needed."
+    </div>
+</div>
+
+<!-- SECTION 6: Building Your Personal Plan -->
+<div class="page section-teal">
+    <div class="section-header">
+        <span class="section-icon">📝</span>
+        <h2>Building Your Personal Anxiety Plan</h2>
+    </div>
+
+    <p>Use this framework to create YOUR customized anxiety response plan based on your patterns and what works for you.</p>
+
+    <h3>Step 1: Identify Your Anxiety Patterns</h3>
+
+    <p><strong>Reflect on these questions:</strong></p>
+    <ul>
+        <li>When does your anxiety typically spike? (time of day, cycle phase, situations)</li>
+        <li>What triggers it? (work stress, social events, hormonal changes, lack of sleep)</li>
+        <li>What physical symptoms do you notice first? (racing heart, tight chest, racing thoughts)</li>
+    </ul>
+
+    <div class="checklist">
+        <p style="font-weight: 600; margin-bottom: 12px;">My Anxiety Patterns:</p>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Morning anxiety / night anxiety / all day</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Worsens during certain cycle phases (which ones?)</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Triggered by: _______________________</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>Physical warning signs: _______________</span>
+        </div>
+    </div>
+
+    <h3>Step 2: Choose Your Top 3 Techniques</h3>
+
+    <p>From this toolkit, which 3 techniques work best for YOU? Practice these until they're automatic.</p>
+
+    <div class="checklist">
+        <p style="font-weight: 600; margin-bottom: 12px;">My Top 3 Go-To Techniques:</p>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>1. _______________________________</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>2. _______________________________</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span>3. _______________________________</span>
+        </div>
+    </div>
+</div>
+
+<!-- Section 6 Continued -->
+<div class="page section-teal">
+    <h3>Step 3: Create Your Emergency Plan</h3>
+
+    <p>For panic attacks or acute anxiety crises—what will you do?</p>
+
+    <div class="checklist">
+        <p style="font-weight: 600; margin-bottom: 12px;">My Emergency Plan:</p>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>First technique to use:</strong> _____________</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Safe person to call:</strong> _____________</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Safe space to go:</strong> _____________</span>
+        </div>
+        <div class="checklist-item">
+            <span class="checkbox">☐</span>
+            <span><strong>Reminder to myself:</strong> "This will pass. It always does."</span>
+        </div>
+    </div>
+
+    <h3>Step 4: Build Preventive Practices</h3>
+
+    <p>Daily/weekly habits that reduce baseline anxiety:</p>
+
+    <div class="card">
+        <h4>Exercise</h4>
+        <p>30 minutes most days. Movement regulates mood. Find what you enjoy—walking, yoga, dancing, strength training.</p>
+    </div>
+
+    <div class="card">
+        <h4>Sleep Hygiene</h4>
+        <p>Consistent bedtime, cool dark room, no screens 30 minutes before sleep. Sleep deprivation worsens anxiety dramatically.</p>
+    </div>
+
+    <div class="card">
+        <h4>Limit Caffeine/Alcohol</h4>
+        <p>Both exacerbate anxiety—especially during high-anxiety windows (luteal phase, perimenopause).</p>
+    </div>
+
+    <div class="card">
+        <h4>Social Connection</h4>
+        <p>Isolation worsens anxiety. Regular connection with safe people (even brief) reduces anxiety.</p>
+    </div>
+
+    <div class="tip-box">
+        <p><strong>💡 Start With ONE Preventive Practice</strong></p>
+        <p>Don't overhaul everything at once. Pick ONE habit to build this month. Once it's automatic, add another. Sustainable change beats overwhelming yourself.</p>
+    </div>
+
+    <h3>Step 5: Know When to Seek Help</h3>
+
+    <p><strong>Consider therapy or medical evaluation if:</strong></p>
+    <ul>
+        <li>Anxiety interferes with daily life for 2+ weeks</li>
+        <li>Panic attacks are increasing in frequency</li>
+        <li>You're avoiding important activities due to anxiety</li>
+        <li>Self-management strategies aren't reducing intensity</li>
+        <li>You're experiencing depression alongside anxiety</li>
+    </ul>
+
+    <p><strong>Therapy (CBT) and medication are valid tools—not failure.</strong></p>
+</div>
+
+<!-- SECTION 7: Quick Reference Guide -->
+<div class="page section-sage">
+    <div class="section-header">
+        <span class="section-icon">⚡</span>
+        <h2>Quick Reference Guide</h2>
+    </div>
+
+    <p style="text-align: center; font-size: 18px; font-weight: 600; margin-bottom: 24px;">In the middle of anxiety? Start here.</p>
+
+    <div class="quick-ref">
+        <p class="quick-ref-title">🚨 Panic Attack Right Now?</p>
+        <p><strong>Box breathing</strong> (4-4-4-4) + <strong>5-4-3-2-1 grounding</strong></p>
+        <p class="quick-ref-arrow">→</p>
+        <p class="quick-ref-solution">Remind yourself: "This peaks at 10 minutes. It will pass."</p>
+    </div>
+
+    <div class="quick-ref">
+        <p class="quick-ref-title">🌙 Racing Thoughts at 2 AM?</p>
+        <p><strong>4-7-8 breathing</strong> + <strong>Progressive muscle relaxation</strong></p>
+        <p class="quick-ref-arrow">→</p>
+        <p class="quick-ref-solution">If awake 20+ min, get up and do something boring. Return when sleepy.</p>
+    </div>
+
+    <div class="quick-ref">
+        <p class="quick-ref-title">👥 Social Situation Anxiety?</p>
+        <p><strong>Tactile anchor</strong> (touch something) + <strong>Ask questions</strong> (takes pressure off you)</p>
+        <p class="quick-ref-arrow">→</p>
+        <p class="quick-ref-solution">Permission to leave early when social battery depleted.</p>
+    </div>
+
+    <div class="quick-ref">
+        <p class="quick-ref-title">💭 General Anxiety Spike?</p>
+        <p><strong>5-4-3-2-1 grounding</strong> + <strong>Thought-stopping</strong> if spiraling</p>
+        <p class="quick-ref-arrow">→</p>
+        <p class="quick-ref-solution">Bring yourself into present moment. Interrupt rumination.</p>
+    </div>
+
+    <div class="quick-ref">
+        <p class="quick-ref-title">🌸 Hormonal Anxiety?</p>
+        <p><strong>Track pattern</strong> (cycle phase + anxiety level) + <strong>Extra self-care this week</strong></p>
+        <p class="quick-ref-arrow">→</p>
+        <p class="quick-ref-solution">Magnesium, more sleep, reduce caffeine during high-anxiety windows.</p>
+    </div>
+
+    <p style="text-align: center; margin-top: 32px; font-style: italic; color: var(--text-medium);">Screenshot this page. Keep it accessible for anxiety moments.</p>
+</div>
+
+<!-- SECTION 8: Long-Term Management -->
+<div class="page section-lavender">
+    <div class="section-header">
+        <span class="section-icon">🌱</span>
+        <h2>Long-Term Anxiety Management</h2>
+    </div>
+
+    <p>These daily and weekly practices help reduce how often and how intensely anxiety shows up. They're preventive—not cures, but they make a difference over time.</p>
+
+    <h3>1. Exercise: Specific Recommendations</h3>
+    <p><strong>What works:</strong> 30 minutes most days, moderate intensity. Walking, yoga, swimming, dancing, strength training.</p>
+    <p><strong>Why it helps:</strong> Regulates cortisol, releases endorphins, improves sleep, processes stress physically.</p>
+    <p><strong>Actionable tip:</strong> Morning movement tends to reduce anxiety throughout the day.</p>
+
+    <h3>2. Sleep Hygiene</h3>
+    <p><strong>What works:</strong> Consistent bedtime, cool room (65-68°F), no screens 30 min before sleep, dark room.</p>
+    <p><strong>Why it helps:</strong> Sleep deprivation and anxiety are bidirectional—each worsens the other.</p>
+    <p><strong>Actionable tip:</strong> Focus on consistent wake time (even weekends)—this anchors sleep cycle.</p>
+
+    <h3>3. Limiting Caffeine/Alcohol</h3>
+    <p><strong>What works:</strong> Cut off caffeine by 2pm. Limit alcohol, especially during high-anxiety windows.</p>
+    <p><strong>Why it helps:</strong> Caffeine mimics anxiety symptoms (racing heart, jitters). Alcohol disrupts sleep and mood.</p>
+    <p><strong>Actionable tip:</strong> Try eliminating caffeine for 2 weeks and see if anxiety improves.</p>
+
+    <h3>4. Consistent Routine</h3>
+    <p><strong>What works:</strong> Regular sleep, meals, and activity schedule reduces decision fatigue.</p>
+    <p><strong>Why it helps:</strong> Unpredictability and chaos increase anxiety. Structure creates safety.</p>
+    <p><strong>Actionable tip:</strong> Start with consistent wake time and bedtime.</p>
+
+    <h3>5. Social Connection</h3>
+    <p><strong>What works:</strong> Regular contact with safe people—even brief (text, call, coffee).</p>
+    <p><strong>Why it helps:</strong> Isolation worsens anxiety. Connection reduces it.</p>
+    <p><strong>Actionable tip:</strong> Schedule one social connection weekly (doesn't have to be long).</p>
+
+    <h3>6. Therapy/Professional Support</h3>
+    <p><strong>What works:</strong> CBT (Cognitive Behavioral Therapy) is gold standard for anxiety. Medication when appropriate.</p>
+    <p><strong>Why it helps:</strong> Professional support teaches you additional tools and addresses root patterns.</p>
+    <p><strong>Actionable tip:</strong> Psychology Today directory to find therapist. Mention CBT specifically.</p>
+
+    <div class="tip-box">
+        <p><strong>💡 Start Small—Don't Overhaul Everything</strong></p>
+        <p>Trying to change 6 habits at once creates overwhelm (which increases anxiety). Pick ONE preventive practice to start this month. Build from there.</p>
+    </div>
+</div>
+
+<!-- SECTION 9: Resources & Support -->
+<div class="page section-periwinkle">
+    <div class="section-header">
+        <span class="section-icon">📚</span>
+        <h2>Resources & Support</h2>
+    </div>
+
+    <p>You're not alone. Here's where to find additional support, tools, and community.</p>
+
+    <h3>Apps</h3>
+
+    <div class="card">
+        <h4>Calm, Headspace, Insight Timer</h4>
+        <p>Guided grounding exercises, breathing techniques, meditation. Useful for practicing techniques from this toolkit.</p>
+    </div>
+
+    <h3>Podcasts</h3>
+
+    <div class="card">
+        <h4>"Your Anxiety Toolkit" by Kimberley Quinlan, LMFT</h4>
+        <p>Evidence-based anxiety tools, interviews with experts. Recommended by New York Times. Practical and compassionate.</p>
+    </div>
+
+    <h3>Books</h3>
+
+    <div class="card">
+        <h4>"The Anxiety Toolkit" by Alice Boyes, PhD</h4>
+        <p>Evidence-based strategies for anxiety management. Practical and accessible.</p>
+    </div>
+
+    <h3>Therapy</h3>
+
+    <div class="card">
+        <h4>Finding a Therapist</h4>
+        <p><strong>Psychology Today directory:</strong> Search by location, insurance, specialization (look for "CBT" and "anxiety")</p>
+        <p><strong>CBT is most effective:</strong> Cognitive Behavioral Therapy has extensive evidence for anxiety treatment.</p>
+    </div>
+
+    <h3>Crisis Support</h3>
+
+    <div class="warning-box">
+        <p><strong>🚨 If You're in Crisis</strong></p>
+        <p><strong>National Suicide Prevention Lifeline: 988</strong></p>
+        <p>24/7 support. Call or text. Free and confidential.</p>
+        <p>If you're experiencing suicidal thoughts or mental health crisis, reach out immediately. You deserve support.</p>
+    </div>
+
+    <h3>Communities</h3>
+
+    <div class="card">
+        <h4>r/Anxiety (Reddit)</h4>
+        <p>Supportive community sharing experiences, techniques, and encouragement. You're not alone.</p>
+    </div>
+
+    <p style="margin-top: 32px; text-align: center; font-weight: 600;">You have tools. You have support. You can manage this.</p>
+</div>
+
+<!-- LEGAL DISCLAIMER PAGE -->
+<div class="page footer">
+    <h3 style="color: var(--text-dark); font-family: 'Inter', sans-serif; font-size: 16px; margin-bottom: 16px;">Medical Disclaimer</h3>
+
+    <p><strong>Medical Disclaimer:</strong> This guide is for educational and informational purposes only and does not constitute medical advice. Always consult with qualified healthcare providers regarding medical conditions, diagnosis, and treatment. Do not disregard professional medical advice or delay seeking it because of information in this guide.</p>
+
+    <p><strong>No Doctor-Patient Relationship:</strong> Reading this guide does not create a doctor-patient or healthcare provider relationship.</p>
+
+    <p><strong>Crisis Support:</strong> If you are experiencing a mental health crisis, contact the National Suicide Prevention Lifeline at 988 or go to your nearest emergency room. If you are having suicidal thoughts, please seek immediate professional help.</p>
+
+    <p><strong>Anxiety Management:</strong> The techniques in this guide are evidence-based tools for managing anxiety symptoms. They are not substitutes for professional mental health treatment. If your anxiety significantly interferes with daily life, please consult a mental health professional.</p>
+
+    <p><strong>Medical Conditions:</strong> Some physical health conditions (thyroid disorders, heart conditions, hormonal imbalances) can cause or worsen anxiety symptoms. If you experience persistent or severe anxiety, consult your healthcare provider to rule out underlying medical causes.</p>
+
+    <p style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #dee2e6;"><strong>© 2025 HealthEGuides. All rights reserved.</strong></p>
+
+    <p style="margin-bottom: 0;">Evidence-Based Women's Health Information</p>
+</div>
+
+</body>
+</html>
