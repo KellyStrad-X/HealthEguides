@@ -67,6 +67,27 @@ function GuideViewerContent({ params }: GuideViewerProps) {
         return;
       }
 
+      // Check if user has admin session (bypass subscription check)
+      try {
+        const adminCheck = await fetch('/api/admin/auth', {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (adminCheck.ok) {
+          const adminData = await adminCheck.json();
+          if (adminData.authenticated) {
+            // Admin access - bypass subscription check
+            setAccessGranted(true);
+            await loadGuideContentForSubscriber();
+            setLoading(false);
+            return;
+          }
+        }
+      } catch (err) {
+        // Not admin, continue with normal validation
+      }
+
       // Check if user is logged in
       if (!user) {
         // No user logged in - redirect to home page to sign up for subscription
