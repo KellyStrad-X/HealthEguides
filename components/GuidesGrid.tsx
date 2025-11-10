@@ -35,7 +35,7 @@ export default function GuidesGrid() {
               Browse Our Guides
             </h2>
             <p className="text-xl text-white/70 max-w-2xl mx-auto mb-6">
-              Evidence-based solutions for your health journey
+              Evidence-based solutions for wellness, health, and lifestyle
             </p>
             {!user && (
               <div className="flex items-center justify-center gap-2 mb-6">

@@ -23,7 +23,7 @@ export default function Stats() {
     },
     {
       title: "Evidence-Based",
-      description: "Informed by current health research",
+      description: "Backed by research and expert insights",
       emoji: "📚"
     }
   ];

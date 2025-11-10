@@ -35,7 +35,7 @@ export default function BundleOffer() {
             </h2>
 
             <p className="text-xl text-white/90 max-w-2xl mx-auto mb-2">
-              Get unlimited access to all our guides. Just $5/month after trial.
+              Get unlimited access to all wellness & lifestyle guides. Just $5/month after trial.
             </p>
 
             <div className="flex items-center justify-center gap-4 text-lg">

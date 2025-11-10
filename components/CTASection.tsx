@@ -41,11 +41,11 @@ export default function CTASection() {
     <section className="py-20 bg-gradient-warm animated-gradient">
       <div className="section-container text-center">
         <h2 className="text-4xl sm:text-5xl font-bold mb-6">
-          Start Your Health Journey Today
+          Start Your Wellness Journey Today
         </h2>
 
         <p className="text-xl text-white/90 mb-6 max-w-2xl mx-auto">
-          Get unlimited access to our complete library of evidence-based guides
+          Get unlimited access to our complete library of wellness & lifestyle guides
         </p>
 
         {/* Sunday Release Banner */}

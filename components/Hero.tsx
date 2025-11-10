@@ -42,12 +42,12 @@ export default function Hero() {
           Your Complete Library of
           <br />
           <span className="bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-            Women&apos;s Health Guides
+            Wellness &amp; Lifestyle Guides
           </span>
         </h1>
 
         <p className="text-xl sm:text-2xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed">
-          Evidence-based digital guides for every stage of your journey
+          Evidence-based guides for health, wellness, and life&apos;s challenges
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
