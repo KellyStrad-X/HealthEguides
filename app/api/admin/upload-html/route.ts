@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
-import { validateAdminAuth } from '@/lib/admin-auth';
+import { requireAdminSession } from '@/lib/session';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import path from 'path';
@@ -10,8 +10,8 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export async function POST(request: NextRequest) {
   try {
-    // Validate admin authentication
-    const authResult = validateAdminAuth(request);
+    // Validate admin authentication using session
+    const authResult = await requireAdminSession(request, true); // true = require CSRF token
     if (authResult !== true) {
       return authResult;
     }
@@ -66,8 +66,8 @@ export async function POST(request: NextRequest) {
     // Convert File to text
     const htmlContent = await html.text();
 
-    // Save to /public/guides/{guideId}.html
-    const guidesDir = join(process.cwd(), 'public', 'guides');
+    // Save to /private/guides/{guideId}.html (server-side only, not publicly accessible)
+    const guidesDir = join(process.cwd(), 'private', 'guides');
 
     // Ensure directory exists
     try {
@@ -80,8 +80,8 @@ export async function POST(request: NextRequest) {
     const filePath = join(guidesDir, `${sanitizedGuideId}.html`);
     await writeFile(filePath, htmlContent, 'utf-8');
 
-    // Update guide record with HTML URL and mark as available (if Firestore is configured)
-    const htmlUrl = `/guides/${sanitizedGuideId}.html`;
+    // Update guide record with hasHtmlGuide flag (if Firestore is configured)
+    const htmlUrl = `/guides/${sanitizedGuideId}`; // Dynamic route, not static file
     try {
       await adminDb.collection('guides').doc(sanitizedGuideId).update({
         htmlUrl,

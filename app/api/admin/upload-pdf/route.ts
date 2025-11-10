@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
-import { validateAdminAuth } from '@/lib/admin-auth';
+import { requireAdminSession } from '@/lib/session';
 import { getStorage } from 'firebase-admin/storage';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
@@ -11,8 +11,8 @@ const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
 export async function POST(request: NextRequest) {
   try {
-    // Validate admin authentication
-    const authResult = validateAdminAuth(request);
+    // Validate admin authentication using session
+    const authResult = await requireAdminSession(request, true); // true = require CSRF token
     if (authResult !== true) {
       return authResult;
     }
