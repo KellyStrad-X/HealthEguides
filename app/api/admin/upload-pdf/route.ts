@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     }
 
     const formData = await request.formData();
-    const pdf = formData.get('pdf') as File;
+    const pdf = formData.get('file') as File; // Changed from 'pdf' to 'file' to match AdminClient
     const guideId = formData.get('guideId') as string;
 
     if (!pdf || !guideId) {

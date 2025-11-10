@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     }
 
     const formData = await request.formData();
-    const html = formData.get('html') as File;
+    const html = formData.get('file') as File; // Changed from 'html' to 'file' to match AdminClient
     const guideId = formData.get('guideId') as string;
 
     if (!html || !guideId) {
