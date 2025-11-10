@@ -46,6 +46,20 @@ export default function BundleOffer() {
             </div>
           </div>
 
+          {/* New Guide Announcement */}
+          <div className="max-w-2xl mx-auto mb-8">
+            <div className="bg-gradient-to-r from-green-400 to-emerald-500 rounded-2xl p-6 shadow-2xl transform hover:scale-105 transition-transform">
+              <div className="flex items-center justify-center gap-3 mb-2">
+                <span className="text-3xl">📅</span>
+                <h3 className="text-2xl font-bold text-white">New Guide Every Sunday!</h3>
+                <span className="text-3xl">🎉</span>
+              </div>
+              <p className="text-white text-center text-lg">
+                Subscribe now and get a brand new guide delivered every Sunday. Your library keeps growing!
+              </p>
+            </div>
+          </div>
+
           {/* What's Included */}
           <div className="max-w-3xl mx-auto mb-12">
             <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8">
@@ -66,10 +80,10 @@ export default function BundleOffer() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <span className="text-2xl">🔄</span>
+                  <span className="text-2xl">📅</span>
                   <div>
-                    <h4 className="font-semibold mb-1">Regular Updates</h4>
-                    <p className="text-sm text-white/80">Guides updated with latest research</p>
+                    <h4 className="font-semibold mb-1">Weekly New Content</h4>
+                    <p className="text-sm text-white/80">Fresh guide every Sunday to keep learning</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">

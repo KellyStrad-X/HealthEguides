@@ -29,6 +29,15 @@ export default function Hero() {
       </div>
 
       <div className="section-container text-center z-10 py-20">
+        {/* New Guide Every Sunday Badge */}
+        {!user && (
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-400 to-emerald-500 px-6 py-3 rounded-full mb-6 shadow-lg animate-pulse">
+            <span className="text-2xl">📅</span>
+            <span className="font-bold text-white text-lg">New Guide Every Sunday!</span>
+            <span className="text-2xl">✨</span>
+          </div>
+        )}
+
         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
           Your Complete Library of
           <br />

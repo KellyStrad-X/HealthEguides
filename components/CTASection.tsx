@@ -44,9 +44,16 @@ export default function CTASection() {
           Start Your Health Journey Today
         </h2>
 
-        <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
+        <p className="text-xl text-white/90 mb-6 max-w-2xl mx-auto">
           Get unlimited access to our complete library of evidence-based guides
         </p>
+
+        {/* Sunday Release Banner */}
+        <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 px-6 py-3 rounded-full mb-10 shadow-lg">
+          <span className="text-2xl">🗓️</span>
+          <span className="font-bold text-white text-lg">Plus: New guide released every Sunday!</span>
+          <span className="text-2xl">📚</span>
+        </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button

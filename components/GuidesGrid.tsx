@@ -37,6 +37,14 @@ export default function GuidesGrid() {
             <p className="text-xl text-white/70 max-w-2xl mx-auto mb-6">
               Evidence-based solutions for your health journey
             </p>
+            {!user && (
+              <div className="flex items-center justify-center gap-2 mb-6">
+                <div className="inline-flex items-center gap-2 bg-green-500/20 backdrop-blur-sm border border-green-400/30 px-6 py-3 rounded-full">
+                  <span className="text-xl">🎯</span>
+                  <span className="text-green-300 font-semibold">Fresh content every Sunday - never run out of guides!</span>
+                </div>
+              </div>
+            )}
             <Link
               href="/catalog"
               className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
