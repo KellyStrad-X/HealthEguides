@@ -19,6 +19,7 @@ export default function MyGuidesPage() {
   const [guideProgress, setGuideProgress] = useState<Map<string, GuideProgress>>(new Map());
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [error, setError] = useState<string | null>(null);
 
   // Redirect if not logged in
   useEffect(() => {
@@ -60,8 +61,11 @@ export default function MyGuidesPage() {
         );
 
         setGuides(favoritedGuides);
+        setError(null);
       } catch (err) {
-    // Error log removed - TODO: Add proper error handling
+        console.error('Error fetching favorites:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load favorites');
+        setGuides([]);
       } finally {
         setLoading(false);
       }
@@ -181,6 +185,14 @@ export default function MyGuidesPage() {
             Showing {filteredGuides.length} {filteredGuides.length === 1 ? 'guide' : 'guides'}
           </p>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="mb-8 bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+            <div className="text-red-600 text-lg font-semibold mb-2">Error Loading Favorites</div>
+            <p className="text-red-700">{error}</p>
+          </div>
+        )}
 
         {/* Guides Grid */}
         {filteredGuides.length === 0 ? (

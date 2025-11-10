@@ -33,20 +33,27 @@ export async function GET(request: Request) {
     const totalItems = totalSnapshot.data().count;
     const totalPages = Math.ceil(totalItems / limit);
 
-    // Get favorites with pagination
+    // Get favorites with pagination (removed orderBy to avoid needing composite index)
     const favoritesSnapshot = await adminDb
       .collection('favorites')
       .where('userId', '==', userId)
-      .orderBy('createdAt', 'desc')
       .limit(limit)
       .offset((page - 1) * limit)
       .get();
 
-    const favorites = favoritesSnapshot.docs.map(doc => ({
-      id: doc.id,
-      guideId: doc.data().guideId,
-      createdAt: doc.data().createdAt,
-    }));
+    // Map and sort in memory instead of using Firestore orderBy
+    const favorites = favoritesSnapshot.docs
+      .map(doc => ({
+        id: doc.id,
+        guideId: doc.data().guideId,
+        createdAt: doc.data().createdAt,
+      }))
+      .sort((a, b) => {
+        // Sort by createdAt in descending order (newest first)
+        const aTime = a.createdAt?.toMillis?.() || 0;
+        const bTime = b.createdAt?.toMillis?.() || 0;
+        return bTime - aTime;
+      });
 
     return NextResponse.json({
       favorites,
