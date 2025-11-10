@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
-import { validateAdminAuth } from '@/lib/admin-auth';
+import { validateAdminSession } from '@/lib/admin-auth';
 import type { Guide } from '@/lib/guides';
 
 // GET all guides from Firestore
 export async function GET(request: NextRequest) {
   try {
-    // Validate admin authentication
-    const authResult = validateAdminAuth(request);
+    // Validate admin session
+    const authResult = await validateAdminSession(request);
     if (authResult !== true) {
       return authResult;
     }
@@ -32,8 +32,8 @@ export async function GET(request: NextRequest) {
 // POST - Create new guide
 export async function POST(request: NextRequest) {
   try {
-    // Validate admin authentication
-    const authResult = validateAdminAuth(request);
+    // Validate admin session
+    const authResult = await validateAdminSession(request);
     if (authResult !== true) {
       return authResult;
     }
@@ -80,8 +80,8 @@ export async function POST(request: NextRequest) {
 // PUT - Update existing guide
 export async function PUT(request: NextRequest) {
   try {
-    // Validate admin authentication
-    const authResult = validateAdminAuth(request);
+    // Validate admin session
+    const authResult = await validateAdminSession(request);
     if (authResult !== true) {
       return authResult;
     }
@@ -127,8 +127,8 @@ export async function PUT(request: NextRequest) {
 // DELETE - Delete guide
 export async function DELETE(request: NextRequest) {
   try {
-    // Validate admin authentication
-    const authResult = validateAdminAuth(request);
+    // Validate admin session
+    const authResult = await validateAdminSession(request);
     if (authResult !== true) {
       return authResult;
     }

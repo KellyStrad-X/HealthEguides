@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as crypto from 'crypto';
+import { getSession } from './session';
 
 // Rate limiting for admin auth attempts
 const authAttempts = new Map<string, { count: number; resetTime: number }>();
@@ -81,6 +82,44 @@ export function validateAdminAuth(request: NextRequest | Request): true | NextRe
     return true;
   } catch (error) {
     console.error('Authentication error:', error);
+    return NextResponse.json(
+      { error: 'Authentication failed' },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * Validates admin session authentication (for logged-in admin users)
+ * Checks for valid session cookie and CSRF token
+ * @param request - The incoming request
+ * @returns true if authenticated, NextResponse with error if not
+ */
+export async function validateAdminSession(request: NextRequest): Promise<true | NextResponse> {
+  try {
+    // Get session from cookie
+    const session = await getSession(request);
+
+    if (!session || !session.isAdmin) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    // Validate CSRF token
+    const csrfToken = request.headers.get('X-CSRF-Token');
+
+    if (!csrfToken || csrfToken !== session.csrfToken) {
+      return NextResponse.json(
+        { error: 'Invalid CSRF token' },
+        { status: 403 }
+      );
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Session validation error:', error);
     return NextResponse.json(
       { error: 'Authentication failed' },
       { status: 500 }
