@@ -8,6 +8,7 @@ import GuidesGrid from '@/components/GuidesGrid';
 import GuideRequestSection from '@/components/GuideRequestSection';
 import CTASection from '@/components/CTASection';
 import Footer from '@/components/Footer';
+import HomePageClient from '@/components/HomePageClient';
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
         <GuideRequestSection />
         <CTASection />
         <Footer />
+        <HomePageClient />
       </main>
     </HeaderProvider>
   );
