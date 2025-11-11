@@ -9,11 +9,18 @@ import Header from '@/components/Header';
 import BundleOffer from '@/components/BundleOffer';
 import GuideRequestSection from '@/components/GuideRequestSection';
 import Footer from '@/components/Footer';
+import EngagementPopup from '@/components/EngagementPopup';
+import SubscriptionModal from '@/components/SubscriptionModal';
+import GuideRequestForm from '@/components/GuideRequestForm';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function CatalogPage() {
+  const { user } = useAuth();
   const [guides, setGuides] = useState<Guide[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const [showGuideRequestForm, setShowGuideRequestForm] = useState(false);
 
   useEffect(() => {
     // Debug log removed
@@ -137,6 +144,30 @@ export default function CatalogPage() {
       <GuideRequestSection />
 
       <Footer />
+
+      {/* Engagement Popup */}
+      <EngagementPopup
+        onOpenSubscriptionModal={() => setShowSubscriptionModal(true)}
+        onOpenGuideRequestForm={() => setShowGuideRequestForm(true)}
+        isUserLoggedIn={!!user}
+        dwellTimeThreshold={20}
+        source="catalog"
+      />
+
+      {/* Subscription Modal */}
+      <SubscriptionModal
+        isOpen={showSubscriptionModal}
+        onClose={() => setShowSubscriptionModal(false)}
+        source="engagement_popup_catalog"
+      />
+
+      {/* Guide Request Form Modal */}
+      {showGuideRequestForm && (
+        <GuideRequestForm
+          isModal={true}
+          onClose={() => setShowGuideRequestForm(false)}
+        />
+      )}
       </div>
     </HeaderProvider>
   );
