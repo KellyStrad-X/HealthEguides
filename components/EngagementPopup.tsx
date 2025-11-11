@@ -240,24 +240,30 @@ export default function EngagementPopup({
 
           {/* Content */}
           <div className="mb-6 bg-white/70 backdrop-blur-sm rounded-xl border border-purple-100 p-5">
-            <ul className="space-y-3 text-gray-800">
-              <li className="flex items-start gap-3">
-                <svg className="w-6 h-6 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+            {/* Personal Message */}
+            <p className="text-gray-800 leading-relaxed mb-4">
+              We're building this library <span className="font-semibold text-purple-700">for you</span>. Your voice matters, and we're committed to creating guides that truly support your health journey. Let us know what you need—we're listening.
+            </p>
+
+            {/* Bullet Points */}
+            <ul className="space-y-2.5 text-gray-700 text-sm">
+              <li className="flex items-start gap-2">
+                <svg className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="font-medium">Fresh guides released every Friday</span>
+                <span>New guides released every Friday</span>
               </li>
-              <li className="flex items-start gap-3">
-                <svg className="w-6 h-6 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <li className="flex items-start gap-2">
+                <svg className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="font-medium">Request any topic - we listen to our members</span>
+                <span>Request any topic—we prioritize member suggestions</span>
               </li>
-              <li className="flex items-start gap-3">
-                <svg className="w-6 h-6 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <li className="flex items-start gap-2">
+                <svg className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="font-medium">7-day free trial to access everything</span>
+                <span>7-day free trial with full access</span>
               </li>
             </ul>
           </div>
@@ -265,17 +271,17 @@ export default function EngagementPopup({
           {/* CTAs */}
           <div className="space-y-3">
             <button
-              onClick={handleStartTrial}
+              onClick={handleRequestGuide}
               className="w-full py-4 bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-purple-700 hover:via-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
             >
-              Start Free Trial
+              Request a Guide
             </button>
 
             <button
-              onClick={handleRequestGuide}
+              onClick={handleStartTrial}
               className="w-full py-4 bg-white/80 hover:bg-white border-2 border-purple-300 hover:border-purple-400 text-purple-700 rounded-xl font-semibold transition-all shadow-sm hover:shadow-md"
             >
-              Request a Guide
+              Start Free Trial
             </button>
           </div>
 
