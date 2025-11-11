@@ -241,8 +241,8 @@ export default function EngagementPopup({
           {/* Content */}
           <div className="mb-6 bg-white/70 backdrop-blur-sm rounded-xl border border-purple-100 p-5">
             {/* Personal Message */}
-            <p className="text-gray-800 leading-relaxed mb-4">
-              We're building this library <span className="font-semibold text-purple-700">for you</span>. Your voice matters, and we're committed to creating guides that truly support your health journey. Let us know what you need—we're listening.
+            <p className="text-gray-800 leading-relaxed mb-4 text-center italic text-base">
+              We're building this library <span className="font-semibold text-purple-700">for you</span>. Your voice matters, and we're committed to creating guides that truly support your health & lifestyle journey. Let us know what you need—we're listening.
             </p>
 
             {/* Bullet Points */}
@@ -286,7 +286,7 @@ export default function EngagementPopup({
           </div>
 
           <p className="text-xs text-gray-600 text-center mt-4">
-            Join 5,000+ women getting weekly wellness guides
+            Don't miss out—new guides every Friday
           </p>
         </div>
       </div>
