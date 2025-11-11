@@ -153,7 +153,8 @@ export default function AnalyticsTracker({ page }: AnalyticsTrackerProps) {
         page,
         time_on_page: timeOnPage,
         final_scroll_depth: scrollPercentage,
-        sections_viewed: Array.from(sectionsTracked.current),
+        sections_viewed: Array.from(sectionsTracked.current).join(','),
+        sections_count: sectionsTracked.current.size,
       });
     };
   }, [page]);
