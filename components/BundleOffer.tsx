@@ -15,7 +15,7 @@ export default function BundleOffer() {
 
   return (
     <>
-      <section id="subscription" className="py-20 bg-gradient-to-br from-pink-600 via-purple-600 to-indigo-600 relative overflow-hidden scroll-mt-[120px]">
+      <section id="subscription" className="py-12 md:py-20 bg-gradient-to-br from-pink-600 via-purple-600 to-indigo-600 relative overflow-hidden scroll-mt-[120px]">
         {/* Animated background pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 text-[150px]">🎁</div>
@@ -60,43 +60,6 @@ export default function BundleOffer() {
             </div>
           </div>
 
-          {/* What's Included */}
-          <div className="max-w-3xl mx-auto mb-12">
-            <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8">
-              <h3 className="text-2xl font-bold text-center mb-6">What You'll Get</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">✨</span>
-                  <div>
-                    <h4 className="font-semibold mb-1">Unlimited Access</h4>
-                    <p className="text-sm text-white/80">All current and future guides included</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">📱</span>
-                  <div>
-                    <h4 className="font-semibold mb-1">Read Anywhere</h4>
-                    <p className="text-sm text-white/80">Access on any device, anytime</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">📅</span>
-                  <div>
-                    <h4 className="font-semibold mb-1">Weekly New Content</h4>
-                    <p className="text-sm text-white/80">Fresh guide every Sunday to keep learning</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">💰</span>
-                  <div>
-                    <h4 className="font-semibold mb-1">Cancel Anytime</h4>
-                    <p className="text-sm text-white/80">No long-term commitment required</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* CTA Button */}
           <div className="text-center">
             <button
@@ -117,6 +80,7 @@ export default function BundleOffer() {
       <SubscriptionModal
         isOpen={showSubscriptionModal}
         onClose={() => setShowSubscriptionModal(false)}
+        source="homepage_cta"
       />
     </>
   );

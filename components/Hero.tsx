@@ -19,7 +19,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-[60vh] flex items-center justify-center bg-gradient-hero animated-gradient shimmer-effect overflow-hidden">
+    <section className="relative min-h-[40vh] md:min-h-[60vh] flex items-center justify-center bg-gradient-hero animated-gradient shimmer-effect overflow-hidden">
       {/* Decorative floating emojis */}
       <div className="absolute inset-0 pointer-events-none">
         <span className="absolute top-20 left-[10%] text-4xl opacity-20 animate-pulse">✨</span>
@@ -28,7 +28,7 @@ export default function Hero() {
         <span className="absolute bottom-20 right-[10%] text-4xl opacity-20 animate-pulse delay-300">💫</span>
       </div>
 
-      <div className="section-container text-center z-10 py-20">
+      <div className="section-container text-center z-10 py-10 md:py-20">
         {/* New Guide Every Sunday Badge */}
         {!user && (
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-400 to-emerald-500 px-6 py-3 rounded-full mb-6 shadow-lg animate-pulse">
@@ -38,7 +38,7 @@ export default function Hero() {
           </div>
         )}
 
-        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+        <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight">
           Your Complete Library of
           <br />
           <span className="bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
@@ -46,7 +46,7 @@ export default function Hero() {
           </span>
         </h1>
 
-        <p className="text-xl sm:text-2xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-8 md:mb-12 max-w-3xl mx-auto leading-relaxed">
           Evidence-based guides for health, wellness, and life&apos;s challenges
         </p>
 
