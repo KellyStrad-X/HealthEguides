@@ -198,50 +198,50 @@ export default function EngagementPopup({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-60 z-40 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black bg-opacity-60 z-[60] flex items-center justify-center p-3 sm:p-4"
       onClick={handleClose}
     >
       <div
-        className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-2xl max-w-lg w-full shadow-2xl"
+        className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-2xl max-w-lg w-full shadow-2xl max-h-[95vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close button */}
-        <div className="flex justify-end p-4 pb-0">
+        {/* Sticky Close button */}
+        <div className="sticky top-0 z-10 flex justify-end p-3 sm:p-4 pb-0 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
           <button
             onClick={handleClose}
-            className="text-gray-600 hover:text-gray-900 bg-white/60 hover:bg-white/80 rounded-full p-2 transition-all shadow-sm"
+            className="text-gray-700 hover:text-gray-900 bg-white hover:bg-white/90 rounded-full p-2.5 transition-all shadow-lg hover:shadow-xl border-2 border-purple-200"
             aria-label="Close"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <div className="px-6 md:px-8 pb-8 pt-2">
+        <div className="px-4 sm:px-6 md:px-8 pb-6 sm:pb-8 pt-2 overflow-y-auto">
           {/* Icon */}
-          <div className="flex justify-center mb-4">
-            <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-full p-4">
-              <svg className="w-12 h-12 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex justify-center mb-3">
+            <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-full p-3">
+              <svg className="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
           </div>
 
           {/* Header */}
-          <div className="text-center mb-6">
-            <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+          <div className="text-center mb-4 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
               Don't See What You're Looking For?
             </h2>
-            <p className="text-gray-700 text-lg">
+            <p className="text-gray-700 text-base sm:text-lg">
               We're adding new guides every week
             </p>
           </div>
 
           {/* Content */}
-          <div className="mb-6 bg-white/70 backdrop-blur-sm rounded-xl border border-purple-100 p-5">
+          <div className="mb-4 sm:mb-6 bg-white/70 backdrop-blur-sm rounded-xl border border-purple-100 p-4 sm:p-5">
             {/* Personal Message */}
-            <p className="text-gray-800 leading-relaxed mb-4 text-center italic text-base">
+            <p className="text-gray-800 leading-relaxed mb-3 sm:mb-4 text-center italic text-sm sm:text-base">
               We're building this library <span className="font-semibold text-purple-700">for you</span>. Your voice matters, and we're committed to creating guides that truly support your health & lifestyle journey. Let us know what you need—we're listening.
             </p>
 
@@ -269,28 +269,28 @@ export default function EngagementPopup({
           </div>
 
           {/* CTAs */}
-          <div className="space-y-3">
+          <div className="space-y-2.5 sm:space-y-3">
             <button
               onClick={handleRequestGuide}
-              className="w-full py-4 bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-purple-700 hover:via-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
+              className="w-full py-3 sm:py-4 bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:from-purple-700 hover:via-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl text-sm sm:text-base"
             >
               Request a Guide
             </button>
 
             <button
               onClick={handleStartTrial}
-              className="w-full py-4 bg-white/80 hover:bg-white border-2 border-purple-300 hover:border-purple-400 text-purple-700 rounded-xl font-semibold transition-all shadow-sm hover:shadow-md"
+              className="w-full py-3 sm:py-4 bg-white/80 hover:bg-white border-2 border-purple-300 hover:border-purple-400 text-purple-700 rounded-xl font-semibold transition-all shadow-sm hover:shadow-md text-sm sm:text-base"
             >
               Start Free Trial
             </button>
           </div>
 
           {/* Catalog Preview */}
-          <div className="mt-6">
-            <p className="text-center text-sm font-medium text-gray-800 mb-3">
+          <div className="mt-4 sm:mt-6">
+            <p className="text-center text-xs sm:text-sm font-medium text-gray-800 mb-2 sm:mb-3">
               Get instant access to all of our guides in our catalog
             </p>
-            <div className="rounded-xl overflow-hidden border-2 border-purple-200 shadow-md">
+            <div className="rounded-lg sm:rounded-xl overflow-hidden border-2 border-purple-200 shadow-md">
               <img
                 src="/catalog-preview.png"
                 alt="Catalog preview showing available health and lifestyle guides"
@@ -299,7 +299,7 @@ export default function EngagementPopup({
             </div>
           </div>
 
-          <p className="text-xs text-gray-600 text-center mt-4">
+          <p className="text-xs text-gray-600 text-center mt-3 sm:mt-4">
             Don't miss out—new guides every Friday
           </p>
         </div>
