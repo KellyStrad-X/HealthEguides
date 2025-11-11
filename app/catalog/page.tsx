@@ -12,6 +12,7 @@ import Footer from '@/components/Footer';
 import EngagementPopup from '@/components/EngagementPopup';
 import SubscriptionModal from '@/components/SubscriptionModal';
 import GuideRequestForm from '@/components/GuideRequestForm';
+import AnalyticsTracker from '@/components/AnalyticsTracker';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function CatalogPage() {
@@ -144,6 +145,9 @@ export default function CatalogPage() {
       <GuideRequestSection />
 
       <Footer />
+
+      {/* Analytics Tracking */}
+      <AnalyticsTracker page="catalog" />
 
       {/* Engagement Popup */}
       <EngagementPopup

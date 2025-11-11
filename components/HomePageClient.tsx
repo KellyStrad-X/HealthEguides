@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import EngagementPopup from './EngagementPopup';
 import SubscriptionModal from './SubscriptionModal';
 import GuideRequestForm from './GuideRequestForm';
+import AnalyticsTracker from './AnalyticsTracker';
 
 export default function HomePageClient() {
   const { user } = useAuth();
@@ -13,6 +14,9 @@ export default function HomePageClient() {
 
   return (
     <>
+      {/* Analytics Tracking */}
+      <AnalyticsTracker page="homepage" />
+
       {/* Engagement Popup */}
       <EngagementPopup
         onOpenSubscriptionModal={() => setShowSubscriptionModal(true)}
