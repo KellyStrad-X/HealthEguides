@@ -16,7 +16,7 @@ interface EngagementPopupProps {
    */
   scrollDepthThreshold?: number;
   /**
-   * Maximum number of times to show popup per session (default: 2)
+   * Maximum number of times to show popup per session (default: 1)
    */
   maxShowsPerSession?: number;
   /**
@@ -35,7 +35,7 @@ export default function EngagementPopup({
   isUserLoggedIn,
   dwellTimeThreshold = 15,
   scrollDepthThreshold = 20,
-  maxShowsPerSession = 2,
+  maxShowsPerSession = 1,
   enableExitIntent = true,
   source = 'unknown',
 }: EngagementPopupProps) {
@@ -283,6 +283,20 @@ export default function EngagementPopup({
             >
               Start Free Trial
             </button>
+          </div>
+
+          {/* Catalog Preview */}
+          <div className="mt-6">
+            <p className="text-center text-sm font-medium text-gray-800 mb-3">
+              Get instant access to all of our guides in our catalog
+            </p>
+            <div className="rounded-xl overflow-hidden border-2 border-purple-200 shadow-md">
+              <img
+                src="/catalog-preview.png"
+                alt="Catalog preview showing available health and lifestyle guides"
+                className="w-full h-auto"
+              />
+            </div>
           </div>
 
           <p className="text-xs text-gray-600 text-center mt-4">
