@@ -18,13 +18,13 @@ export default function Header() {
   return (
     <>
       <header className="sticky top-0 z-40 bg-[#0a0a0a]/80 backdrop-blur-lg border-b border-white/10 transition-all duration-300">
-        <nav className="section-container py-2">
+        <nav className="section-container py-1">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center">
               <img
                 src="/logo.png"
                 alt="Health E-Guides"
-                className="h-20 md:h-20 w-auto"
+                className="h-24 md:h-24 w-auto"
               />
             </Link>
 
