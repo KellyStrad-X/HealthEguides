@@ -67,25 +67,25 @@ export default function GuideEmailCapture({ guide }: GuideEmailCaptureProps) {
   };
 
   return (
-    <section id="get-guide" className="py-20 bg-[#0a0a0a]">
+    <section id="get-guide" className="py-12 sm:py-20 bg-[#0a0a0a]">
       <div className="section-container">
         <div className="max-w-2xl mx-auto">
-          <div className="glass-card p-8 sm:p-12">
-            <div className="text-center mb-8">
-              <div className="text-6xl mb-4">{guide.emoji}</div>
-              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+          <div className="glass-card p-6 sm:p-8 md:p-12">
+            <div className="text-center mb-6 sm:mb-8">
+              <div className="text-5xl sm:text-6xl mb-3 sm:mb-4">{guide.emoji}</div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
                 Get {guide.title} + All Our Guides
               </h2>
-              <div className="mb-4">
-                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-500 px-6 py-2 rounded-full mb-3">
-                  <span className="text-2xl">🎉</span>
-                  <span className="font-bold text-sm uppercase tracking-wide">7 Days Free</span>
+              <div className="mb-3 sm:mb-4">
+                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-500 px-4 py-1.5 sm:px-6 sm:py-2 rounded-full mb-2 sm:mb-3">
+                  <span className="text-xl sm:text-2xl">🎉</span>
+                  <span className="font-bold text-xs sm:text-sm uppercase tracking-wide">7 Days Free</span>
                 </div>
-                <div className="text-2xl font-bold text-white/90">
+                <div className="text-xl sm:text-2xl font-bold text-white/90">
                   Then $5/month
                 </div>
               </div>
-              <p className="text-white/70">
+              <p className="text-sm sm:text-base text-white/70">
                 Start your free trial to access this guide and our entire library.
               </p>
             </div>

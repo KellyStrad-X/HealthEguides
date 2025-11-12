@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { HeaderProvider } from '@/lib/headerContext';
 import { Guide } from '@/lib/guides';
 import GuideCard from '@/components/GuideCard';
-import SaleHeader from '@/components/SaleHeader';
+import ScrollProgressBar from '@/components/ScrollProgressBar';
 import Header from '@/components/Header';
 import BundleOffer from '@/components/BundleOffer';
 import GuideRequestSection from '@/components/GuideRequestSection';
@@ -52,25 +52,25 @@ export default function CatalogPage() {
   return (
     <HeaderProvider>
       <div className="min-h-screen bg-[#0a0a0a]">
-        <SaleHeader />
+        <ScrollProgressBar />
         <Header />
-      <div className="pt-24 pb-20">
+      <div className="pt-20 pb-12 sm:pt-24 sm:pb-20">
       <div className="section-container">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl sm:text-6xl font-bold mb-4">
+        <div className="text-center mb-6 sm:mb-12">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold mb-2 sm:mb-4">
             Complete Catalog
           </h1>
-          <p className="text-xl text-white/70 max-w-2xl mx-auto">
+          <p className="text-base sm:text-xl text-white/70 max-w-2xl mx-auto">
             Browse all our evidence-based health guides
           </p>
         </div>
 
         {/* Filter Bubbles */}
-        <div className="flex flex-wrap gap-3 justify-center mb-12">
+        <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-6 sm:mb-12">
           <button
             onClick={() => setSelectedCategory('All')}
-            className={`px-6 py-2.5 rounded-full font-medium transition-all duration-300 ${
+            className={`px-4 py-1.5 sm:px-6 sm:py-2.5 rounded-full text-sm sm:text-base font-medium transition-all duration-300 ${
               selectedCategory === 'All'
                 ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-lg shadow-primary/30 scale-105'
                 : 'bg-white/5 text-white/80 hover:bg-white/10 border border-white/10'
@@ -82,7 +82,7 @@ export default function CatalogPage() {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-6 py-2.5 rounded-full font-medium transition-all duration-300 ${
+              className={`px-4 py-1.5 sm:px-6 sm:py-2.5 rounded-full text-sm sm:text-base font-medium transition-all duration-300 ${
                 selectedCategory === category
                   ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-lg shadow-primary/30 scale-105'
                   : 'bg-white/5 text-white/80 hover:bg-white/10 border border-white/10'
@@ -94,21 +94,21 @@ export default function CatalogPage() {
         </div>
 
         {/* Results Count */}
-        <div className="text-center mb-8">
-          <p className="text-white/60">
+        <div className="text-center mb-4 sm:mb-8">
+          <p className="text-sm sm:text-base text-white/60">
             Showing {filteredGuides.length} {filteredGuides.length === 1 ? 'guide' : 'guides'}
           </p>
         </div>
 
         {/* Guides Grid */}
         {loading ? (
-          <div className="text-center py-20">
+          <div className="text-center py-12 sm:py-20">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white/20 mb-4"></div>
             <p className="text-white/60">Loading guides...</p>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
               {filteredGuides.map((guide) => (
                 <GuideCard key={guide.id} guide={guide} />
               ))}
@@ -116,8 +116,8 @@ export default function CatalogPage() {
 
             {/* Empty State */}
             {filteredGuides.length === 0 && (
-              <div className="text-center py-20">
-                <p className="text-2xl text-white/50">
+              <div className="text-center py-12 sm:py-20">
+                <p className="text-xl sm:text-2xl text-white/50">
                   No guides found in this category.
                 </p>
               </div>
@@ -126,13 +126,13 @@ export default function CatalogPage() {
         )}
 
         {/* More Coming Soon */}
-        <div className="text-center mt-16 mb-8">
-          <div className="inline-flex items-center gap-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full px-8 py-4">
-            <span className="text-3xl">✨</span>
-            <p className="text-xl font-semibold text-white/80">
+        <div className="text-center mt-8 sm:mt-16 mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-2 sm:gap-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full px-6 py-3 sm:px-8 sm:py-4">
+            <span className="text-2xl sm:text-3xl">✨</span>
+            <p className="text-base sm:text-xl font-semibold text-white/80">
               More Coming Soon!
             </p>
-            <span className="text-3xl">✨</span>
+            <span className="text-2xl sm:text-3xl">✨</span>
           </div>
         </div>
       </div>

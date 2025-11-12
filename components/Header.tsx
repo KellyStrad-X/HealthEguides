@@ -17,11 +17,15 @@ export default function Header() {
 
   return (
     <>
-      <header className={`sticky z-40 bg-[#0a0a0a]/80 backdrop-blur-lg border-b border-white/10 transition-all duration-300 ${user ? 'top-0' : (isCompressed ? 'top-[36px] md:top-[42px]' : 'top-[72px]')}`}>
-        <nav className="section-container py-4">
+      <header className="sticky top-0 z-40 bg-[#0a0a0a]/80 backdrop-blur-lg border-b border-white/10 transition-all duration-300">
+        <nav className="section-container py-1.5">
           <div className="flex items-center justify-between">
-            <Link href="/" className="text-2xl font-bold gradient-text">
-              Health E-Guides
+            <Link href="/" className="flex items-center -my-3 md:-my-6">
+              <img
+                src="/logo.png"
+                alt="Health E-Guides"
+                className="h-8 md:h-20 w-auto"
+              />
             </Link>
 
             {/* Desktop Navigation */}

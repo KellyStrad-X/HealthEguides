@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Guide } from '@/lib/guides';
 import GuideCard from './GuideCard';
@@ -12,6 +12,7 @@ export default function GuidesGrid() {
   const [guides, setGuides] = useState<Guide[]>([]);
   const [loading, setLoading] = useState(true);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch('/api/guides')
@@ -28,60 +29,80 @@ export default function GuidesGrid() {
 
   return (
     <>
-      <section id="catalog" className="py-20 bg-[#0a0a0a] scroll-mt-[120px]">
+      <section id="catalog" className="py-8 sm:py-20 bg-[#0a0a0a] scroll-mt-[120px]">
         <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">
+          <div className="text-center mb-6 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8">
               Browse Our Guides
             </h2>
-            <p className="text-xl text-white/70 max-w-2xl mx-auto mb-6">
-              Evidence-based solutions for wellness, health, and lifestyle
-            </p>
-            <Link
-              href="/catalog"
-              className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
-            >
-              View Catalog
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </Link>
           </div>
 
         {loading ? (
-          <div className="text-center py-12">
+          <div className="text-center py-8 sm:py-12">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white/20 mb-4"></div>
             <p className="text-white/60">Loading guides...</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {guides.slice(0, 6).map((guide) => (
-              <GuideCard key={guide.id} guide={guide} />
-            ))}
-          </div>
+          <>
+            {/* Mobile Carousel */}
+            <div className="md:hidden -mx-4">
+              <div
+                ref={carouselRef}
+                className="flex overflow-x-auto gap-4 px-4 scrollbar-hide"
+                style={{
+                  scrollSnapType: 'none',
+                }}
+              >
+                {guides.map((guide, index) => (
+                  <div
+                    key={`${guide.id}-${index}`}
+                    className="flex-shrink-0"
+                    style={{ width: 'calc(85% - 8px)' }}
+                  >
+                    <div className="scale-[0.85] origin-center">
+                      <GuideCard guide={guide} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop Grid */}
+            <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              {guides.slice(0, 6).map((guide) => (
+                <GuideCard key={guide.id} guide={guide} />
+              ))}
+            </div>
+          </>
         )}
 
-        <div className="text-center mt-12">
-          {user ? (
-            <Link
-              href="/catalog"
-              className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold rounded-full bg-gradient-purple hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
-            >
-              View Full Catalog
-              <span>→</span>
-            </Link>
-          ) : (
+        {/* View Catalog Button */}
+        <div className="text-center mt-4 sm:mt-12 mb-4 sm:mb-8">
+          <Link
+            href="/catalog"
+            className="inline-flex items-center gap-2 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+          >
+            View Catalog
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </Link>
+        </div>
+
+        {/* Get Access Button (Non-logged in users only) */}
+        {!user && (
+          <div className="text-center">
             <button
               onClick={() => setShowSubscriptionModal(true)}
-              className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold rounded-full bg-gradient-purple hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center gap-2 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-full bg-gradient-purple hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               Get Access to All Our Guides
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </section>
 

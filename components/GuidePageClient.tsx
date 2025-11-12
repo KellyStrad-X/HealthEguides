@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Guide } from '@/lib/guides';
-import SaleHeader from '@/components/SaleHeader';
+import ScrollProgressBar from '@/components/ScrollProgressBar';
 import Header from '@/components/Header';
 import GuideLandingHero from '@/components/GuideLandingHero';
 import GuideProblemAgitation from '@/components/GuideProblemAgitation';
@@ -30,6 +30,7 @@ export default function GuidePageClient({ guide }: GuidePageClientProps) {
   if (user) {
     return (
       <>
+        <ScrollProgressBar />
         <Header />
         <GuideOverview guide={guide} />
       </>
@@ -39,7 +40,7 @@ export default function GuidePageClient({ guide }: GuidePageClientProps) {
   // Show full sales page for non-logged-in users
   return (
     <>
-      <SaleHeader onClaimClick={() => setShowSubscriptionModal(true)} />
+      <ScrollProgressBar />
       <Header />
       <GuideLandingHero guide={guide} />
       <GuideProblemAgitation guide={guide} />
