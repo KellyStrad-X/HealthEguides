@@ -29,24 +29,12 @@ export default function GuidesGrid() {
 
   return (
     <>
-      <section id="catalog" className="py-12 sm:py-20 bg-[#0a0a0a] scroll-mt-[120px]">
+      <section id="catalog" className="py-8 sm:py-20 bg-[#0a0a0a] scroll-mt-[120px]">
         <div className="section-container">
-          <div className="text-center mb-10 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4">
+          <div className="text-center mb-6 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8">
               Browse Our Guides
             </h2>
-            <p className="text-base sm:text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-4 sm:mb-6">
-              Evidence-based solutions for wellness, health, and lifestyle
-            </p>
-            <Link
-              href="/catalog"
-              className="inline-flex items-center gap-2 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
-            >
-              View Catalog
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </Link>
           </div>
 
         {loading ? (
@@ -88,16 +76,22 @@ export default function GuidesGrid() {
           </>
         )}
 
-        <div className="text-center mt-4 sm:mt-12">
-          {user ? (
-            <Link
-              href="/catalog"
-              className="inline-flex items-center gap-2 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-full bg-gradient-purple hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
-            >
-              View Full Catalog
-              <span>→</span>
-            </Link>
-          ) : (
+        {/* View Catalog Button */}
+        <div className="text-center mt-4 sm:mt-12 mb-4 sm:mb-8">
+          <Link
+            href="/catalog"
+            className="inline-flex items-center gap-2 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+          >
+            View Catalog
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </Link>
+        </div>
+
+        {/* Get Access Button (Non-logged in users only) */}
+        {!user && (
+          <div className="text-center">
             <button
               onClick={() => setShowSubscriptionModal(true)}
               className="inline-flex items-center gap-2 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-full bg-gradient-purple hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
@@ -107,8 +101,8 @@ export default function GuidesGrid() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </section>
 
