@@ -20,11 +20,11 @@ export default function Header() {
       <header className="sticky top-0 z-40 bg-[#0a0a0a]/80 backdrop-blur-lg border-b border-white/10 transition-all duration-300">
         <nav className="section-container py-1.5">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center -my-3">
+            <Link href="/" className="flex items-center -my-3 md:-my-4">
               <img
                 src="/logo.png"
                 alt="Health E-Guides"
-                className="h-24 md:h-24 w-auto"
+                className="h-8 md:h-12 w-auto"
               />
             </Link>
 
