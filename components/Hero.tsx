@@ -28,17 +28,17 @@ export default function Hero() {
         <span className="absolute bottom-20 right-[10%] text-4xl opacity-20 animate-pulse delay-300">💫</span>
       </div>
 
-      <div className="section-container text-center z-10 py-10 md:py-20">
+      <div className="section-container text-center z-10 py-8 sm:py-10 md:py-20">
         {/* New Guide Every Sunday Badge */}
         {!user && (
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-400 to-emerald-500 px-6 py-3 rounded-full mb-6 shadow-lg animate-pulse">
-            <span className="text-2xl">📅</span>
-            <span className="font-bold text-white text-lg">New Guide Every Sunday!</span>
-            <span className="text-2xl">✨</span>
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-400 to-emerald-500 px-4 py-2 sm:px-6 sm:py-3 rounded-full mb-4 sm:mb-6 shadow-lg animate-pulse">
+            <span className="text-xl sm:text-2xl">📅</span>
+            <span className="font-bold text-white text-sm sm:text-base md:text-lg">New Guide Every Sunday!</span>
+            <span className="text-xl sm:text-2xl">✨</span>
           </div>
         )}
 
-        <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-3 sm:mb-4 md:mb-6 leading-tight">
           Your Complete Library of
           <br />
           <span className="bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
@@ -46,14 +46,14 @@ export default function Hero() {
           </span>
         </h1>
 
-        <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-8 md:mb-12 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 mb-6 sm:mb-8 md:mb-12 max-w-3xl mx-auto leading-relaxed">
           Evidence-based guides for health, wellness, and life&apos;s challenges
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center">
           <button
             onClick={scrollToCatalog}
-            className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105"
+            className="inline-flex items-center gap-2 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105"
           >
             Browse Guides
             <span className="animate-bounce">↓</span>
@@ -62,7 +62,7 @@ export default function Hero() {
           {!user && (
             <a
               href="#subscription"
-              className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 shadow-lg"
+              className="inline-flex items-center gap-2 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 shadow-lg"
             >
               Get Access to All Our Guides
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

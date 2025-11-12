@@ -28,18 +28,18 @@ export default function GuidesGrid() {
 
   return (
     <>
-      <section id="catalog" className="py-20 bg-[#0a0a0a] scroll-mt-[120px]">
+      <section id="catalog" className="py-12 sm:py-20 bg-[#0a0a0a] scroll-mt-[120px]">
         <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">
+          <div className="text-center mb-10 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4">
               Browse Our Guides
             </h2>
-            <p className="text-xl text-white/70 max-w-2xl mx-auto mb-6">
+            <p className="text-base sm:text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-4 sm:mb-6">
               Evidence-based solutions for wellness, health, and lifestyle
             </p>
             <Link
               href="/catalog"
-              className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center gap-2 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               View Catalog
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -49,23 +49,23 @@ export default function GuidesGrid() {
           </div>
 
         {loading ? (
-          <div className="text-center py-12">
+          <div className="text-center py-8 sm:py-12">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white/20 mb-4"></div>
             <p className="text-white/60">Loading guides...</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {guides.slice(0, 6).map((guide) => (
               <GuideCard key={guide.id} guide={guide} />
             ))}
           </div>
         )}
 
-        <div className="text-center mt-12">
+        <div className="text-center mt-8 sm:mt-12">
           {user ? (
             <Link
               href="/catalog"
-              className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold rounded-full bg-gradient-purple hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center gap-2 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-full bg-gradient-purple hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               View Full Catalog
               <span>→</span>
@@ -73,7 +73,7 @@ export default function GuidesGrid() {
           ) : (
             <button
               onClick={() => setShowSubscriptionModal(true)}
-              className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold rounded-full bg-gradient-purple hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center gap-2 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-full bg-gradient-purple hover:opacity-90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               Get Access to All Our Guides
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
