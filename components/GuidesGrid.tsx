@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Guide } from '@/lib/guides';
 import GuideCard from './GuideCard';
@@ -12,6 +12,8 @@ export default function GuidesGrid() {
   const [guides, setGuides] = useState<Guide[]>([]);
   const [loading, setLoading] = useState(true);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch('/api/guides')
@@ -25,6 +27,22 @@ export default function GuidesGrid() {
         setLoading(false);
       });
   }, []);
+
+  // Track scroll position for dots indicator (mobile only)
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    const handleScroll = () => {
+      const scrollPosition = carousel.scrollLeft;
+      const cardWidth = carousel.scrollWidth / guides.length;
+      const index = Math.round(scrollPosition / cardWidth);
+      setCurrentSlide(index % guides.length);
+    };
+
+    carousel.addEventListener('scroll', handleScroll);
+    return () => carousel.removeEventListener('scroll', handleScroll);
+  }, [guides.length]);
 
   return (
     <>
@@ -54,11 +72,51 @@ export default function GuidesGrid() {
             <p className="text-white/60">Loading guides...</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {guides.slice(0, 6).map((guide) => (
-              <GuideCard key={guide.id} guide={guide} />
-            ))}
-          </div>
+          <>
+            {/* Mobile Carousel */}
+            <div className="md:hidden -mx-4">
+              <div
+                ref={carouselRef}
+                className="flex overflow-x-auto gap-4 px-4 pb-4 scrollbar-hide"
+                style={{
+                  scrollSnapType: 'none',
+                }}
+              >
+                {guides.map((guide, index) => (
+                  <div
+                    key={`${guide.id}-${index}`}
+                    className="flex-shrink-0"
+                    style={{ width: 'calc(85% - 8px)' }}
+                  >
+                    <div className="scale-[0.85] origin-center">
+                      <GuideCard guide={guide} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Dots Indicator */}
+              <div className="flex justify-center gap-2 mt-2">
+                {guides.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      index === currentSlide
+                        ? 'w-8 bg-primary'
+                        : 'w-2 bg-white/30'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop Grid */}
+            <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              {guides.slice(0, 6).map((guide) => (
+                <GuideCard key={guide.id} guide={guide} />
+              ))}
+            </div>
+          </>
         )}
 
         <div className="text-center mt-8 sm:mt-12">

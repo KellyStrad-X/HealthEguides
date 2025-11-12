@@ -18,8 +18,8 @@ export default function Home() {
         <Header />
         <Hero />
         <Stats />
-        <BundleOffer />
         <GuidesGrid />
+        <BundleOffer />
         <GuideRequestSection />
         <CTASection />
         <Footer />
