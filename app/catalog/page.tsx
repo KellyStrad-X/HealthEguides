@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { HeaderProvider } from '@/lib/headerContext';
 import { Guide } from '@/lib/guides';
 import GuideCard from '@/components/GuideCard';
-import SaleHeader from '@/components/SaleHeader';
+import ScrollProgressBar from '@/components/ScrollProgressBar';
 import Header from '@/components/Header';
 import BundleOffer from '@/components/BundleOffer';
 import GuideRequestSection from '@/components/GuideRequestSection';
@@ -52,7 +52,7 @@ export default function CatalogPage() {
   return (
     <HeaderProvider>
       <div className="min-h-screen bg-[#0a0a0a]">
-        <SaleHeader />
+        <ScrollProgressBar />
         <Header />
       <div className="pt-24 pb-20">
       <div className="section-container">

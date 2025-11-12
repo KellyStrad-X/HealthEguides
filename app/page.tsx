@@ -1,5 +1,5 @@
 import { HeaderProvider } from '@/lib/headerContext';
-import SaleHeader from '@/components/SaleHeader';
+import ScrollProgressBar from '@/components/ScrollProgressBar';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import Stats from '@/components/Stats';
@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <HeaderProvider>
       <main className="min-h-screen">
-        <SaleHeader />
+        <ScrollProgressBar />
         <Header />
         <Hero />
         <Stats />
