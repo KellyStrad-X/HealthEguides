@@ -12,7 +12,6 @@ export default function GuidesGrid() {
   const [guides, setGuides] = useState<Guide[]>([]);
   const [loading, setLoading] = useState(true);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,22 +26,6 @@ export default function GuidesGrid() {
         setLoading(false);
       });
   }, []);
-
-  // Track scroll position for dots indicator (mobile only)
-  useEffect(() => {
-    const carousel = carouselRef.current;
-    if (!carousel) return;
-
-    const handleScroll = () => {
-      const scrollPosition = carousel.scrollLeft;
-      const cardWidth = carousel.scrollWidth / guides.length;
-      const index = Math.round(scrollPosition / cardWidth);
-      setCurrentSlide(index % guides.length);
-    };
-
-    carousel.addEventListener('scroll', handleScroll);
-    return () => carousel.removeEventListener('scroll', handleScroll);
-  }, [guides.length]);
 
   return (
     <>
@@ -77,7 +60,7 @@ export default function GuidesGrid() {
             <div className="md:hidden -mx-4">
               <div
                 ref={carouselRef}
-                className="flex overflow-x-auto gap-4 px-4 pb-4 scrollbar-hide"
+                className="flex overflow-x-auto gap-4 px-4 scrollbar-hide"
                 style={{
                   scrollSnapType: 'none',
                 }}
@@ -94,20 +77,6 @@ export default function GuidesGrid() {
                   </div>
                 ))}
               </div>
-
-              {/* Dots Indicator */}
-              <div className="flex justify-center gap-2 mt-2">
-                {guides.map((_, index) => (
-                  <div
-                    key={index}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      index === currentSlide
-                        ? 'w-8 bg-primary'
-                        : 'w-2 bg-white/30'
-                    }`}
-                  />
-                ))}
-              </div>
             </div>
 
             {/* Desktop Grid */}
@@ -119,7 +88,7 @@ export default function GuidesGrid() {
           </>
         )}
 
-        <div className="text-center mt-8 sm:mt-12">
+        <div className="text-center mt-4 sm:mt-12">
           {user ? (
             <Link
               href="/catalog"
